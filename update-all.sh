@@ -2,5 +2,5 @@
 ################################################################################
 # Script para hacer update all
 #-------------------------------------------------------------------------------
-sudo -u openerp /opt/openerp/v7/server/openerp-server -d mk --addons-path=/opt/openerp/v7/addons,/opt/openerp/v7/web/addons,/opt/openerp/v7/localizacion,/opt/openerp/v7/custom/addons --update all
+sudo -u odoo /opt/odoo/odoo-server/openerp-server -d mk --addons-path=/opt/odoo/odoo-server/addons,/opt/odoo/custom/addons,/opt/odoo/custom/addons/localizacion --update all --stop-after-init
 exit
