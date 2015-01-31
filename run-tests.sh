@@ -2,5 +2,5 @@
 ###############################################################################
 # Script para correr los tests yaml
 #-------------------------------------------------------------------------------
-sudo -u openerp /opt/openerp/v7/server/openerp-server --addons-path=/opt/openerp/v7/addons,/opt/openerp/v7/web/addons,/opt/openerp/v7/localizacion,/opt/openerp/v7/custom/addons --log-level=test -u email_template --test-enable -d test --stop-after-init
+sudo -u odoo /opt/odoo/odoo-server/openerp-server -d test --addons-path=/opt/odoo/odoo-server/addons,/opt/odoo/custom/addons,/opt/odoo/custom/addons/localizacion --log-level=test -u email_template --test-enable --stop-after-init
 exit
