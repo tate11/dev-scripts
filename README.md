@@ -1,2 +1,2 @@
 # dev-scripts
-scripts para desarrollo
+scripts para desarrollo en master version 8
