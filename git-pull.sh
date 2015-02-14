@@ -1,5 +1,6 @@
 #!/bin/bash
-# odoo v87
+# odoo v7
+##################################################################################
 echo -e "\n******************************************* pull curso"
 cd /opt/odoo/custom/addons/curso
 sudo git pull
