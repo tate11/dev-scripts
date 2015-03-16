@@ -1,7 +1,15 @@
 #!/bin/bash
-################################################################################
-# Script para hrrancar openerp sin el log
-# odoo v8
-#-------------------------------------------------------------------------------
-sudo -u odoo /opt/odoo/odoo-server/openerp-server --addons-path=/opt/odoo/odoo-server/addons,/opt/odoo/custom/addons,/opt/odoo/custom/addons/localizacion --db_user=odoo --db_password=melquiades --log-level=debug 
-exit
+# Script to start odoo docker instance
+###############################################
+sudo docker run \
+  --name db -d --restart=always \
+  -e POSTGRES_PASSWORD=melquiades -e POSTGRES_USER=odoo \
+  -v /home/ubuntu/80/data:/var/lib/postgresql/data \
+   postgres:9.3.6
+
+sudo docker run -d --restart=always -p 80:8069 --link db:db \
+  --name odoo \
+  jobiols/odoo:8.0
+#  -v /home/ubuntu/80-80/log:/var/log/odoo \
+#  jobiols/odoo:80
+
