@@ -1,5 +1,5 @@
 #!/bin/sh
-# scripto to install no-ip
+# scripto to install no-ip client
 ###################################
 sudo apt-get install make
 sudo apt-get -y install gcc
