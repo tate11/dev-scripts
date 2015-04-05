@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo git pull
 sudo cp sd /usr/bin
 sudo cp up-docker /usr/bin
 sudo cp down-docker /usr/bin
