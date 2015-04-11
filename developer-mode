@@ -1,0 +1,15 @@
+# Start developer mode container
+###############################################
+sudo docker run -d \
+    --name db  \
+    -e POSTGRES_PASSWORD=odoo \
+    -e POSTGRES_USER=odoo \
+    -v /home/ubuntu/70/data:/var/lib/postgresql/data \
+    postgres:9.3.6
+
+sudo docker run -d -p 80:8069 \
+    --name odoo \
+    --link db:db \
+    -v /home/ubuntu/70/filestore:/home/odoo \
+    -v /home/ubuntu/70/addons:/opt/odoo/custom/addons
+    jobiols/odoo:70

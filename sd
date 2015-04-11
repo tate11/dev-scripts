@@ -1,3 +1,4 @@
 #!/bin/bash
-# shortcuto for sudo docker
+# shortcut for sudo docker
+###############################################
 sudo docker $* 
