@@ -1,6 +1,7 @@
 #!/bin/sh
 # scripto to install no-ip client
 ###################################
+echo -e "\n=== install no-ip on this server ==="
 sudo apt-get install make
 sudo apt-get -y install gcc
 cd /usr/local/src/

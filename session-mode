@@ -1,6 +1,6 @@
 # Start session on docker container
 ###############################################
-echo 'Entering session mode on odoo v7 container'
+echo -e "\n=== Entering session mode on odoo v7 container ==="
 sudo docker run -d \
     --name db  \
     -e POSTGRES_PASSWORD=odoo \
