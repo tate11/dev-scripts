@@ -1,5 +1,6 @@
 # Start session on docker container
 ###############################################
+echo 'Entering session mode on odoo v7 container'
 sudo docker run -d \
     --name db  \
     -e POSTGRES_PASSWORD=odoo \
@@ -7,7 +8,7 @@ sudo docker run -d \
     -v /home/ubuntu/70/data:/var/lib/postgresql/data \
     postgres:9.3.6
 
-sudo docker run -d -p 80:8069 \
+sudo docker run --rm -it -p 80:8069 \
     --name odoo \
     --link db:db \
     --entrypoint=/bin/bash \

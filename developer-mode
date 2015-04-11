@@ -1,5 +1,6 @@
 # Start developer mode container
 ###############################################
+echo 'Starting odoo v7 developer mode'
 sudo docker run -d \
     --name db  \
     -e POSTGRES_PASSWORD=odoo \
