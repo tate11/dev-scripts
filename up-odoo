@@ -17,4 +17,4 @@ sudo docker run -d --restart=always -p 80:8069 \
     --name odoo \
     --link db:db \
     -v /home/ubuntu/70/filestore:/home/odoo \
-    jobiols/odoo:80
+    jobiols/odoo:70
