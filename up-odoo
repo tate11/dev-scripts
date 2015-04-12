@@ -9,7 +9,7 @@ sudo docker run -d --restart=always \
     -v /home/ubuntu/80/data:/var/lib/postgresql/data \
     postgres:9.3.6
 
-sudo docker run -d -p 8989:8989 --restart=always \
+sudo docker run -d --restart=always -p 8989:8989 \
     --name aeroo_docs  \
     jobiols/aeroo_docs
 
