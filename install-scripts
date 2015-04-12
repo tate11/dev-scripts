@@ -1,9 +1,8 @@
 #!/bin/bash
 ###############################################
-echo -e "\n=== pulling scripts odoo v7 ==="
-sudo git checkout 70
+echo -e "\n=== pulling scripts odoo v8 ==="
 sudo git pull
-echo -e "\n=== installing scripts odoo v7 ==="
+echo -e "\n=== installing scripts odoo v8 ==="
 sudo cp sd /usr/bin
 sudo cp up-odoo /usr/bin
 sudo cp down-odoo /usr/bin

@@ -1,6 +1,7 @@
+#!/bin/bash
 # Start session on docker container
 ###############################################
-echo -e "\n=== Entering session mode on odoo v7 container ==="
+echo -e "\n=== Entering session mode on odoo v8 container ==="
 sudo docker run -d \
     --name db  \
     -e POSTGRES_PASSWORD=odoo \
@@ -8,9 +9,13 @@ sudo docker run -d \
     -v /home/ubuntu/70/data:/var/lib/postgresql/data \
     postgres:9.3.6
 
+sudo docker run -d -p 8989:8989 \
+    --name aeroo_docs  \
+    rvalyi/aeroocker
+
 sudo docker run --rm -it -p 80:8069 \
     --name odoo \
     --link db:db \
     --entrypoint=/bin/bash \
-    -v /home/ubuntu/70/filestore:/home/odoo \
-    jobiols/odoo:70
+    -v /home/ubuntu/80/filestore:/home/odoo \
+    jobiols/odoo:80

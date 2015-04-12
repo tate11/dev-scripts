@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # scripto to install no-ip client
 ###################################
 echo -e "\n=== install no-ip on this server ==="
