@@ -1,7 +1,7 @@
 #!/bin/bash
 # stop and remove all instances
 ###############################################
-echo -e "\n=== Stopping odoo v7 ==="
+echo -e "\n=== Stopping odoo v8 ==="
 sudo docker stop odoo
 sudo docker stop db
 sudo docker stop aeroo_docs
