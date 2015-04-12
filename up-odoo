@@ -2,7 +2,6 @@
 # Script to start odoo v8 docker instance
 ###############################################
 echo -e "\n=== Starting odoo v8 ==="
-
 sudo docker run -d --restart=always \
     --name db  \
     -e POSTGRES_PASSWORD=odoo \
