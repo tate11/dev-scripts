@@ -1,5 +1,6 @@
 #!/bin/bash
 ###############################################
+sudo git status
 echo -e "\n=== pulling scripts odoo v8 ==="
 sudo git pull
 echo -e "\n=== installing scripts odoo v8 ==="
