@@ -1,5 +1,6 @@
 #!/bin/bash
 # Start developer mode container
+# points addons to /home/ubuntu/80/addons 
 ###############################################
 echo -e "\n=== Starting odoo V8 on developer mode ==="
 sudo docker run -d --restart=always \
