@@ -19,4 +19,5 @@ sudo docker run --rm -it -p 80:8069 \
     --link aeroo_docs:aeroo_docs \
     --entrypoint=/bin/bash \
     -v /home/ubuntu/80/filestore:/home/odoo \
+    -v /home/ubuntu/80/addons:/opt/odoo/custom \
     jobiols/odoo:80
