@@ -1,8 +1,10 @@
 #!/bin/bash
 #set -x
 #
-# ad this line to sudo crontab -e to backup twice a day
-# 0 0,12  *   *   *   host-backup odoo db >> /var/log/bkp.log
+# add this line to sudo crontab -e to backup twice a day
+#  m h  dom mon dow   command
+#  0 0,12 *   *   *   host-backup odoo orto >> /var/log/bkp.log
+#  0 0    *   *   1   housekeeping >> /var/log/bkp.log
 #
 
 ERROR=0

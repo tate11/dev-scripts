@@ -11,6 +11,7 @@ sudo cp developer-mode /usr/bin
 sudo cp session-mode /usr/bin
 sudo cp host-backup /usr/bin
 sudo cp host-restore /usr/bin
+sudo cp housekeeping /usr/bin
 echo -e "\n=== scripts installed odoo v8 ==="
 echo -e "\n=== pulling images odoo v8 ==="
 sd pull jobiols/odoo:80
