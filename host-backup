@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 readonly RED="\e[31m"
 readonly YELLOW="\e[33m"
 readonly GREEN="\e[32m"
@@ -19,7 +19,7 @@ HASERROR=0
 CUSTOMER=$1
 DB=$2
 
-echo -e "${YELLOW}Starting backup for database ${DB} of ${CUSTOMER}...${STD}"
+#echo -e "${YELLOW}Starting backup for database ${DB} of ${CUSTOMER}...${STD}"
 docker run --rm -ti \
   --name bkp \
   --link db:db \
@@ -28,14 +28,14 @@ docker run --rm -ti \
   --env DBNAME=$DB jobiols/backup backup &> /home/ubuntu/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
-    echo -e "${RED}Backup for ${CUSTOMER} with  ${DB} failed!${STD}"
+#   echo -e "${RED}Backup for ${CUSTOMER} with  ${DB} failed!${STD}"
     HASERROR=1
-  else
-    echo -e "${GREEN}Backup for ${DB} successful done${STD}"
+# else
+#   echo -e "${GREEN}Backup for ${DB} successful done${STD}"
 fi
 
 if [ "$HASERROR" = "1" ]
   then
-    echo -e "${RED}Errors occured on backup process!!!!${STD}"
+#   echo -e "${RED}Errors occured on backup process!!!!${STD}"
     exit 2
 fi
