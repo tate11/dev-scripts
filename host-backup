@@ -18,9 +18,10 @@ HASERROR=0
 
 CUSTOMER=$1
 DB=$2
+DATE=$(date +"%Y %m %d %H:%M")
 
 #echo -e "${YELLOW}Starting backup for database ${DB} of ${CUSTOMER}...${STD}"
-docker run --rm -ti \
+docker run --rm -i \
   --name bkp \
   --link db:db \
   --volumes-from $CUSTOMER \
@@ -28,14 +29,14 @@ docker run --rm -ti \
   --env DBNAME=$DB jobiols/backup backup &> /home/ubuntu/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
-#   echo -e "${RED}Backup for ${CUSTOMER} with  ${DB} failed!${STD}"
+#   echo -e "${DATE} ${RED}Backup for ${CUSTOMER} with  ${DB} failed!${STD}"
     HASERROR=1
-# else
-#   echo -e "${GREEN}Backup for ${DB} successful done${STD}"
+ else
+   echo -e "${DATE} ${GREEN}Backup for ${DB} successful done${STD}"
 fi
 
 if [ "$HASERROR" = "1" ]
   then
-#   echo -e "${RED}Errors occured on backup process!!!!${STD}"
+   echo -e "${DATE} ${RED}Errors occured on backup process!!!!${STD}"
     exit 2
 fi
