@@ -15,5 +15,5 @@ echo -e "\n=== scripts installed odoo v8 ==="
 echo -e "\n=== pulling images odoo v8 ==="
 sd pull jobiols/odoo:80
 sd pull jobiols/aeroo_docs
-sd pull jobiols/docker-odoo-backup
+sd pull jobiols/backup
 echo -e "\n=== images up to date ==="
