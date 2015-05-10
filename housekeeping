@@ -1,0 +1,12 @@
+#!/bin/sh
+path=~/80/backup
+logfile=/var/log/howskeeping.log
+
+rm -f $logfile
+for file in `find $path/* -mtime +30 -type f`
+do
+  echo "deleting: " $file >> $logfile
+  rm $file
+done
+
+exit 0
