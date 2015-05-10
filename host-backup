@@ -1,26 +1,13 @@
 #!/bin/bash
 #set -x
-readonly RED="\e[31m"
-readonly YELLOW="\e[33m"
-readonly GREEN="\e[32m"
-readonly STD="\e[0m"
 
-if [ $# -lt 2 ]
-  then
-    echo -e "${RED}Error! Too few arguments supplied!${STD}"
-    echo -e "${STD}Command: sudo host-backup <customer> <db>"
-    echo -e "${STD}--- or ---"
-    echo -e "${STD}Command: sudo host-backup -c <configfile>"
-    exit 1
-fi
-
-HASERROR=0
-
+ERROR=0
 CUSTOMER=$1
 DB=$2
 DATE=$(date +"%Y %m %d %H:%M")
 
-#echo -e "${YELLOW}Starting backup for database ${DB} of ${CUSTOMER}...${STD}"
+docker stop odoo
+
 docker run --rm -i \
   --name bkp \
   --link db:db \
@@ -29,14 +16,15 @@ docker run --rm -i \
   --env DBNAME=$DB jobiols/backup backup &> /home/ubuntu/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
-#   echo -e "${DATE} ${RED}Backup for ${CUSTOMER} with  ${DB} failed!${STD}"
-    HASERROR=1
- else
-   echo -e "${DATE} ${GREEN}Backup for ${DB} successful done${STD}"
+    ERROR=1
 fi
 
-if [ "$HASERROR" = "1" ]
+docker start odoo
+
+if [ $ERROR -ne 0 ]
   then
-   echo -e "${DATE} ${RED}Errors occured on backup process!!!!${STD}"
+    echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
     exit 2
+  else
+    echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
 fi
