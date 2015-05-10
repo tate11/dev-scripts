@@ -1,25 +1,25 @@
 #!/bin/bash
 #set -x
+#
+# ad this line to sudo crontab -e to backup twice a day
+# 0 0,12  *   *   *   host-backup odoo db >> /var/log/bkp.log
+#
 
 ERROR=0
 CUSTOMER=$1
 DB=$2
 DATE=$(date +"%Y %m %d %H:%M")
 
-docker stop odoo
-
 docker run --rm -i \
   --name bkp \
   --link db:db \
   --volumes-from $CUSTOMER \
   -v /home/ubuntu/80/backup:/backup  \
-  --env DBNAME=$DB jobiols/backup backup &> /home/ubuntu/$CUSTOMER.backup.log
+  --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
     ERROR=1
 fi
-
-docker start odoo
 
 if [ $ERROR -ne 0 ]
   then
