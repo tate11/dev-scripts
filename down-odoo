@@ -2,10 +2,10 @@
 # stop and remove all instances
 ###############################################
 echo -e "\n=== Stopping odoo v8 ==="
-sudo docker stop odoo
-sudo docker stop db
+sudo docker stop odoo80
+sudo docker stop db-odoo80
 sudo docker stop aeroo_docs
 
-sudo docker rm odoo
-sudo docker rm db
+sudo docker rm odoo80
+sudo docker rm db-odoo80
 sudo docker rm aeroo_docs

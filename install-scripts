@@ -1,9 +1,9 @@
 #!/bin/bash
 ###############################################
 git status
-echo -e "\n=== pulling scripts odoo v8 ==="
+echo -e "\n=== pulling scripts odoo v8 adhoc ==="
 git pull
-echo -e "\n=== installing scripts odoo v8 ==="
+echo -e "\n=== installing scripts odoo v8 adhoc ==="
 cp sd /usr/bin
 cp up-odoo /usr/bin
 cp down-odoo /usr/bin
@@ -12,9 +12,9 @@ cp session-mode /usr/bin
 cp host-backup /usr/bin
 cp host-restore /usr/bin
 cp housekeeping /usr/bin
-echo -e "\n=== pulling images odoo v8 ==="
-docker pull jobiols/odoo:80
-docker pull jobiols/aeroo_docs
+echo -e "\n=== pulling images odoo v8 adhoc ==="
+docker pull adhoc/odoo-adhoc:8.0
+docker pull adhoc/aeroo_docs
 docker pull jobiols/backup
-docker pull postgres:9.3.6
-echo -e "\n=== all right for odoo v8 ==="
+docker pull postgres:9.4
+echo -e "\n=== all right for odoo v8 adhoc ==="

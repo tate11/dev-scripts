@@ -2,20 +2,32 @@
 # Script to start odoo v8 docker instance
 ###############################################
 echo -e "\n=== Starting odoo v8 ==="
-sudo docker run -d --restart=always \
-    --name db  \
-    -e POSTGRES_PASSWORD=odoo \
-    -e POSTGRES_USER=odoo \
-    -v /home/ubuntu/80/data:/var/lib/postgresql/data \
-    postgres:9.3.6
 
-sudo docker run -d --restart=always -p 8989:8989 \
-    --name aeroo_docs  \
-    jobiols/aeroo_docs
+#Levantar postgresql
+sudo docker run -d \
+	-e POSTGRES_USER=odoo \
+	-e POSTGRES_PASSWORD=odoo \
+	-v ~/odoo80/postgresql:/var/lib/postgresql/data \
+	--restart=always \
+	--name db-odoo80 \
+	postgres:9.4
 
-sudo docker run -d --restart=always -p 80:8069 \
-    --name odoo \
-    --link db:db \
-    --link aeroo_docs:aeroo_docs \
-    -v /home/ubuntu/80/filestore:/home/odoo \
-    jobiols/odoo:80
+#Levantar container para convertir archivos de aeroo
+sudo docker run -d \
+	-p 8989:8989 \
+	--name="aeroo_docs" \
+	--restart=always \
+	adhoc/aeroo-docs
+
+sudo docker run -d \
+	--link aeroo_docs:aeroo -p \
+	127.0.0.1:8069:8069 \
+	-p 127.0.0.1:8072:8072 \
+	-v ~/odoo80/config:/etc/odoo \
+	-v ~/odoo80/sources:/mnt/extra-addons \
+	-v ~/odoo80/data_dir:/var/lib/odoo \
+	--link db-odoo80:db \
+	--restart=always \
+	--name odoo80 \
+	adhoc/odoo-adhoc:8.0
+
