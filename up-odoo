@@ -20,8 +20,8 @@ sudo docker run -d \
 	adhoc/aeroo-docs
 
 sudo docker run -d \
-	--link aeroo_docs:aeroo -p \
-	127.0.0.1:8069:8069 \
+	--link aeroo_docs:aeroo \
+	-p 8069:8069 \
 	-p 127.0.0.1:8072:8072 \
 	-v ~/odoo80/config:/etc/odoo \
 	-v ~/odoo80/sources:/mnt/extra-addons \
