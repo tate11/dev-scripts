@@ -12,6 +12,7 @@
 
 if [ "$#" -ne 1 ] ; then
     msgerror "must have an argument"
+    exit 1
 fi
 
 msgrun "\n Starting odoo v8 adhoc for ${CLIENT}"
