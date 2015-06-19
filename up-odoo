@@ -10,12 +10,13 @@
 #Include file lib in same dir as this file
 . $(dirname $0)"/lib"
 
-if [ "$#" -ne 1 ] ; then
-    msgerror "must have an argument"
+if [ "$#" -ne 2 ] ; then
+    msgerror "must have 2 arguments (client port)"
     exit 1
 fi
 
 CLIENT=$1
+PORT=$2
 msgrun "Starting odoo v8 adhoc for ${CLIENT}"
 
 #Levantar postgresql
@@ -36,7 +37,7 @@ sudo docker run -d \
 
 sudo docker run -d \
 	--link aeroo_docs:aeroo \
-	-p 127.0.0.1:8069:8069 \
+	-p 127.0.0.1:${PORT}:8069 \
 	-p 127.0.0.1:8072:8072 \
 	-v ~/odoo80/${CLIENT}/config:/etc/odoo \
 	-v ~/odoo80/sources:/mnt/extra-addons \
