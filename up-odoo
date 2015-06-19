@@ -7,12 +7,14 @@
 #	~/odoo80/${client}/config
 #	~/odoo80/${client}/data_dir
 
-client="STR"
-
 #Include file lib in same dir as this file
 . $(dirname $0)"/lib"
 
-msgrun "\n Starting odoo v8 adhoc for ${client}"
+if [ "$#" -ne 1 ] ; then
+    msgerror "must have an argument"
+fi
+
+msgrun "\n Starting odoo v8 adhoc for ${CLIENT}"
 
 #Levantar postgresql
 sudo docker run -d \
@@ -34,10 +36,10 @@ sudo docker run -d \
 	--link aeroo_docs:aeroo \
 	-p 127.0.0.1:8069:8069 \
 	-p 127.0.0.1:8072:8072 \
-	-v ~/odoo80/${client}/config:/etc/odoo \
+	-v ~/odoo80/${CLIENT}/config:/etc/odoo \
 	-v ~/odoo80/sources:/mnt/extra-addons \
-	-v ~/odoo80/${client}/data_dir:/var/lib/odoo \
+	-v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
 	--link db-odoo:db \
 	--restart=always \
-	--name ${client} \
+	--name ${CLIENT} \
 	jobiols/odoo-adhoc:8.0
