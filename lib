@@ -1,0 +1,24 @@
+#!/bin/bash
+#################################################3 
+
+readonly RED="\e[31m"
+readonly YELLOW="\e[33m"
+readonly GREEN="\e[32m"
+readonly STD="\e[0m"
+
+function msginfo {
+    echo -e "${STD}$1"
+}
+function msgrun {
+    echo -e "${YELLOW}$1...${STD}"
+}
+function msgdone {
+    echo -e "${GREEN}$1${STD}"
+}
+function msgerror {
+    echo -e "${RED}ERROR: $1${STD}"
+}
+
+port=(8070 8071 8072);
+client=(makeover ortopedia str);
+

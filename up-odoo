@@ -1,7 +1,11 @@
 #!/bin/bash
 # Script to start odoo v8 docker instance
 ###############################################
-echo -e "\n=== Starting odoo v8 ==="
+
+#Include file lib in same dir as this file
+. $(dirname $0)"/lib"
+
+msgrun "\n=== Starting odoo v8 ==="
 
 #Levantar postgresql
 sudo docker run -d \
@@ -31,3 +35,4 @@ sudo docker run -d \
 	--name odoo80 \
 	adhoc/odoo-adhoc:8.0
 
+msgdone "odoo v8 started"
