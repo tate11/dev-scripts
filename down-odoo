@@ -7,12 +7,13 @@
 
 if [ "$#" -ne 1 ] ; then
     msgerror "must have an argument"
+    exit 1
 fi
 
 CLIENT=$1
 
 msgrun "\n Stopping odoo v8 adhoc for ${CLIENT}"
-exit 0
+
 sudo docker stop db-odoo
 sudo docker stop aeroo_docs
 sudo docker stop ${CLIENT}
