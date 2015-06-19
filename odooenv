@@ -193,6 +193,25 @@ function console_mode
 	msgrun "console mode for $OPTARG"
 }
 
+
+############################################################################################
+function create_config
+{
+# Crear archivo de configuracion despues del -- se pueden pasar todas las opciones que se quieran
+# almacenar en el .conf, como por ejemplo path a nuevos addons que se ubiquen en la carpeta sources --addons-path)
+docker run --rm --link aeroo_docs:aeroo\
+     -p 127.0.0.1:8069:8069 \
+     -p 127.0.0.1:8072:8072 \
+     -v ~/odoo80/$OPTARG/config:/etc/odoo \
+     -v ~/odoo80/sources:/mnt/extra-addons \
+     -v ~/odoo80/$OPTARG/data_dir:/var/lib/odoo \
+     --link db-odoo:db \
+     --name $OPTARG \
+     adhoc/odoo-adhoc:8.0 \
+     -- --stop-after-init -s \
+     --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
+}
+
 # test if user is root
 if [[ $EUID -ne 0 ]]; then
    msgerror "This script must be run as root"
