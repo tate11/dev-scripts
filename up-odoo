@@ -15,7 +15,8 @@ if [ "$#" -ne 1 ] ; then
     exit 1
 fi
 
-msgrun "\n Starting odoo v8 adhoc for ${CLIENT}"
+CLIENT=$1
+msgrun "Starting odoo v8 adhoc for ${CLIENT}"
 
 #Levantar postgresql
 sudo docker run -d \
