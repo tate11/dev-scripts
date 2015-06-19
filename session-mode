@@ -1,23 +1,18 @@
 #!/bin/bash
 # Start session on docker container
 ###############################################
-echo -e "\n=== Entering session mode on odoo v8 container ==="
-sudo docker run -d --restart=always \
-    --name db  \
-    -e POSTGRES_PASSWORD=odoo \
-    -e POSTGRES_USER=odoo \
-    -v /home/ubuntu/80/data:/var/lib/postgresql/data \
-    postgres:9.3.6
+echo -e "\n=== Entering session mode on odoo v8 adhoc container ==="
+sudo docker stop odoo80
 
-sudo docker run -d --restart=always -p 8989:8989 \
-    --name aeroo_docs  \
-    jobiols/aeroo_docs
+sudo docker run -rm -it \
+	--link aeroo_docs:aeroo \
+	-p 127.0.0.1:8069:8069 \
+	-p 127.0.0.1:8072:8072 \
+	-v ~/odoo80/config:/etc/odoo \
+	-v ~/odoo80/sources:/mnt/extra-addons \
+	-v ~/odoo80/data_dir:/var/lib/odoo \
+	--entrypoint=/bin/bash
+	--link db-odoo80:db \
+	--name odoo80 \
+	adhoc/odoo-adhoc:8.0
 
-sudo docker run --rm -it -p 80:8069 \
-    --name odoo \
-    --link db:db \
-    --link aeroo_docs:aeroo_docs \
-    --entrypoint=/bin/bash \
-    -v /home/ubuntu/80/filestore:/home/odoo \
-    -v /home/ubuntu/80/addons:/opt/odoo/custom \
-    jobiols/odoo:80

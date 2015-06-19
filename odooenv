@@ -1,19 +1,22 @@
 #!/bin/bash
-##################################
+############################################################################################
 #Include file lib in same dir as this file
+
 . $(dirname $0)"/lib"
 
+############################################################################################
 function usage
 {
    msginfo "\nUsage: odooenv [OPTIONS] [CLIENT]"
    msginfo "Manages odoo environment in this VPS"
    msginfo
+   msginfo "-p  pull all images"
    msginfo "-i  install no-ip on this server"
    msginfo "-l  list all clients in this server"
+
    msginfo "-u [client|all] start CLIENT or all clients"
    msginfo "-d  stop CLIENT or all clients if none given"
    msginfo "-h  this help"
-   msginfo "-p  pull all images"
    msginfo "-D  start CLIENT in developer mode, CLIENT must be given"
    msginfo "-c  start console mode for CLIENT, must be given"
 }
@@ -21,128 +24,209 @@ function usage
 ############################################################################################
 function install_noip
 {
-  msgrun "\n installing no-ip on this server"
-  apt-get install make
-  apt-get -y install gcc
-  cd /usr/local/src/
-  wget http://www.noip.com/client/linux/noip-duc-linux.tar.gz
-  tar xf noip-duc-linux.tar.gz
-  cd noip-2.1.9-1/
-  make install
-  msginfo "Pleas answer some questions"
-#Please enter login/email: jobiols
-#Please enter password: veconceR
-#contestar preguntas sobre defaults y grupos.
-  rm /usr/local/src/noip-duc-linux.tar.gz
-#Poner el script en init.d
-  cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/
-#Make script executable
-  chmod +x /etc/init.d/debian.noip2.sh
-#hacer que se ejecute al booteo
-  update-rc.d debian.noip2.sh defaults
-#arrancar y parar el demonio
-  msgrun "Starting no-ip daemon"
-  /etc/init.d/debian.noip2.sh restart
-  msgdone "no-ip service running"
+    msgrun "\n installing no-ip on this server"
+    apt-get install make
+    apt-get -y install gcc
+    cd /usr/local/src/
+    wget http://www.noip.com/client/linux/noip-duc-linux.tar.gz
+    tar xf noip-duc-linux.tar.gz
+    cd noip-2.1.9-1/
+    make install
+    msginfo "Please answer some questions"
+    #Please enter login/email: jobiols
+    #Please enter password: veconceR
+    #contestar preguntas sobre defaults y grupos.
+    rm /usr/local/src/noip-duc-linux.tar.gz
+    #Poner el script en init.d
+    cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/
+    #Make script executable
+    chmod +x /etc/init.d/debian.noip2.sh
+    #hacer que se ejecute al booteo
+    update-rc.d debian.noip2.sh defaults
+    #arrancar y parar el demonio
+    msgrun "Starting no-ip daemon"
+    /etc/init.d/debian.noip2.sh restart
+    msgdone "no-ip service running"
 }
 
 ############################################################################################
 function list_all
 {
-  for ((i=0 ; i<${#port[@]} ; i++))
-  do
-    msginfo " ${port[i]} ${client[i]} "
-  done
-
+    for ((i=0 ; i<${#port[@]} ; i++))
+    do
+        msginfo "Port ${port[i]} for client ${client[i]}"
+    done
 }
 
-
+############################################################################################
+#Levantar container para convertir archivos de aeroo $image[1]
 function start_aeroo
 {
-  msgrun "starting aeroo container"
-
+    msgrun "Starting ${images[1]}"
+    if ! sudo docker run -d \
+	    -p 8989:8989 \
+	    --name="aeroo_docs" \
+    	--restart=always \
+	    ${images[1]} ;
+	then
+	    msgerror "starting ${images[1]}"
+ 	    exit 1
+ 	fi
 }
 
+############################################################################################
+#Levantar postgresql image[2]
 function start_postgres
 {
-  msgrun "starting postgres container"
-
+    msgrun "starting ${images[2]}"
+    if ! sudo docker run -d \
+	    -e POSTGRES_USER=odoo \
+	    -e POSTGRES_PASSWORD=odoo \
+	    -v ~/odoo80/postgresql:/var/lib/postgresql/data \
+	    --restart=always \
+	    --name db-odoo80 \
+	    ${images[2]} ;
+	then
+	    msgerror "starting ${images[2]}"
+ 	    exit 1
+	fi
 }
 
+############################################################################################
+#Levantar odoo images[4]
+function start_odoo
+{
+    msginfo "fake start $port $client $images[4]"
+#    msgrun "starting $images[4]"
+#    if ! sudo docker run -d \
+#        --link aeroo_docs:aeroo \
+#        -p 127.0.0.1:8069:8069 \
+#        -p 127.0.0.1:8072:8072 \
+#        -v ~/odoo80/config:/etc/odoo \
+#        -v ~/odoo80/sources:/mnt/extra-addons \
+#        -v ~/odoo80/data_dir:/var/lib/odoo \
+#        --link db-odoo80:db \
+#        --restart=always \
+#        --name odoo80 \
+#	    adhoc/odoo-adhoc:8.0 ;
+#	then
+#        msgerror "starting $images[4]"
+# 	    exit 1
+#	fi
+}
 
+############################################################################################
 function do_up
 #starts db and aeroo if needed and the client given or all clients.
 {
-	msgrun "starting $OPTARG client(s)"
+    msgrun "starting $OPTARG client(s)"
 	start_aeroo
 	start_postgres
+
 	if ($OPTARG = 'all'); then
  	  for ((i=0 ; i<${#port[@]} ; i++))
 	  do
-	    msginfo " ${port[i]} ${client[i]} "
+	    msgrun"Starting on ${port[i]} Client ${client[i]} "
+        port=${port[i]}
+        client=${client[i]}
+	    start_odoo
 	  done
+	else
+        client=""
+        for ((i=0 ; i<${#client[@]} ; i++))
+        do
+            if ($OPTARG=client[i]) ; then
+                port=${port[i]}
+                client=${client[i]}
+            fi
+        done
+        if (client != "") ; then
+            start_odoo
+        else
+            msgerror "Unknown client $OPTARG"
+        fi
 	fi
 }
 
+############################################################################################
 function do_down
 {
-	msgrun "down $OPTARG"
+	msgrun "down all images"
+    for ((i=0 ; i<${#images[@]} ; i++))
+    do
+        msgrun "down ${images[i]}"
+	    if ! docker stop ${images[i]} ; then
+ 	        msgerror "fail stoping ${images[i]}"
+ 	    fi
+	    if ! docker rm ${images[i]} ; then
+ 	        msgerror "fail removing ${images[i]}"
+ 	    fi
+    done
+    msgdone "All images ok"
+
 }
 
+############################################################################################
 function do_pull
 {
-	msgrun "pulling all images"
-	if ! git pull; then
-		msgerr "fail pulling from repo"
-	exit 1 
-	fi
+	msgrun "pulling all images for odoo V8 adhoc"
+    for ((i=0 ; i<${#images[@]} ; i++))
+    do
+        msgrun "Pulling ${images[i]}"
+	    if ! docker pull ${images[i]} ; then
+ 	        msgerror "fail pulling ${images[i]}"
+ 	        exit 1
+ 	    fi
+    done
+    msgdone "All images ok"
 }
 
+############################################################################################
 function developer_mode
 {
 	msgrun "developer mode for $OPTARG"
 }
 
+############################################################################################
 function console_mode
 {
 	msgrun "console mode for $OPTARG"
 }
 
+# test if user is root
 if [[ $EUID -ne 0 ]]; then
    msgerror "This script must be run as root"
-
    exit 1
 fi
 
 while getopts "u:d:hpD:c:l" opt; do
   case $opt in
     i)
-	install_noip
+	    install_noip
 	;;
     l)
-	list_all
+    	list_all
 	exit 0
 	;;
     u)
- 	do_up
+     	do_up
       	;;
     d)
-      do_down
+        do_down
       ;;
     h)
-      usage
-      exit 1
+        usage
+        exit 1
       ;;
     p)
-      do_pull
+        do_pull
       ;;
     D)
-      developer_mode
+        developer_mode
       ;;
     c)
-      console_mode
+        console_mode
       ;;
   esac
 done
-
 

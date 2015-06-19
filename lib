@@ -19,6 +19,9 @@ function msgerror {
     echo -e "${RED}ERROR: $1${STD}"
 }
 
-port=(8070 8071 8072);
-client=(makeover ortopedia str);
+#port=(8070 8071 8072);
+#client=(makeover ortopedia str);
+images=(jobiols/aeroo-docs postgres:9.4 jobiols/backup jobiols/odoo-adhoc:8.0)
+
+
 
