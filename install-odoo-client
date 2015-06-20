@@ -8,6 +8,8 @@
 #	~/odoo80/${client}/data_dir
 # instalar odoo client
 
+CLIENT=$1
+
 cd ~/odoo80
 mkdir -p ${CLIENT}/config
 mkdir -p ${CLIENT}/data_dir
