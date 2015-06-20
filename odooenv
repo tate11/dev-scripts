@@ -46,7 +46,7 @@ function list_all_clients
 function start_aeroo
 {
     msgrun "Starting ${images[1]}"
-    if ! sudo docker run -d \
+    if ! docker run -d \
 	    -p 8989:8989 \
 	    --name="aeroo_docs" \
     	--restart=always \
@@ -55,6 +55,7 @@ function start_aeroo
 	    msgerror "starting ${images[1]}"
  	    exit 1
  	fi
+ 	msgdone "Started ${images[1]}"
 }
 
 ############################################################################################
@@ -62,7 +63,7 @@ function start_aeroo
 function start_postgres
 {
     msgrun "starting ${images[2]}"
-    if ! sudo docker run -d \
+    if ! docker run -d \
 	    -e POSTGRES_USER=odoo \
 	    -e POSTGRES_PASSWORD=odoo \
 	    -v ~/odoo80/postgresql:/var/lib/postgresql/data \
@@ -73,29 +74,30 @@ function start_postgres
 	    msgerror "starting ${images[2]}"
  	    exit 1
 	fi
+ 	msgdone "Started ${images[2]}"
 }
 
 ############################################################################################
 #Levantar odoo images[4]
 function start_odoo
 {
-    msginfo "fake start $port $client $images[4]"
-#    msgrun "starting $images[4]"
-#    if ! sudo docker run -d \
-#        --link aeroo_docs:aeroo \
-#        -p 127.0.0.1:8069:8069 \
-#        -p 127.0.0.1:8072:8072 \
-#        -v ~/odoo80/config:/etc/odoo \
-#        -v ~/odoo80/sources:/mnt/extra-addons \
-#        -v ~/odoo80/data_dir:/var/lib/odoo \
-#        --link db-odoo80:db \
-#        --restart=always \
-#        --name odoo80 \
-#	    adhoc/odoo-adhoc:8.0 ;
-#	then
-#        msgerror "starting $images[4]"
-# 	    exit 1
-#	fi
+    msgrun "Starting $images[4]"
+    if ! sudo docker run -d \
+        --link aeroo_docs:aeroo \
+        -p 127.0.0.1:8069:8069 \
+        -p 127.0.0.1:8072:8072 \
+        -v ~/odoo80/${CLIENT}/config:/etc/odoo \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
+        --link db-odoo80:db \
+        --restart=always \
+        --name ${CLIENT} \
+	    ${images[4]} ;
+	then
+        msgerror "starting ${images[4]}"
+ 	    exit 1
+	fi
+ 	msgdone "Started ${images[4]}"
 }
 
 ############################################################################################
@@ -193,6 +195,14 @@ function install_odoo
     git clone -b 8.0 https://github.com/OCA/web
     msgdone "Installing done"
 }
+############################################################################################
+function run_images
+{
+    CLIENT=$OPTARG
+    start_aeroo
+    start_postgres
+    start_odoo
+}
 
 ############################################################################################
 function install_odoo_client
@@ -211,7 +221,7 @@ function install_odoo_client
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
-        --name odoo80 \
+        --name ${CLIENT} \
         adhoc/odoo-adhoc:8.0 -- --stop-after-init -s \
         --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
     msgdone "Installing done"
@@ -225,18 +235,19 @@ function help
     msginfo "-I install odoo repos"
     msginfo "-i [client] install odoo instance for client"
     msginfo "-p  pull all images"
+    msginfo "-r [client] run image client and dependent images"
     msginfo "-n  install no-ip on this server"
     msginfo "-l  list all clients in this server"
     msginfo "-h  this help"
     msginfo "-d [client] start CLIENT in developer mode"
     msginfo "-c [client] start console mode for CLIENT"
 
-    msginfo ###########################################
-    msginfo # dir struct on host
-    msginfo #	~/postgresql
-    msginfo #	~/odoo80/sources
-    msginfo #	~/odoo80/${client}/config
-    msginfo #	~/odoo80/${client}/data_dir
+    msginfo "###########################################"
+    msginfo " dir struct on host"
+    msginfo "	~/postgresql"
+    msginfo "	~/odoo80/sources"
+    msginfo "	~/odoo80/${client}/config"
+    msginfo "	~/odoo80/${client}/data_dir"
 }
 
 # test if user is root
@@ -245,7 +256,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhd:" opt; do
+while getopts "Ii:pnlhd:r:" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -268,6 +279,8 @@ while getopts "Ii:pnlhd:" opt; do
         ;;
     c)  console_mode
         exit 0
+        ;;
+    r)  run_images
         ;;
    [?]) help
         exit 1
