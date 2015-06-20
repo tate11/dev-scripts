@@ -23,9 +23,9 @@ function msgerror {
 #client=(makeover ortopedia str);
 #images=(jobiols/aeroo-docs postgres:9.4 jobiols/backup jobiols/odoo-adhoc:8.0)
 
-aeroo="jobiols/aeroo-docs"
-postgres="postgres:9.4"
+AEROO="jobiols/aeroo-docs"
+POSTGRES="postgres:9.4"
 backup="jobiols/backup"
-odoo="jobiols/odoo-adhoc:8.0"
-images=($aeroo $postgres $backup $odoo)
+ODOO="jobiols/odoo-adhoc:8.0"
+images=($AEROO $postgres $backup $odoo)
 

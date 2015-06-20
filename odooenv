@@ -40,47 +40,48 @@ function list_all_clients
     do
         msginfo "Port ${port[i]} for client ${client[i]}"
     done
+
     msginfo "images"
     for ((i=0 ; i<${#images[@]} ; i++))
     do
-        msginfo "${images[i]}"
+        msginfo "  ${images[i]}"
     done
 }
 
 ############################################################################################
-#Levantar container para convertir archivos de aeroo $images[0]
+#Levantar container para convertir archivos de aeroo $AEROO
 function run_aeroo
 {
-    msgrun "Starting ${images[0]}"
+    msgrun "Running ${AEROO}"
     if ! docker run -d \
 	    -p 8989:8989 \
 	    --name="aeroo_docs" \
     	--restart=always \
-	    ${images[0]} ;
+	    ${AEROO} ;
 	then
-	    msgerror "starting ${images[0]}"
+	    msgerror "starting ${AEROO}"
  	    exit 1
  	fi
- 	msgdone "Started ${images[0]}"
+ 	msgdone "${AEROO} up and running"
 }
 
 ############################################################################################
-#Levantar postgresql images[1]
+#Levantar postgresql $POSTGRES
 function run_postgres
 {
-    msgrun "starting ${images[1]}"
+    msgrun "Running ${POSTGRES}"
     if ! docker run -d \
 	    -e POSTGRES_USER=odoo \
 	    -e POSTGRES_PASSWORD=odoo \
 	    -v ~/odoo80/postgresql:/var/lib/postgresql/data \
 	    --restart=always \
 	    --name db-odoo \
-	    ${images[2]} ;
+	    ${POSTGRES} ;
 	then
-	    msgerror "starting ${images[1]}"
+	    msgerror "starting ${POSTGRES}"
  	    exit 1
 	fi
- 	msgdone "Started ${images[1]}"
+ 	msgdone "${POSTGRES} up and running"
 }
 
 function run_database
@@ -90,10 +91,10 @@ function run_database
 }
 
 ############################################################################################
-#Levantar odoo images[3]
+#Levantar odoo
 function run_odoo
 {
-    msgrun "Running ${images[3]}"
+    msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! sudo docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:8069:8069 \
@@ -104,12 +105,12 @@ function run_odoo
         --link db-odoo:db \
         --restart=always \
         --name ${CLIENT} \
-	    ${images[3]} ;
+	    ${ODOO} ;
 	then
-        msgerror "running ${images[3]}"
+        msgerror "running ${ODOO}"
  	    exit 1
 	fi
- 	msgdone "${images[3]} running"
+ 	msgdone "${ODOO} up and running on client ${CLIENT}"
 }
 
 ############################################################################################
