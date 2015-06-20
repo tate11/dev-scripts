@@ -5,23 +5,6 @@
 . $(dirname $0)"/lib"
 
 ############################################################################################
-function usage
-{
-   msginfo "\nUsage: odooenv [OPTIONS] [CLIENT]"
-   msginfo "Manages odoo environment in this VPS"
-   msginfo
-   msginfo "-p  pull all images"
-   msginfo "-i  install no-ip on this server"
-   msginfo "-l  list all clients in this server"
-
-   msginfo "-u [client|all] start CLIENT or all clients"
-   msginfo "-d  stop CLIENT or all clients if none given"
-   msginfo "-h  this help"
-   msginfo "-D  start CLIENT in developer mode, CLIENT must be given"
-   msginfo "-c  start console mode for CLIENT, must be given"
-}
-
-############################################################################################
 function install_noip
 {
     msgrun "\n installing no-ip on this server"
@@ -184,19 +167,20 @@ function do_pull
 ############################################################################################
 function developer_mode
 {
-	msgrun "developer mode for $OPTARG"
+	msgrun "developer mode for $OPTARG coming soon"
 }
 
 ############################################################################################
 function console_mode
 {
-	msgrun "console mode for $OPTARG"
+	msgrun "console mode for $OPTARG coming soon"
 }
 
 
 ############################################################################################
 function create_config
 {
+	msgrun "Creating config file for $OPTARG"
 # Crear archivo de configuracion despues del -- se pueden pasar todas las opciones que se quieran
 # almacenar en el .conf, como por ejemplo path a nuevos addons que se ubiquen en la carpeta sources --addons-path)
 docker run --rm --link aeroo_docs:aeroo\
@@ -218,34 +202,53 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "u:d:hpD:c:l" opt; do
+############################################################################################
+function usage
+{
+   msginfo "\nUsage: odooenv [OPTIONS] [CLIENT]"
+   msginfo "Manages odoo environment in this VPS"
+   msginfo
+   msginfo "-c [client] Create config file"
+   msginfo "-p  pull all images"
+   msginfo "-i  install no-ip on this server"
+   msginfo "-l  list all clients in this server"
+#   msginfo "-u [client|all] start CLIENT or all clients"
+#   msginfo "-d  stop CLIENT or all clients if none given"
+   msginfo "-h  this help"
+   msginfo "-d [client] start CLIENT in developer mode"
+   msginfo "-c [client] start console mode for CLIENT"
+}
+
+while getopts "c:pilhd:c:" opt; do
   case $opt in
-    i)
-	    install_noip
-	;;
-    l)
-    	list_all
-	exit 0
-	;;
-    u)
-     	do_up
-      	;;
-    d)
-        do_down
-      ;;
-    h)
-        usage
-        exit 1
-      ;;
+    c)
+        create_config
+	    exit 0
+        ;;
     p)
         do_pull
+	    exit 0
       ;;
-    D)
+    i)
+	    install_noip
+	    exit 0
+	    ;;
+    l)
+    	list_all
+	    exit 0
+	    ;;
+    h)
+        usage
+        exit 0
+        ;;
+    d)
         developer_mode
-      ;;
+        exit 0
+        ;;
     c)
         console_mode
-      ;;
+        exit 0
+        ;;
   esac
 done
 
