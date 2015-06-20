@@ -25,7 +25,7 @@ function msgerror {
 
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"
-backup="jobiols/backup"
+BACKUP="jobiols/backup"
 ODOO="jobiols/odoo-adhoc:8.0"
 images=($AEROO $postgres $backup $odoo)
 

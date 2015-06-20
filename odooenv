@@ -255,17 +255,13 @@ function stop_image_client
 
 function stop_database
 {
-    for i in 0 1
+    for name in db-odoo aeroo_docs
     do
-        msgrun "stop image ${images[i]}"
-        if ! docker stop aeroo_docs ; then
-                msgerror "fail stoping ${images[i]}"
-            fi
-            if ! docker rm ${images[i]} ; then
-                msgerror "fail removing ${images[i]}"
-            fi
+        msgrun "removing image ${name}"
+        if ! docker rm -f ${name} ; then
+                msgerror "fail stoping ${name}"
+        fi
     done
-    msgdone "stopped ${images[i]}"
 }
 ############################################################################################
 function help
