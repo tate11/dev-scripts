@@ -33,7 +33,7 @@ function install_noip
 }
 
 ############################################################################################
-function list_all
+function list_all_clients
 {
     for ((i=0 ; i<${#port[@]} ; i++))
     do
@@ -176,24 +176,67 @@ function console_mode
 	msgrun "console mode for $OPTARG coming soon"
 }
 
+############################################################################################
+function install_odoo
+{
+    msgrun "Installing odoo repos"
+    cd
+    mkdir postgresql
+    mkdir -p odoo80/sources
+    cd odoo80
+    chmod 777 -R sources/
+    cd sources
+    git clone -b 8.0 https://github.com/ingadhoc/odoo-addons
+    git clone -b 8.0 https://github.com/ingadhoc/odoo-argentina
+    git clone -b 8.0 https://github.com/aeroo/aeroo_reports
+    git clone -b 8.0 https://github.com/OCA/server-tools
+    git clone -b 8.0 https://github.com/OCA/web
+    msgdone "Installing done"
+}
 
 ############################################################################################
-function create_config
+function install_odoo_client
 {
-	msgrun "Creating config file for $OPTARG"
-# Crear archivo de configuracion despues del -- se pueden pasar todas las opciones que se quieran
-# almacenar en el .conf, como por ejemplo path a nuevos addons que se ubiquen en la carpeta sources --addons-path)
-docker run --rm --link aeroo_docs:aeroo\
-     -p 127.0.0.1:8069:8069 \
-     -p 127.0.0.1:8072:8072 \
-     -v ~/odoo80/$OPTARG/config:/etc/odoo \
-     -v ~/odoo80/sources:/mnt/extra-addons \
-     -v ~/odoo80/$OPTARG/data_dir:/var/lib/odoo \
-     --link db-odoo:db \
-     --name $OPTARG \
-     adhoc/odoo-adhoc:8.0 \
-     -- --stop-after-init -s \
-     --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
+    msgrun "Installing odoo instance for client $OPTARG"
+    CLIENT=$OPTARG
+
+    cd ~/odoo80
+    mkdir -p ${CLIENT}/config
+    mkdir -p ${CLIENT}/data_dir
+    chmod 777 -R ${CLIENT}/config/ ${CLIENT}/data_dir/
+
+    msgrun "Creating config file for client $OPTARG"
+    # Crear archivo de configuracion despues del -- se pueden pasar todas las opciones que se quieran almacenar en el .conf, como por ejemplo path a nuevos addons que se ubiquen en la carpeta sources --addons-path)
+    docker run --rm -p 127.0.0.1:8069:8069 -p 127.0.0.1:8072:8072 \
+        -v ~/odoo80/${CLIENT}/config:/etc/odoo \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
+        --name odoo80 \
+        adhoc/odoo-adhoc:8.0 -- --stop-after-init -s \
+        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
+    msgdone "Installing done"
+}
+
+############################################################################################
+function help
+{
+    msginfo "Manages odoo environment in this VPS"
+    msginfo
+    msginfo "-I install odoo repos"
+    msginfo "-i [client] install odoo instance for client"
+    msginfo "-p  pull all images"
+    msginfo "-n  install no-ip on this server"
+    msginfo "-l  list all clients in this server"
+    msginfo "-h  this help"
+    msginfo "-d [client] start CLIENT in developer mode"
+    msginfo "-c [client] start console mode for CLIENT"
+
+    msginfo ###########################################
+    msginfo # dir struct on host
+    msginfo #	~/postgresql
+    msginfo #	~/odoo80/sources
+    msginfo #	~/odoo80/${client}/config
+    msginfo #	~/odoo80/${client}/data_dir
 }
 
 # test if user is root
@@ -202,52 +245,32 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-############################################################################################
-function usage
-{
-   msginfo "\nUsage: odooenv [OPTIONS] [CLIENT]"
-   msginfo "Manages odoo environment in this VPS"
-   msginfo
-   msginfo "-c [client] Create config file"
-   msginfo "-p  pull all images"
-   msginfo "-i  install no-ip on this server"
-   msginfo "-l  list all clients in this server"
-#   msginfo "-u [client|all] start CLIENT or all clients"
-#   msginfo "-d  stop CLIENT or all clients if none given"
-   msginfo "-h  this help"
-   msginfo "-d [client] start CLIENT in developer mode"
-   msginfo "-c [client] start console mode for CLIENT"
-}
-
-while getopts "c:pilhd:c:" opt; do
+while getopts "Ii:pnlhd:" opt; do
   case $opt in
-    c)
-        create_config
-	    exit 0
+    I)  install_odoo
         ;;
-    p)
-        do_pull
-	    exit 0
-      ;;
-    i)
-	    install_noip
+    i)  install_odoo_client
+        ;;
+    p)  do_pull
 	    exit 0
 	    ;;
-    l)
-    	list_all
+    n)  install_noip
 	    exit 0
 	    ;;
-    h)
-        usage
+    l)  list_all_clients
+	    exit 0
+	    ;;
+    h)  help
         exit 0
         ;;
-    d)
-        developer_mode
+    d)  developer_mode
         exit 0
         ;;
-    c)
-        console_mode
+    c)  console_mode
         exit 0
+        ;;
+   [?]) help
+        exit 1
         ;;
   esac
 done
