@@ -42,63 +42,63 @@ function list_all_clients
 }
 
 ############################################################################################
-#Levantar container para convertir archivos de aeroo $image[1]
+#Levantar container para convertir archivos de aeroo $images[0]
 function start_aeroo
 {
 msgrun "arrancando aeroo"
-    msgrun "Starting ${images[1]}"
+    msgrun "Starting ${images[0]}"
     if ! docker run -d \
 	    -p 8989:8989 \
 	    --name="aeroo_docs" \
     	--restart=always \
-	    ${images[1]} ;
+	    ${images[0]} ;
 	then
-	    msgerror "starting ${images[1]}"
+	    msgerror "starting ${images[0]}"
  	    exit 1
  	fi
- 	msgdone "Started ${images[1]}"
+ 	msgdone "Started ${images[0]}"
 }
 
 ############################################################################################
-#Levantar postgresql image[2]
+#Levantar postgresql images[1]
 function start_postgres
 {
-    msgrun "starting ${images[2]}"
+    msgrun "starting ${images[1]}"
     if ! docker run -d \
 	    -e POSTGRES_USER=odoo \
 	    -e POSTGRES_PASSWORD=odoo \
 	    -v ~/odoo80/postgresql:/var/lib/postgresql/data \
 	    --restart=always \
-	    --name db-odoo80 \
+	    --name db-odoo \
 	    ${images[2]} ;
 	then
-	    msgerror "starting ${images[2]}"
+	    msgerror "starting ${images[1]}"
  	    exit 1
 	fi
- 	msgdone "Started ${images[2]}"
+ 	msgdone "Started ${images[1]}"
 }
 
 ############################################################################################
-#Levantar odoo images[4]
+#Levantar odoo images[3]
 function start_odoo
 {
-    msgrun "Starting $images[4]"
+    msgrun "Starting $images[3]"
     if ! sudo docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:8069:8069 \
         -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
-        -v ~/odoo80/sources:/mnt/extra-addons \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
-        --link db-odoo80:db \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        --link db-odoo:db \
         --restart=always \
         --name ${CLIENT} \
-	    ${images[4]} ;
+	    ${images[3]} ;
 	then
-        msgerror "starting ${images[4]}"
+        msgerror "starting ${images[3]}"
  	    exit 1
 	fi
- 	msgdone "Started ${images[4]}"
+ 	msgdone "Started ${images[3]}"
 }
 
 ############################################################################################
