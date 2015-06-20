@@ -257,10 +257,16 @@ function stop_database
 {
     for name in db-odoo aeroo_docs
     do
-        msgrun "removing image ${name}"
-        if ! docker rm -f ${name} ; then
-                msgerror "fail stoping ${name}"
+        msgrun "stoping image ${name}"
+        if ! docker stop ${name} ; then
+            msgerror "fail stoping ${name}"
+            exit 1
         fi
+        if ! docker rm ${name} ; then
+            msgerror "fail removing ${name}"
+            exit 1
+        fi
+
     done
 }
 ############################################################################################
