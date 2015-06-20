@@ -21,7 +21,11 @@ function msgerror {
 
 #port=(8070 8071 8072);
 #client=(makeover ortopedia str);
-images=(jobiols/aeroo-docs postgres:9.4 jobiols/backup jobiols/odoo-adhoc:8.0)
+#images=(jobiols/aeroo-docs postgres:9.4 jobiols/backup jobiols/odoo-adhoc:8.0)
 
-
+aeroo="jobiols/aeroo-docs"
+postgres="postgres:9.4"
+backup="jobiols/backup"
+odoo="jobiols/odoo-adhoc:8.0"
+images=($aeroo $postgres $backup $odoo)
 
