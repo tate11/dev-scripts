@@ -35,9 +35,15 @@ function install_noip
 ############################################################################################
 function list_all_clients
 {
+    msginfo "ports"
     for ((i=0 ; i<${#port[@]} ; i++))
     do
         msginfo "Port ${port[i]} for client ${client[i]}"
+    done
+    msginfo "images"
+    for ((i=0 ; i<${#images[@]} ; i++))
+    do
+        msginfo "${images[i]}"
     done
 }
 
