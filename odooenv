@@ -45,6 +45,7 @@ function list_all_clients
 #Levantar container para convertir archivos de aeroo $image[1]
 function start_aeroo
 {
+msgrun "arrancando aeroo"
     msgrun "Starting ${images[1]}"
     if ! docker run -d \
 	    -p 8989:8989 \
@@ -234,8 +235,8 @@ function help
     msginfo
     msginfo "-I install odoo repos"
     msginfo "-i [client] install odoo instance for client"
-    msginfo "-p  pull all images"
     msginfo "-r [client] run image client and dependent images"
+    msginfo "-p  pull all images"
     msginfo "-n  install no-ip on this server"
     msginfo "-l  list all clients in this server"
     msginfo "-h  this help"
