@@ -43,9 +43,8 @@ function list_all_clients
 
 ############################################################################################
 #Levantar container para convertir archivos de aeroo $images[0]
-function start_aeroo
+function run_aeroo
 {
-msgrun "arrancando aeroo"
     msgrun "Starting ${images[0]}"
     if ! docker run -d \
 	    -p 8989:8989 \
@@ -61,7 +60,7 @@ msgrun "arrancando aeroo"
 
 ############################################################################################
 #Levantar postgresql images[1]
-function start_postgres
+function run_postgres
 {
     msgrun "starting ${images[1]}"
     if ! docker run -d \
@@ -78,11 +77,17 @@ function start_postgres
  	msgdone "Started ${images[1]}"
 }
 
+function run_database
+{
+    run_aeroo
+    run_postgres
+}
+
 ############################################################################################
 #Levantar odoo images[3]
-function start_odoo
+function run_odoo
 {
-    msgrun "Starting $images[3]"
+    msgrun "Running ${images[3]}"
     if ! sudo docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:8069:8069 \
@@ -95,10 +100,10 @@ function start_odoo
         --name ${CLIENT} \
 	    ${images[3]} ;
 	then
-        msgerror "starting ${images[3]}"
+        msgerror "running ${images[3]}"
  	    exit 1
 	fi
- 	msgdone "Started ${images[3]}"
+ 	msgdone "${images[3]} running"
 }
 
 ############################################################################################
@@ -106,8 +111,8 @@ function do_up
 #starts db and aeroo if needed and the client given or all clients.
 {
     msgrun "starting $OPTARG client(s)"
-	start_aeroo
-	start_postgres
+	run_aeroo
+	run_postgres
 
 	if ($OPTARG = 'all'); then
  	  for ((i=0 ; i<${#port[@]} ; i++))
@@ -115,7 +120,7 @@ function do_up
 	    msgrun"Starting on ${port[i]} Client ${client[i]} "
         port=${port[i]}
         client=${client[i]}
-	    start_odoo
+	    run_odoo
 	  done
 	else
         client=""
@@ -127,7 +132,7 @@ function do_up
             fi
         done
         if (client != "") ; then
-            start_odoo
+            run_odoo
         else
             msgerror "Unknown client $OPTARG"
         fi
@@ -149,7 +154,6 @@ function do_down
  	    fi
     done
     msgdone "All images ok"
-
 }
 
 ############################################################################################
@@ -197,12 +201,10 @@ function install_odoo
     msgdone "Installing done"
 }
 ############################################################################################
-function run_images
+function run_image_client
 {
     CLIENT=$OPTARG
-    start_aeroo
-    start_postgres
-    start_odoo
+    run_odoo
 }
 
 ############################################################################################
@@ -229,13 +231,46 @@ function install_odoo_client
 }
 
 ############################################################################################
+function stop_image_client
+{
+    CLIENT=$OPTARG
+	msgrun "stop image for client ${CLIENT}"
+    if ! docker stop ${CLIENT} ; then
+        msgerror "fail stoping ${CLIENT}"
+        exit 1
+    fi
+    if ! docker rm ${CLIENT} ; then
+        msgerror "fail removing ${images[i]}"
+        exit 1
+    fi
+    msgdone "client ${CLIENT} stopped"
+}
+
+function stop_database
+{
+    for i in 0 1
+    do
+        msgrun "stop image ${images[i]}"
+        if ! docker stop aeroo_docs ; then
+                msgerror "fail stoping ${images[i]}"
+            fi
+            if ! docker rm ${images[i]} ; then
+                msgerror "fail removing ${images[i]}"
+            fi
+    done
+    msgdone "stopped ${images[i]}"
+}
+############################################################################################
 function help
 {
     msginfo "Manages odoo environment in this VPS"
     msginfo
     msginfo "-I install odoo repos"
     msginfo "-i [client] install odoo instance for client"
-    msginfo "-r [client] run image client and dependent images"
+    msginfo "-R run database and aeroo images"
+    msginfo "-S stop database and aeroo images"
+    msginfo "-r [client] run image client"
+    msginfo "-s [client] stop image client"
     msginfo "-p  pull all images"
     msginfo "-n  install no-ip on this server"
     msginfo "-l  list all clients in this server"
@@ -257,7 +292,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhd:r:" opt; do
+while getopts "Ii:pnlhd:r:s:RS" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -281,7 +316,13 @@ while getopts "Ii:pnlhd:r:" opt; do
     c)  console_mode
         exit 0
         ;;
-    r)  run_images
+    r)  run_image_client
+        ;;
+    s)  stop_image_client
+        ;;
+    R)  run_database
+        ;;
+    S)  stop_database
         ;;
    [?]) help
         exit 1
