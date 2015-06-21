@@ -73,7 +73,7 @@ function run_postgres
     if ! docker run -d \
 	    -e POSTGRES_USER=odoo \
 	    -e POSTGRES_PASSWORD=odoo \
-	    -v ~/odoo80/postgresql:/var/lib/postgresql/data \
+	    -v ~/postgresql:/var/lib/postgresql/data \
 	    --restart=always \
 	    --name db-odoo \
 	    ${POSTGRES} ;
