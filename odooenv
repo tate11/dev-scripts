@@ -318,7 +318,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhd:r:s:RS" opt; do
+while getopts "Ii:pnlhd:c:r:s:RS" opt; do
   case $opt in
     I)  install_odoo
         ;;
