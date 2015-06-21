@@ -1,8 +1,10 @@
 #!/bin/bash
 ############################################################################################
 #Include file lib in same dir as this file
-
 . $(dirname $0)"/lib"
+
+#TODO solucionar problema de port
+#TODO hacer backup automático
 
 ############################################################################################
 function install_noip
@@ -97,7 +99,7 @@ function run_odoo
     msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! docker run -d \
         --link aeroo_docs:aeroo \
-        -p 127.0.0.1:8069:8069 \
+        -p 127.0.0.1:8070:8069 \
         -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
