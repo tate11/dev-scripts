@@ -95,7 +95,7 @@ function run_database
 function run_odoo
 {
     msgrun "Running ${ODOO} on client ${CLIENT}"
-    if ! sudo docker run -d \
+    if ! docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:8069:8069 \
         -p 127.0.0.1:8072:8072 \
@@ -181,7 +181,24 @@ function do_pull
 ############################################################################################
 function developer_mode
 {
-	msgrun "developer mode for $OPTARG coming soon"
+    msgrun "Running ${ODOO} on client ${CLIENT} in developer mode"
+    if ! docker run -it --rm \
+        --link aeroo_docs:aeroo \
+        -p 127.0.0.1:8069:8069 \
+        -p 127.0.0.1:8072:8072 \
+        -v ~/odoo80/${CLIENT}/config:/etc/odoo \
+        -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        --link db-odoo:db \
+        --entrypoint=/bin/bash \
+        --name ${CLIENT} \
+	    ${ODOO} ;
+	then
+        msgerror "running ${ODOO}"
+ 	    exit 1
+	fi
+ 	msgdone "${ODOO} up and running on client ${CLIENT}"
+
 }
 
 ############################################################################################
