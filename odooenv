@@ -181,6 +181,7 @@ function do_pull
 ############################################################################################
 function developer_mode
 {
+    CLIENT=$OPTARG
     msgrun "Running ${ODOO} on client ${CLIENT} in developer mode"
     if ! docker run -it --rm \
         --link aeroo_docs:aeroo \
