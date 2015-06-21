@@ -179,10 +179,10 @@ function do_pull
 }
 
 ############################################################################################
-function developer_mode
+function console_mode
 {
     CLIENT=$OPTARG
-    msgrun "Running ${ODOO} on client ${CLIENT} in developer mode"
+    msgrun "Running ${ODOO} on client ${CLIENT} in console mode"
     if ! docker run -it --rm \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:8069:8069 \
@@ -198,14 +198,13 @@ function developer_mode
         msgerror "running ${ODOO}"
  	    exit 1
 	fi
- 	msgdone "${ODOO} up and running on client ${CLIENT}"
-
+ 	msgdone "${ODOO} up and running on developer mode ${CLIENT}"
 }
 
 ############################################################################################
-function console_mode
+function developer_mode
 {
-	msgrun "console mode for $OPTARG coming soon"
+	msgrun "developer mode for $OPTARG coming soon"
 }
 
 ############################################################################################
