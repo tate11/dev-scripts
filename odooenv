@@ -6,6 +6,21 @@
 #TODO solucionar problema de port
 #TODO hacer backup automático
 
+function get_port
+{
+	for ((i=0 ; i<${#client[@]} ; i++))
+        do
+            if [ $1=$CLIENT[i] ] ; then
+               PORT=${PORT[i]}
+            fi
+        done
+}
+
+
+
+
+
+
 ############################################################################################
 function install_noip
 {
@@ -107,7 +122,7 @@ function run_odoo
         --link db-odoo:db \
         --restart=always \
         --name ${CLIENT} \
-	    ${ODOO} ;
+	    ${ODOO} -- --db-filter=${CLIENT}_.* ;
 	then
         msgerror "running ${ODOO}"
  	    exit 1
@@ -312,6 +327,19 @@ function help
     msginfo "	    ~/odoo80/sources"
     msginfo "	    ~/odoo80/${client}/config"
     msginfo "	    ~/odoo80/${client}/data_dir"
+
+
+  get_port 'str'
+  msginfo "str ${port}"
+
+  get_port 'makeover'
+  msginfo "makeover ${port}"
+
+  get_port 'ortopedia'
+  msginfo "ortopedia ${port}"
+
+
+
 }
 
 # test if user is root
