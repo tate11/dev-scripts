@@ -98,6 +98,7 @@ function run_odoo
     if [ ${CLIENT} = 'str' ] ; then
       PORT = "8070"
     fi
+    PORT = "8070"
 
     msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! docker run -d \
