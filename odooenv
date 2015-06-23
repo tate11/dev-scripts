@@ -95,15 +95,14 @@ function run_database
 #Levantar odoo
 function run_odoo
 {
-    if [ ${CLIENT} = 'str' ] ; then
+    if [ ${CLIENT} = "str" ] ; then
       PORT="8070"
     fi
-    PORT="8070"
 
     msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! docker run -d \
         --link aeroo_docs:aeroo \
-        -p 127.0.0.1:8070:8069 \
+        -p 127.0.0.1:${PORT}:8069 \
         -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
