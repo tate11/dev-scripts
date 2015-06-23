@@ -96,7 +96,7 @@ function run_database
 function run_odoo
 {
     if [ ${CLIENT} = 'str' ] ; then
-      PORT = 8070
+      PORT = "8070"
     fi
 
     msgrun "Running ${ODOO} on client ${CLIENT}"
