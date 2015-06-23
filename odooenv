@@ -3,23 +3,7 @@
 #Include file lib in same dir as this file
 . $(dirname $0)"/lib"
 
-#TODO solucionar problema de port
 #TODO hacer backup automático
-
-function get_port
-{
-	for ((i=0 ; i<${#client[@]} ; i++))
-        do
-            if [ $1=$CLIENT[i] ] ; then
-               PORT=${PORT[i]}
-            fi
-        done
-}
-
-
-
-
-
 
 ############################################################################################
 function install_noip
@@ -111,10 +95,14 @@ function run_database
 #Levantar odoo
 function run_odoo
 {
+    if [ ${CLIENT} = 'str' ] ; then
+      PORT = 8070
+    fi
+
     msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! docker run -d \
         --link aeroo_docs:aeroo \
-        -p 127.0.0.1:8070:8069 \
+        -p 127.0.0.1:${PORT}:8069 \
         -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
@@ -300,7 +288,6 @@ function stop_database
             msgerror "fail removing ${name}"
             exit 1
         fi
-
     done
 }
 ############################################################################################
@@ -327,19 +314,6 @@ function help
     msginfo "	    ~/odoo80/sources"
     msginfo "	    ~/odoo80/${client}/config"
     msginfo "	    ~/odoo80/${client}/data_dir"
-
-
-  get_port 'str'
-  msginfo "str ${port}"
-
-  get_port 'makeover'
-  msginfo "makeover ${port}"
-
-  get_port 'ortopedia'
-  msginfo "ortopedia ${port}"
-
-
-
 }
 
 # test if user is root
@@ -385,4 +359,3 @@ while getopts "Ii:pnlhd:c:r:s:RS" opt; do
         ;;
   esac
 done
-
