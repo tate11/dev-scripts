@@ -169,7 +169,7 @@ function do_down
 function do_pull
 {
 	msgrun "pulling all images for odoo V8 adhoc"
-    for ((i=0 ; i<${#images[@]} ; i++))
+    for ((i=0 ; i<${#IMAGES[@]} ; i++))
     do
         msgrun "Pulling ${images[i]}"
 	    if ! docker pull ${images[i]} ; then
