@@ -1,0 +1,11 @@
+sudo docker run -it --rm \
+        --link aeroo_docs:aeroo \
+        -p 127.0.0.1:8070:8069 \
+        -p 127.0.0.1:8072:8072 \
+        -v ~/odoo80/str/config:/etc/odoo \
+        -v ~/odoo80/str/data_dir:/var/lib/odoo \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        --link db-odoo:db \
+        --name str \
+    jobiols/odoo-adhoc:8.0 $*
+

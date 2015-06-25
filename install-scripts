@@ -7,4 +7,4 @@ echo -e "\n=== installing scripts odoo v8 adhoc ==="
 cp sd /usr/bin
 cp odooenv /usr/bin
 cp lib /usr/bin
-
+cp developer /usr/bin
