@@ -101,7 +101,6 @@ function run_odoo
     if ! docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:${PORT}:8069 \
-#        -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
@@ -191,7 +190,6 @@ function console_mode
     if ! docker run -it --rm \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:${PORT}:8069 \
-#        -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
