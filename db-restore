@@ -17,14 +17,14 @@ CUSTOMER=$1
 DB=$2
 DATE=$3
 
-docker run --rm -ti \
+docker run --rm -t \
        --volumes-from $CUSTOMER \
-       -v /home/ubuntu/80/backup:/backup \
-       --link db:db \
+       -v ~/odoo80/backup:/backup \
+       --link db-odoo:db \
        --env DBNAME=$DB \
        --env DATE=$DATE \
        jobiols/backup \
-       restore &> /home/ubuntu/$CUSTOMER.restore.log
+       restore 
 
 if [ $? -ne 0 ]
   then

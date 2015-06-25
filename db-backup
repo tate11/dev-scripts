@@ -20,13 +20,8 @@ docker run --rm -i \
   --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
-    ERROR=1
-fi
-
-if [ $ERROR -ne 0 ]
-  then
     echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
-    exit 2
-  else
-    echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
+    exit 1
 fi
+echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
+

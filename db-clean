@@ -1,6 +1,6 @@
 #!/bin/sh
-path=~/80/backup
-logfile=/var/log/howskeeping.log
+path=~/odoo80/backup
+logfile=/var/log/housekeeping.log
 date=$(date +"%Y %m %d %H:%M")
 
 rm -f $logfile
@@ -11,4 +11,3 @@ do
 done
 echo ${date} "deleting 30 days old files"
 
-exit 0
