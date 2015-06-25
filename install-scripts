@@ -8,3 +8,5 @@ cp sd /usr/bin
 cp odooenv /usr/bin
 cp lib /usr/bin
 cp developer /usr/bin
+cp sites-available-PS01 /etc/nginx/sites-available/
+
