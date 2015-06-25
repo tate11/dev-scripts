@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#
 
 import sys, getopt
 import subprocess
@@ -17,10 +18,10 @@ def main(argv):
          sys.exit()
       elif opt in ("-i", "--ifile"):
          inputfile = arg
+         print 'Input file is "', inputfile
       elif opt in ("-o", "--ofile"):
          outputfile = arg
-   print 'Input file is "', inputfile
-   print 'Output file is "', outputfile
+         print 'Output file is "', outputfile
 
 if __name__ == "__main__":
    main(sys.argv[1:])
