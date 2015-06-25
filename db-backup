@@ -14,9 +14,9 @@ DATE=$(date +"%Y %m %d %H:%M")
 
 docker run --rm -i \
   --name bkp \
-  --link db:db \
+  --link db-odoo:db \
   --volumes-from $CUSTOMER \
-  -v /home/ubuntu/80/backup:/backup  \
+  -v ~/odoo80/backup:/backup  \
   --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
