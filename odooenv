@@ -101,7 +101,7 @@ function run_odoo
     if ! docker run -d \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:${PORT}:8069 \
-        -p 127.0.0.1:8072:8072 \
+#        -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
@@ -191,7 +191,7 @@ function console_mode
     if ! docker run -it --rm \
         --link aeroo_docs:aeroo \
         -p 127.0.0.1:${PORT}:8069 \
-        -p 127.0.0.1:8072:8072 \
+#        -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
@@ -248,7 +248,7 @@ function install_odoo_client
 
     msgrun "Creating config file for client $OPTARG"
     # Crear archivo de configuracion despues del -- se pueden pasar todas las opciones que se quieran almacenar en el .conf, como por ejemplo path a nuevos addons que se ubiquen en la carpeta sources --addons-path)
-    docker run --rm -p 127.0.0.1:8069:8069 -p 127.0.0.1:8072:8072 \
+    docker run --rm  \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
