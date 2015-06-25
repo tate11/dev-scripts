@@ -19,8 +19,19 @@ function msgerror {
     echo -e "${RED}ERROR: $1${STD}"
 }
 
-port=(8070 8069 8068);
-client=(makeover ortopedia str);
+function get_port {
+#cliente
+  if [ ${CLIENT} = "str" ] ; then
+     PORT="8070"
+  fi
+# developer
+  if [ ${CLIENT} = "kikai" ] ; then
+     PORT="8069"
+  fi
+}
+
+port=(8070 8069);
+client=(str kikai);
 
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"

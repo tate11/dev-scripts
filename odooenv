@@ -95,9 +95,7 @@ function run_database
 #Levantar odoo
 function run_odoo
 {
-    if [ ${CLIENT} = "str" ] ; then
-      PORT="8070"
-    fi
+    get_port
 
     msgrun "Running ${ODOO} on client ${CLIENT}"
     if ! docker run -d \
@@ -187,9 +185,7 @@ function do_pull
 function console_mode
 {
     CLIENT=$OPTARG
-    if [ ${CLIENT} = "str" ] ; then
-      PORT="8070"
-    fi
+    get_port
 
     msgrun "Running ${ODOO} on client ${CLIENT} in console mode"
     if ! docker run -it --rm \
@@ -200,7 +196,6 @@ function console_mode
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
         --link db-odoo:db \
-        --entrypoint=/bin/bash \
         --name ${CLIENT} \
 	    ${ODOO} ;
 	then
