@@ -172,7 +172,7 @@ function do_pull
     for ((i=0 ; i<${#IMAGES[@]} ; i++))
     do
         msgrun "Pulling ${images[i]}"
-	    if ! docker pull ${images[i]} ; then
+	    if ! docker pull ${IMAGES[i]} ; then
  	        msgerror "fail pulling ${images[i]}"
  	        exit 1
  	    fi
