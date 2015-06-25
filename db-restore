@@ -1,16 +1,13 @@
 #!/bin/bash
 ################################
-#set -x
-readonly RED="\e[31m"
-readonly YELLOW="\e[33m"
-readonly GREEN="\e[32m"
-readonly STD="\e[0m"
+#Include file lib in same dir as this file
+. $(dirname $0)"/lib"
 
 if [ $# -lt 3 ]
   then
-    echo -e "${RED}Error! Too few arguments supplied!${STD}"
-    echo -e "${STD}Command: host-restore <customer> <db> <timestamp>"
-    exit 1
+    msgerror "Too few arguments supplied!"
+    msginfo "Command: host-restore [customer] [db] [timestamp]"
+    exit 0
 fi
 
 CUSTOMER=$1
@@ -28,8 +25,8 @@ docker run --rm -t \
 
 if [ $? -ne 0 ]
   then
-    echo -e "${RED}Restore for ${CUSTOMER} with  ${DB} failed!${STD}"
+    msgerror "Restore for ${CUSTOMER} with  ${DB} failed!"
     HASERROR=1
   else
-  echo -e "${GREEN}Restore for ${DB} successful done${STD}"
+  msgdone "Restore for ${DB} successful done$"
 fi

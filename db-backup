@@ -1,4 +1,6 @@
 #!/bin/bash
+#Include file lib in same dir as this file
+. $(dirname $0)"/lib"
 #set -x
 #
 # add this line to sudo crontab -e to backup twice a day
@@ -20,8 +22,8 @@ docker run --rm -i \
   --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then
-    echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
+    msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
     exit 1
 fi
-echo -e "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
+msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
 
