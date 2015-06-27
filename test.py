@@ -23,11 +23,8 @@ def main(argv):
          outputfile = arg
          print 'Output file is "', outputfile
 
-#if __name__ == "__main__":
-#   main(sys.argv[1:])
-
-
-
+if __name__ == "__main__":
+   main(sys.argv[1:])
 
 #subprocess.call("ls -l", shell=True)
 #target = raw_input("Enter an IP or Host to ping:\n")
