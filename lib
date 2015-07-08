@@ -20,23 +20,26 @@ function msgerror {
 }
 
 function get_port {
-#cliente
-  if [ ${CLIENT} = "str" ] ; then
-     PORT="8070"
-  fi
-# developer
-  if [ ${CLIENT} = "kikai" ] ; then
-     PORT="8069"
-  fi
-# developer
-  if [ ${CLIENT} = "adriana" ] ; then
-     PORT="8068"
-  fi
-
+    for ((jj=0 ; jj<${#CLIENTS[@]} ; jj++))
+    do
+        if [ ${CLIENT} = ${CLIENTS[jj]} ] ; then
+            PORT=${PORTS[jj]}
+        fi
+    done
 }
 
-port=(8070 8069 8068);
-client=(str kikai adriana);
+#########################################################3
+
+CLIENT1="str"
+CLIENT2="makeover"
+CLIENT3="adriana"
+
+PORT1="8069"
+PORT2="8068"
+PORT3="8067"
+
+PORTS=($PORT1 $PORT2 $PORT3)
+CLIENTS=($CLIENT1 $CLIENT2 $CLIENT3)
 
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"

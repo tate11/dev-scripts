@@ -1,6 +1,24 @@
+#!/bin/bash
+
+docker run -d \
+	    -p 8989:8989 \
+	    --name="aeroo_docs" \
+    	--restart=always \
+	    jobiols/aeroo-docs
+
+
+sudo docker run -d \
+            -e POSTGRES_USER=odoo \
+            -e POSTGRES_PASSWORD=odoo \
+            -v ~/postgresql:/var/lib/postgresql/data \
+            -p 5432:5432 \
+	    --restart=always \
+            --name db-odoo \
+            postgres:9.4 
+
 sudo docker run -it --rm \
         --link aeroo_docs:aeroo \
-        -p 127.0.0.1:8070:8069 \
+        -p 127.0.0.1:8069:8069 \
         -p 127.0.0.1:8072:8072 \
         -v ~/odoo80/str/config:/etc/odoo \
         -v ~/odoo80/str/data_dir:/var/lib/odoo \

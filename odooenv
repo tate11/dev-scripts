@@ -36,16 +36,18 @@ function install_noip
 ############################################################################################
 function list_all_clients
 {
-    msginfo "ports"
-    for ((i=0 ; i<${#port[@]} ; i++))
+    msginfo "port----client--------------"
+    for ((i=0 ; i<${#CLIENTS[@]} ; i++))
     do
-        msginfo "Port ${port[i]} for client ${client[i]}"
+        CLIENT=${CLIENTS[i]}
+        get_port
+        msginfo "${PORT} >  ${CLIENTS[i]}"
     done
-
-    msginfo "images"
-    for ((i=0 ; i<${#images[@]} ; i++))
+    msginfo
+    msginfo "images ----------------------"
+    for ((i=0 ; i<${#IMAGES[@]} ; i++))
     do
-        msginfo "  ${images[i]}"
+        msginfo "  ${IMAGES[i]}"
     done
 }
 
@@ -55,7 +57,7 @@ function run_aeroo
 {
     msgrun "Running ${AEROO}"
     if ! docker run -d \
-	    -p 8989:8989 \
+	    -p 127.0.0.1:8989:8989 \
 	    --name="aeroo_docs" \
     	--restart=always \
 	    ${AEROO} ;
@@ -95,6 +97,7 @@ function run_database
 #Levantar odoo
 function run_odoo
 {
+    CLIENT=$OPTARG
     get_port
 
     msgrun "Running ${ODOO} on client ${CLIENT}"
@@ -215,7 +218,7 @@ function install_odoo
     msgrun "Installing odoo repos"
     cd
     mkdir postgresql
-    mkdir -p odoo80/sources
+    mkdir -p odoo80/sources/custom
     cd odoo80
     chmod 777 -R sources/
     cd sources
@@ -224,6 +227,8 @@ function install_odoo
     git clone -b 8.0 https://github.com/aeroo/aeroo_reports
     git clone -b 8.0 https://github.com/OCA/server-tools
     git clone -b 8.0 https://github.com/OCA/web
+    cd custom
+    git clone -b 7.0 https://github.com/jobiols/curso
     msgdone "Installing done"
 }
 ############################################################################################
@@ -252,7 +257,7 @@ function install_odoo_client
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         --name ${CLIENT} \
         adhoc/odoo-adhoc:8.0 -- --stop-after-init -s \
-        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
+        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web,/mnt/extra-addons/custom
     msgdone "Installing done"
 }
 
@@ -287,6 +292,14 @@ function stop_database
         fi
     done
 }
+
+function uninstall_all
+{
+    cd
+    rm -r postgresql
+    rm -r odoo80
+}
+
 ############################################################################################
 function help
 {
@@ -304,6 +317,7 @@ function help
     msginfo "  -h           this help"
     msginfo "  -d [client]  start CLIENT in developer mode"
     msginfo "  -c [client]  start console mode for CLIENT"
+    msginfo "  -U           uninstall all files"
 
     msginfo "###########################################"
     msginfo "   dir struct on host"
@@ -319,7 +333,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhd:c:r:s:RS" opt; do
+while getopts "Ii:pnlhd:c:r:s:RSU" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -350,6 +364,8 @@ while getopts "Ii:pnlhd:c:r:s:RS" opt; do
     R)  run_database
         ;;
     S)  stop_database
+        ;;
+    U)  uninstall_all
         ;;
    [?]) help
         exit 1
