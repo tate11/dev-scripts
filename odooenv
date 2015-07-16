@@ -212,7 +212,7 @@ function install_odoo
     msgrun "Installing odoo repos"
     cd
     mkdir postgresql
-    mkdir -p odoo80/sources/custom
+    mkdir -p odoo80/sources
     cd odoo80
     chmod 777 -R sources/
     cd sources
@@ -221,8 +221,6 @@ function install_odoo
     git clone -b 8.0 https://github.com/${REPORTS}
     git clone -b 8.0 https://github.com/${SERVERTOOLS}
     git clone -b 8.0 https://github.com/${WEB}
-#    cd custom
-#    git clone -b 7.0 https://github.com/jobiols/curso
     msgdone "Installing done"
 }
 ############################################################################################
