@@ -249,7 +249,7 @@ function install_odoo_client
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         --name ${CLIENT} \
         ${ODOO} -- --stop-after-init -s \
-        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web,/mnt/extra-addons/custom
+        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web
     msgdone "Installing done"
 }
 
