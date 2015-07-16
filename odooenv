@@ -192,18 +192,18 @@ function console_mode
     msgrun "Running ${ODOO} on client ${CLIENT} in console mode"
     if ! docker run -it --rm \
         --link aeroo_docs:aeroo \
-        -p 127.0.0.1:${PORT}:8069 \
+        -p ${PORT}:8069 \
         -v ~/odoo80/${CLIENT}/config:/etc/odoo \
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
         --link db-odoo:db \
+        --entrypoint=/bin/bash
         --name ${CLIENT} \
-	    ${ODOO} ;
+	    ${ODOO} -- --db-filter=${CLIENT}_.* ;
 	then
         msgerror "running ${ODOO}"
  	    exit 1
 	fi
- 	msgdone "${ODOO} up and running on developer mode ${CLIENT}"
 }
 
 ############################################################################################
