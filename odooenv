@@ -197,7 +197,7 @@ function console_mode
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         -v ~/odoo80/sources:/mnt/extra-addons \
         --link db-odoo:db \
-        --entrypoint=/bin/bash
+        --entrypoint=/bin/bash \
         --name ${CLIENT} \
 	    ${ODOO} -- --db-filter=${CLIENT}_.* ;
 	then
