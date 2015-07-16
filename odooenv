@@ -207,12 +207,6 @@ function console_mode
 }
 
 ############################################################################################
-function developer_mode
-{
-	msgrun "developer mode for $OPTARG coming soon"
-}
-
-############################################################################################
 function install_odoo
 {
     msgrun "Installing odoo repos"
@@ -315,7 +309,6 @@ function help
     msginfo "  -n           install no-ip on this server"
     msginfo "  -l           list all clients in this server"
     msginfo "  -h           this help"
-    msginfo "  -d [client]  start CLIENT in developer mode"
     msginfo "  -c [client]  start console mode for CLIENT"
     msginfo "  -U           uninstall all files"
 
@@ -333,7 +326,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhd:c:r:s:RSU" opt; do
+while getopts "Ii:pnlhc:r:s:RSU" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -349,9 +342,6 @@ while getopts "Ii:pnlhd:c:r:s:RSU" opt; do
 	    exit 0
 	    ;;
     h)  help
-        exit 0
-        ;;
-    d)  developer_mode
         exit 0
         ;;
     c)  console_mode
