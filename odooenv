@@ -199,7 +199,7 @@ function console_mode
         --link db-odoo:db \
         --entrypoint=/bin/bash \
         --name ${CLIENT} \
-	    ${ODOO} -- --db-filter=${CLIENT}_.* ;
+	    ${ODOO} ;
 	then
         msgerror "running ${ODOO}"
  	    exit 1
