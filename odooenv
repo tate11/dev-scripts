@@ -216,7 +216,7 @@ function install_odoo
     chmod 777 -R sources/
     cd sources
     git clone -b 8.0 https://github.com/${ADDONS}
-    git clone -b 8.0 https://github.com/${ARGENTINA}
+    git clone -b 8.0.2 https://github.com/${ARGENTINA}
     git clone -b 8.0 https://github.com/${REPORTS}
     git clone -b 8.0 https://github.com/${SERVERTOOLS}
     git clone -b 8.0 https://github.com/${WEB}
