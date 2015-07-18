@@ -3,6 +3,7 @@
 #Include file lib in same dir as this file
 . $(dirname $0)"/lib"
 
+msgrun "Status of this repo"
 git status
 
 msgrun "Pulling scripts odoo v8 adhoc"
