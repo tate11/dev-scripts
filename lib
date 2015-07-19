@@ -41,13 +41,15 @@ PORT3="8067"
 PORTS=($PORT1 $PORT2 $PORT3)
 CLIENTS=($CLIENT1 $CLIENT2 $CLIENT3)
 
+# imagenes docker
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"
 BACKUP="jobiols/backup"
 ODOO="adhoc/odoo-adhoc:8.0"
 
-ADDONS="adhoc/odoo-addons"
-ARGENTINA="adhoc/odoo-argentina"
+# repositorios
+ADDONS="ingadhoc/odoo-addons"
+ARGENTINA="ingadhoc/odoo-argentina"
 REPORTS="aeroo/aeroo_reports"
 SERVERTOOLS="OCA/server-tools"
 WEB="OCA/web"
