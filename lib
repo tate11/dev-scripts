@@ -45,11 +45,11 @@ CLIENTS=($CLIENT1 $CLIENT2 $CLIENT3)
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"
 BACKUP="jobiols/backup"
-ODOO="adhoc/odoo-adhoc:8.0"
+ODOO="jobiols/odoo-adhoc:8.0"
 
 # repositorios
-ADDONS="ingadhoc/odoo-addons"
-ARGENTINA="ingadhoc/odoo-argentina"
+ADDONS="jobiols/odoo-addons"
+ARGENTINA="jobiols/odoo-argentina"
 REPORTS="aeroo/aeroo_reports"
 SERVERTOOLS="OCA/server-tools"
 WEB="OCA/web"

@@ -4,7 +4,7 @@
 . $(dirname $0)"/lib"
 
 
-for repo in odoo-argentina odoo-web docker-odoo-adhoc odoo-addons
+for repo in odoo-addons odoo-argentina odoo-web docker-odoo-adhoc
 do
   cd
   cd git-repos
