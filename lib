@@ -45,7 +45,7 @@ CLIENTS=($CLIENT1 $CLIENT2 $CLIENT3)
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"
 BACKUP="jobiols/backup"
-ODOO="jobiols/odoo-adhoc:8.0.ubuntu"
+ODOO="adhoc/odoo-adhoc:8.0.4"
 
 # repositorios
 ADDONS="jobiols/odoo-addons"
