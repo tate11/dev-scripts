@@ -6,6 +6,13 @@
 #TODO hacer backup automático
 
 ############################################################################################
+function install_docker
+{
+    wget -qO- https://get.docker.com/ | sh
+}
+
+
+############################################################################################
 function install_noip
 {
     msgrun "\n installing no-ip on this server"
@@ -119,56 +126,6 @@ function run_odoo
 }
 
 ############################################################################################
-function do_up
-#starts db and aeroo if needed and the client given or all clients.
-{
-    msgrun "starting $OPTARG client(s)"
-	run_aeroo
-	run_postgres
-
-	if ($OPTARG = 'all'); then
- 	  for ((i=0 ; i<${#port[@]} ; i++))
-	  do
-	    msgrun"Starting on ${port[i]} Client ${client[i]} "
-        port=${port[i]}
-        client=${client[i]}
-	    run_odoo
-	  done
-	else
-        client=""
-        for ((i=0 ; i<${#client[@]} ; i++))
-        do
-            if ($OPTARG=client[i]) ; then
-                port=${port[i]}
-                client=${client[i]}
-            fi
-        done
-        if (client != "") ; then
-            run_odoo
-        else
-            msgerror "Unknown client $OPTARG"
-        fi
-	fi
-}
-
-############################################################################################
-function do_down
-{
-	msgrun "down all images"
-    for ((i=0 ; i<${#images[@]} ; i++))
-    do
-        msgrun "down ${images[i]}"
-	    if ! docker stop ${images[i]} ; then
- 	        msgerror "fail stoping ${images[i]}"
- 	    fi
-	    if ! docker rm ${images[i]} ; then
- 	        msgerror "fail removing ${images[i]}"
- 	    fi
-    done
-    msgdone "All images ok"
-}
-
-############################################################################################
 function do_pull
 {
 	msgrun "pulling all images for odoo V8 adhoc"
@@ -186,7 +143,10 @@ function do_pull
 ############################################################################################
 function console_mode
 {
-    CLIENT=$OPTARG
+    CLIENT=$(echo $OPTARG | cut -f1 -d,)
+    DB=$(echo $OPTARG | cut -f2 -d,)
+    echo $CLIENT
+    echo $DB
     get_port
 
     msgrun "Running ${ODOO} on client ${CLIENT} in console mode"
@@ -198,7 +158,7 @@ function console_mode
         -v ~/odoo80/sources:/mnt/extra-addons \
         --link db-odoo:db \
         --name ${CLIENT} \
-	    ${ODOO} -- -d str_crm -u all ;
+	    ${ODOO} -- -d $DB -u all ;
 	then
         msgerror "running ${ODOO}"
  	    exit 1
@@ -295,18 +255,19 @@ function help
 {
     msginfo "Manages odoo environment in this VPS"
     msginfo
+    msginfo "  -U           uninstall all files"
     msginfo "  -I           install odoo repos"
     msginfo "  -i [client]  install odoo instance for client"
     msginfo "  -R           run database and aeroo images"
-    msginfo "  -S           stop database and aeroo images"
     msginfo "  -r [client]  run image client"
+    msginfo "  -S           stop database and aeroo images"
     msginfo "  -s [client]  stop image client"
     msginfo "  -p           pull all images"
     msginfo "  -n           install no-ip on this server"
+    msginfo "  -d           install docker on this server"
     msginfo "  -l           list all clients in this server"
     msginfo "  -h           this help"
-    msginfo "  -c [client]  start console mode for CLIENT"
-    msginfo "  -U           uninstall all files"
+    msginfo "  -c [client,database]  update all for client and database"
 
     msginfo "###########################################"
     msginfo "   dir struct on host"
@@ -322,7 +283,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhc:r:s:RSU" opt; do
+while getopts "Ii:pnlhc:r:s:RSUd" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -352,6 +313,8 @@ while getopts "Ii:pnlhc:r:s:RSU" opt; do
     S)  stop_database
         ;;
     U)  uninstall_all
+        ;;
+    d)  install_docker
         ;;
    [?]) help
         exit 1
