@@ -175,11 +175,11 @@ function install_odoo
     cd odoo80
     chmod 777 -R sources/
     cd sources
-    git clone -b 8.0 https://github.com/${ADDONS}
-    git clone -b 8.0 https://github.com/${ARGENTINA}
-    git clone -b 8.0 https://github.com/${REPORTS}
-    git clone -b 8.0 https://github.com/${SERVERTOOLS}
-    git clone -b 8.0 https://github.com/${WEB}
+    git clone -b 8.0 --depth 1 https://github.com/${ADDONS}
+    git clone -b 8.0 --depth 1 https://github.com/${ARGENTINA}
+    git clone -b 8.0 --depth 1 https://github.com/${REPORTS}
+    git clone -b 8.0 --depth 1 https://github.com/${SERVERTOOLS}
+    git clone -b 8.0 --depth 1 https://github.com/${WEB}
     msgdone "Installing done"
 }
 ############################################################################################
