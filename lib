@@ -45,7 +45,7 @@ CLIENTS=($CLIENT1 $CLIENT2 $CLIENT3)
 AEROO="jobiols/aeroo-docs"
 POSTGRES="postgres:9.4"
 BACKUP="jobiols/backup"
-ODOO="adhoc/odoo-adhoc:8.0.4"
+ODOO="adhoc/odoo-adhoc:8.0"
 
 # repositorios
 ADDONS="jobiols/odoo-addons"
@@ -55,3 +55,4 @@ SERVERTOOLS="OCA/server-tools"
 WEB="OCA/web"
 
 IMAGES=($AEROO $POSTGRES $BACKUP $ODOO)
+REPOS=($ADDONS $ARGENTINA $REPORTS $SERVERTOOLS $WEB)
