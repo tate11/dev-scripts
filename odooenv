@@ -178,7 +178,7 @@ function install_odoo
     for ((i=0 ; i<${#REPOS[@]} ; i++))
     do
         msgrun "Pulling ${REPOS[i]}"
-	    if ! git clone -b 8.0 --depth 1 https://github.com/${IMAGES[i]} ; then
+	    if ! git clone -b 8.0 --depth 1 https://github.com/${REPOS[i]} ; then
  	        msgerror "fail pulling ${REPOS[i]}"
  	        exit 1
  	    fi
