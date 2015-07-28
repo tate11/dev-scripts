@@ -106,7 +106,6 @@ function run_database
 function developer_mode
 {
     run_aeroo
-
     msgrun "Running ${POSTGRES}"
     if ! docker run -d \
 	    -e POSTGRES_USER=odoo \
@@ -121,26 +120,6 @@ function developer_mode
  	    exit 1
 	fi
  	msgdone "${POSTGRES} up and running on developer mode"
-
-    CLIENT=$OPTARG
-    get_port
-
-    msgrun "Running ${ODOO} on client ${CLIENT}"
-    if ! docker run -d \
-        --link aeroo_docs:aeroo \
-        -p ${PORT}:8069 \
-        -v ~/odoo80/${CLIENT}/config:/etc/odoo \
-        -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
-        -v ~/odoo80/sources:/mnt/extra-addons \
-        --link db-odoo:db \
-        --restart=always \
-        --name ${CLIENT} \
-	    ${ODOO};
-	then
-        msgerror "running ${ODOO} without db filter"
- 	    exit 1
-	fi
- 	msgdone "${ODOO} up and running on client ${CLIENT}"
 }
 
 ############################################################################################
@@ -320,7 +299,7 @@ function help
     msginfo "  -l           list all clients in this server"
     msginfo "  -h           this help"
     msginfo "  -c [client,database]  update all for client and database"
-    msginfo "  -D [client]  run on developer mode (local db access)"
+    msginfo "  -D           run database and aeroo on developer mode (local db access)"
 
     msginfo "###########################################"
     msginfo "   dir struct on host"
