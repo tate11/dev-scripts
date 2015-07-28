@@ -100,6 +100,49 @@ function run_database
     run_postgres
 }
 
+
+############################################################################################
+#Levantar odoo en modo developer
+function developer_mode
+{
+    run_aeroo
+
+    msgrun "Running ${POSTGRES}"
+    if ! docker run -d \
+	    -e POSTGRES_USER=odoo \
+	    -e POSTGRES_PASSWORD=odoo \
+	    -v ~/postgresql:/var/lib/postgresql/data \
+	    -p 5432:5432 \
+	    --restart=always \
+	    --name db-odoo \
+	    ${POSTGRES} ;
+	then
+	    msgerror "starting ${POSTGRES}"
+ 	    exit 1
+	fi
+ 	msgdone "${POSTGRES} up and running on developer mode"
+
+    CLIENT=$OPTARG
+    get_port
+
+    msgrun "Running ${ODOO} on client ${CLIENT}"
+    if ! docker run -d \
+        --link aeroo_docs:aeroo \
+        -p ${PORT}:8069 \
+        -v ~/odoo80/${CLIENT}/config:/etc/odoo \
+        -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
+        -v ~/odoo80/sources:/mnt/extra-addons \
+        --link db-odoo:db \
+        --restart=always \
+        --name ${CLIENT} \
+	    ${ODOO};
+	then
+        msgerror "running ${ODOO} without db filter"
+ 	    exit 1
+	fi
+ 	msgdone "${ODOO} up and running on client ${CLIENT}"
+}
+
 ############################################################################################
 #Levantar odoo
 function run_odoo
@@ -277,6 +320,7 @@ function help
     msginfo "  -l           list all clients in this server"
     msginfo "  -h           this help"
     msginfo "  -c [client,database]  update all for client and database"
+    msginfo "  -D [client]  run on developer mode (local db access)"
 
     msginfo "###########################################"
     msginfo "   dir struct on host"
@@ -292,7 +336,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-while getopts "Ii:pnlhc:r:s:RSUd" opt; do
+while getopts "Ii:pnlhc:r:s:RSUdD" opt; do
   case $opt in
     I)  install_odoo
         ;;
@@ -324,6 +368,8 @@ while getopts "Ii:pnlhc:r:s:RSUd" opt; do
     U)  uninstall_all
         ;;
     d)  install_docker
+        ;;
+    D)  developer_mode
         ;;
    [?]) help
         exit 1
