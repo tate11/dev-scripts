@@ -50,9 +50,9 @@ ODOO="adhoc/odoo-adhoc:8.0"
 # repositorios
 ADDONS="jobiols/odoo-addons"
 ARGENTINA="jobiols/odoo-argentina"
-REPORTS="aeroo/aeroo_reports"
-SERVERTOOLS="OCA/server-tools"
-WEB="OCA/web"
+REPORTS="jobiols/aeroo_reports"
+SERVERTOOLS="jobiols/server-tools"
+WEB="jobiols/web"
 
 IMAGES=($AEROO $POSTGRES $BACKUP $ODOO)
 REPOS=($ADDONS $ARGENTINA $REPORTS $SERVERTOOLS $WEB)
