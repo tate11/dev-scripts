@@ -55,7 +55,7 @@ SERVERTOOLS="jobiols/server-tools"
 WEB="jobiols/web"
 ISO="jobiols/management-system"
 KNOWLEDGE="jobiols/knowledge"
-CURSO = "jobiols/curso"
+CURSO="jobiols/curso"
 
 IMAGES=($AEROO $POSTGRES $BACKUP $ODOO)
 REPOS=($ADDONS $ARGENTINA $REPORTS $SERVERTOOLS $WEB $ISO $KNOWLEDGE $CURSO)
