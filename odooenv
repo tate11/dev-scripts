@@ -193,7 +193,7 @@ function install_odoo
     msgrun "Installing odoo repos"
     cd
 # si no existe postgresql crear el directorio
-    if [ 'postgresql' does note exist ];
+    if [ 'postgresql' does not exist ];
     then
         mkdir postgresql
     fi
@@ -238,7 +238,7 @@ function install_odoo_client
         -v ~/odoo80/${CLIENT}/data_dir:/var/lib/odoo \
         --name ${CLIENT} \
         ${ODOO} -- --stop-after-init -s \
-        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web,/mnt/extra-addons/management-system,/mnt/extra-addons/curso,/mnt/extra-addons/knowledge
+        --addons-path=/mnt/extra-addons/odoo-argentina,/mnt/extra-addons/odoo-addons,/mnt/extra-addons/aeroo_reports,/mnt/extra-addons/server-tools,/mnt/extra-addons/web,/mnt/extra-addons/management-system,/mnt/extra-addons/str,/mnt/extra-addons/knowledge
     msgdone "Installing done"
 }
 
