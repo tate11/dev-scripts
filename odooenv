@@ -192,10 +192,12 @@ function install_odoo
 {
     msgrun "Installing odoo repos"
     cd
+# si no existe postgresql crear el directorio
     if [ 'postgresql' does note exist ];
     then
         mkdir postgresql
     fi
+# instalar fuentes
     mkdir -p odoo80/sources
     cd odoo80
     chmod 777 -R sources/
@@ -203,17 +205,11 @@ function install_odoo
     for ((i=0 ; i<${#REPOS[@]} ; i++))
     do
         msgrun "Pulling ${REPOS[i]}"
-	    if ! git clone -b 8.0 --depth 1 https://github.com/${REPOS[i]} ; then
+	    if ! git clone -b 8.0 --depth 5 https://github.com/${REPOS[i]} ; then
  	        msgerror "fail pulling ${REPOS[i]}"
  	        exit 1
  	    fi
     done
-
-#    git clone -b 8.0 --depth 1 https://github.com/${ADDONS}
-#    git clone -b 8.0 --depth 1 https://github.com/${ARGENTINA}
-#    git clone -b 8.0 --depth 1 https://github.com/${REPORTS}
-#    git clone -b 8.0 --depth 1 https://github.com/${SERVERTOOLS}
-#    git clone -b 8.0 --depth 1 https://github.com/${WEB}
     msgdone "Installing done"
 }
 ############################################################################################
