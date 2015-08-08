@@ -1,25 +1,41 @@
 #!/usr/bin/env python
 import argparse
 import subprocess
+import sys
 
-ODOOVER = '8.0'
-HOME = '~/odoo-test-' + ODOOVER + '/'
-PSQL = '~/postgresql-test/'
+ODOOVER = '7.0'
+HOME = '~/odoo-beta-' + ODOOVER + '/'
+PSQL = '~/postgresql-beta/'
 
-ODOO = 'jobiols/odoo-adhoc:' + ODOOVER
-AEROO = "jobiols/aeroo-docs"
-POSTGRES = "postgres:9.4"
-BACKUP = "jobiols/backup"
+if ODOOVER == '8.0':
+    # images
+    ODOO = 'jobiols/odoo-adhoc:' + ODOOVER
+    AEROO = "jobiols/aeroo-docs"
+    POSTGRES = "postgres:9.4"
+    BACKUP = "jobiols/backup"
+    IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
-IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-CLIENTS = [{'client': 'str', 'port': '8069'},
-           {'client': 'makeover', 'port': '8070'}]
+    # clients
+    CLIENTS = [{'client': 'str', 'port': '8069'},
+               {'client': 'makeover', 'port': '8070'}]
 
-REPOS = ['odoo-addons', 'odoo-argentina', 'aeroo_reports', 'server-tools', 'web', 'management-system', 'knowledge',
-         'str']
+    # repos
+    REPOS = ['odoo-addons', 'odoo-argentina', 'aeroo_reports', 'server-tools', 'web',
+             'management-system', 'knowledge', 'str']
+elif ODOOVER == '7.0':
+    # images
+    ODOO = 'jobiols/odoo-adhoc:' + ODOOVER
+    POSTGRES = "postgres:9.4"
+    BACKUP = "jobiols/backup"
+    IMAGES = [ODOO, POSTGRES, BACKUP]
 
+    # clients
+    CLIENTS = [{'client': 'makeover', 'port': '8069'},
+               {'client': 'pirulo', 'port': '8070'}]
 
-# ###############################
+    # repos
+    REPOS = ['odoo-addons', 'localizacion', 'str']
+
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
@@ -43,12 +59,8 @@ def yellow_light(string):
     return YELLOW_LIGHT + string + CLEAR
 
 
-###################################
-
-
-
 def msgrun(msg):
-    print green(msg)
+    print yellow(msg)
 
 
 def msgdone(msg):
@@ -57,10 +69,11 @@ def msgdone(msg):
 
 def msgerr(msg):
     print red(msg)
+    sys.exit()
 
 
 def msginf(msg):
-    print yellow(msg)
+    print yellow_light(msg)
 
 
 def client_port(client):
@@ -68,11 +81,13 @@ def client_port(client):
     for cli in CLIENTS:
         if cli['client'] == client:
             port = cli['port']
+    if port == '':
+        msgerr('no ' + client + ' client in this environment')
     return port
 
 
 def uninstall_environment():
-    msgrun('Uninstalling odoo environment')
+    msgrun('Uninstalling odoo environment ' + ODOOVER)
     subprocess.call(['sudo rm -r ' + HOME], shell=True)
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
         subprocess.call(['sudo rm -r ' + PSQL], shell=True)
@@ -80,7 +95,7 @@ def uninstall_environment():
 
 
 def install_environment():
-    msgrun('Installing odoo environment')
+    msgrun('Installing odoo environment ' + ODOOVER)
 
     # if not exist psql create it
     if subprocess.call(['ls ' + PSQL], shell=True):
@@ -88,19 +103,15 @@ def install_environment():
 
     # install sources
     subprocess.call(['mkdir -p ' + HOME + 'sources'], shell=True)
-
-
     # subprocess.call(['chmod 777 -R '+HOME+'/sources'], shell=True)
-
     for repo in REPOS:
         msginf('pulling repo ' + repo)
         if subprocess.call('git clone -b ' + ODOOVER +
-                                   ' --depth 1 http://github.com/jobiols/' + repo + ' ' + HOME + 'sources/' + repo,
-                           shell=True):
+                                   ' --depth 1 http://github.com/jobiols/' + repo + ' ' + HOME +
+                                   'sources/' + repo, shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
-            return True
 
-    msgdone('Install Done')
+    msgdone('Install Done ' + ODOOVER)
     return True
 
 
@@ -127,48 +138,59 @@ def install_client():
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             --name ' + cli + ' ' + \
             ODOO + ' -- --stop-after-init -s \
-            --addons-path=' + addon_path, shell=True)
+            --addons-path=' + addon_path + \
+            ' --db-filter=' + cli + '_.*'
+                                    ' --db-user=odoo'
+            , shell=True)
+
     msgdone('Installing done')
     return True
 
 
 def run_aeroo_image():
-    msgrun("Running aeroo and postgres images")
-    subprocess.call(
-        'sudo docker run -d \
-	    -p 127.0.0.1:8989:8989 \
-	    --name="aeroo_docs" \
-    	--restart=always ' + \
-        AEROO, shell=True)
+    if subprocess.call(
+                    'sudo docker run -d \
+                    -p 127.0.0.1:8989:8989 \
+                    --name="aeroo_docs" \
+                    --restart=always ' + \
+                    AEROO, shell=True):
+        msgerr('Fail running environment')
+        return False
     return True
 
 
 def run_environment():
-    run_aeroo_image()
+    msgrun('Running environment images')
+    if ODOOVER == '8.0':
+        run_aeroo_image()
 
-    subprocess.call(
-        'sudo docker run -d \
-	    -e POSTGRES_USER=odoo \
-	    -e POSTGRES_PASSWORD=odoo \
-	    -v ~/postgresql:/var/lib/postgresql/data \
-	    --restart=always \
-	    --name db-odoo ' + \
-        POSTGRES, shell=True)
-    msgdone("Images up and running")
+    if subprocess.call(
+                                    'sudo docker run -d \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    --restart=always \
+                    --name db-odoo ' + \
+                    POSTGRES, shell=True):
+        msgerr('Fail running environment')
+        return False
+    else:
+        msgdone("Environment up and running")
 
     return True
 
 
 def run_developer():
-    msgrun('Running developer mode')
-    run_aeroo_image()
+    msgrun('Running environment in developer mode')
+    if ODOOVER == '8.0':
+        run_aeroo_image()
 
     subprocess.call(
         'sudo docker run -d \
-	    -e POSTGRES_USER=odoo \
         -p 5432:5432 \
+	    -e POSTGRES_USER=odoo \
 	    -e POSTGRES_PASSWORD=odoo \
-	    -v ~/postgresql:/var/lib/postgresql/data \
+	    -v ' + PSQL + ':/var/lib/postgresql/data \
 	    --restart=always \
 	    --name db-odoo ' + \
         POSTGRES, shell=True)
@@ -178,18 +200,30 @@ def run_developer():
 
 def run_client():
     for cli in args.client:
-        msgrun('starting ' + cli)
-        subprocess.call(
-            'sudo docker run -d \
-            --link aeroo_docs:aeroo \
-            -p ' + client_port(cli) + ':8069 \
-            -v ~/odoo80/' + cli + '/config:/etc/odoo \
-            -v ~/odoo80/' + cli + '/data_dir:/var/lib/odoo \
-            -v ~/odoo80/sources:/mnt/extra-addons \
-            --link db-odoo:db \
-            --restart=always \
-            --name ' + cli + ' ' + \
-            ODOO + ' -- --db-filter= ' + cli, shell=True)
+        msgrun('Running image for client ' + cli)
+        if ODOOVER == '8.0':
+            subprocess.call(
+                'sudo docker run -d \
+                --link aeroo_docs:aeroo \
+                -p ' + client_port(cli) + ':8069 \
+                -v ' + HOME + cli + '/config:/etc/odoo \
+                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+                -v ' + HOME + '/sources:/mnt/extra-addons \
+                --link db-odoo:db \
+                --restart=always \
+                --name ' + cli + ' ' + \
+                ODOO + ' -- --db-filter=' + cli + '_.*', shell=True)
+        else:
+            subprocess.call(
+                'sudo docker run -d \
+                -p ' + client_port(cli) + ':8069 \
+                -v ' + HOME + cli + '/config:/etc/odoo \
+                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+                -v ' + HOME + 'sources:/mnt/extra-addons \
+                --link db-odoo:db \
+                --restart=always \
+                --name ' + cli + ' ' + \
+                ODOO + ' -- --db-filter=' + cli + '_.*', shell=True)
 
     return True
 
@@ -197,11 +231,11 @@ def run_client():
 def stop_client():
     msgrun('stopping clients ' + ', '.join(args.client))
     for cli in args.client:
-        msgrun('stop image for client ' + cli)
+        msginf('stop image for client ' + cli)
         subprocess.call('sudo docker stop ' + cli, shell=True)
         subprocess.call('sudo docker rm ' + cli, shell=True)
 
-    msgdone('all client stopped')
+    msgdone('all clients stopped')
 
     return True
 
@@ -209,12 +243,21 @@ def stop_client():
 def stop_environment():
     msgrun('Stopping environment')
 
-    for name in ['db-odoo', 'aeroo_docs']:
+    if ODOOVER == '8.0':
+        images = ['db-odoo', 'aeroo_docs']
+    else:
+        images = ['db-odoo']
+
+    for name in images:
         msgrun
         'Stoping image ' + name
-        subprocess.call('sudo docker stop ' + name, shell=True)
-        subprocess.call('sudo docker rm ' + name, shell=True)
-
+        if subprocess.call('sudo docker stop ' + name, shell=True):
+            msgerr('Fail stopping ' + name)
+            return False
+        if subprocess.call('sudo docker rm ' + name, shell=True):
+            msgerr('Fail removing ' + name)
+            return False
+    msgdone('Environmen stopped')
     return True
 
 
@@ -222,14 +265,17 @@ def pull_all_images():
     msgrun('Pulling all images for ' + ODOOVER)
 
     for image in IMAGES:
-        msgrun('Pulling ' + image)
-        subprocess.call('sudo docker pull ' + image, shell=True)
+        msginf('Pulling ' + image)
+        if subprocess.call('sudo docker pull ' + image, shell=True):
+            msgerr('Fail pulling image ' + image + ' - Aborting.')
+            return False
 
+    msgdone('All images ok ' + ODOOVER)
     return True
 
 
 def list_data():
-    msgrun('Data for this environment')
+    msgrun('Data for this environment - Odoo ' + ODOOVER)
     msgrun('Repos ' + 20 * '-')
     for rep in REPOS:
         msgrun('jobiols/' + rep)
@@ -243,10 +289,14 @@ def no_ip_install():
     msgrun('Installing no-ip client')
     subprocess.call('apt-get install make', shell=True)
     subprocess.call('apt-get -y install gcc', shell=True)
-
+    subprocess.call('wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
+                    shell=True)
+    subprocess.call('tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
+    subprocess.call('make install', shell=True)
     """
         cd /usr/local/src/
         wget http://www.noip.com/client/linux/noip-duc-linux.tar.gz
+
         tar xf noip-duc-linux.tar.gz
         cd noip-2.1.9-1/
         make install
@@ -276,18 +326,17 @@ def docker_install():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Odoo environment setup.')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v' + ODOOVER)
     parser.add_argument('-U', '--uninstall-env', action='store_true',
-                        help='Uninstall and erase all files from environment including databases. \
-                        WARNING all database files will be erased.')
-    parser.add_argument('-I', '--install-env', action='store_true', help="Install all files and odoo repos needed")
+                        help='Uninstall and erase all files from environment including \
+                              databases. WARNING all database files will be erased.')
+    parser.add_argument('-I', '--install-env', action='store_true',
+                        help="Install all files and odoo repos needed")
     parser.add_argument('-i', '--install-cli', action='store_true',
                         help="Install all clients, required at least one -c option")
-
     parser.add_argument('-R', '--run-env', action='store_true', help="Run database and aeroo images.")
     parser.add_argument('-D', '--run-dev', action='store_true',
                         help="Run database and aeroo images for developer mode (local db access).")
-
     parser.add_argument('-r', '--run-cli', action='store_true', help="Run client odoo images, requieres -c option.")
     parser.add_argument('-S', '--stop-env', action='store_true', help="Stop database and aeroo images.")
     parser.add_argument('-s', '--stop-cli', action='store_true', help="Stop client images, requieres -c option.")
@@ -302,22 +351,26 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    if args.client != None:
+        for cli in args.client:
+            client_port(cli)
+
     if args.uninstall_env:
         uninstall_environment()
     if args.install_env:
         install_environment()
     if args.install_cli:
         install_client()
+    if args.stop_env:
+        stop_environment()
     if args.run_env:
         run_environment()
     if args.run_dev:
         run_developer()
-    if args.run_cli:
-        run_client()
-    if args.stop_env:
-        stop_environment()
     if args.stop_cli:
         stop_client()
+    if args.run_cli:
+        run_client()
     if args.pull_all:
         pull_all_images()
     if args.list:
