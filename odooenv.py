@@ -228,7 +228,9 @@ def run_client():
                 --link db-odoo:db \
                 --restart=always \
                 --name ' + cli + ' ' + \
-                ODOO + ' -- --db-filter=' + cli + '_.*', shell=True)
+                ODOO + ' -- --db-filter=' + cli + '_.*' +
+                ' --db_user=odoo --db_password=odoo --db_host=db'
+                , shell=True)
 
     return True
 
