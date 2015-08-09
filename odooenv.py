@@ -103,12 +103,12 @@ def install_environment():
 
     # install sources
     subprocess.call(['mkdir -p ' + HOME + 'sources'], shell=True)
-    # subprocess.call(['chmod 777 -R '+HOME+'/sources'], shell=True)
+
     for repo in REPOS:
         msginf('pulling repo ' + repo)
         if subprocess.call('git clone -b ' + ODOOVER +
-                                   ' --depth 1 http://github.com/jobiols/' + repo + ' ' + HOME +
-                                   'sources/' + repo, shell=True):
+                                   ' --depth 1 http://github.com/jobiols/' + repo + ' '
+                                   + HOME + 'sources/' + repo, shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
     msgdone('Install Done ' + ODOOVER)
@@ -117,6 +117,7 @@ def install_environment():
 
 def install_client():
     msgrun('Install clients')
+
     # Calculate addon_path
     path = '/mnt/extra-addons/'
     addon_path = path + REPOS[0]
@@ -125,6 +126,7 @@ def install_client():
 
     for cli in args.client:
         msgrun('Installing Odoo image for client ' + cli)
+
         # Creating directory's for client
         subprocess.call('mkdir -p ' + HOME + cli + '/config', shell='True')
         subprocess.call('mkdir -p ' + HOME + cli + '/data_dir', shell='True')
@@ -140,7 +142,6 @@ def install_client():
             ODOO + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + \
             ' --db-filter=' + cli + '_.*'
-                                    ' --db-user=odoo'
             , shell=True)
 
     msgdone('Installing done')
@@ -154,7 +155,7 @@ def run_aeroo_image():
                     --name="aeroo_docs" \
                     --restart=always ' + \
                     AEROO, shell=True):
-        msgerr('Fail running environment')
+        msgerr('Fail running environment.')
         return False
     return True
 
@@ -173,7 +174,6 @@ def run_environment():
                     --name db-odoo ' + \
                     POSTGRES, shell=True):
         msgerr('Fail running environment')
-        return False
     else:
         msgdone("Environment up and running")
 
@@ -181,19 +181,23 @@ def run_environment():
 
 
 def run_developer():
-    msgrun('Running environment in developer mode')
+    msgrun('Running environment in developer mode.')
+
     if ODOOVER == '8.0':
         run_aeroo_image()
 
-    subprocess.call(
-        'sudo docker run -d \
-        -p 5432:5432 \
-	    -e POSTGRES_USER=odoo \
-	    -e POSTGRES_PASSWORD=odoo \
-	    -v ' + PSQL + ':/var/lib/postgresql/data \
+    if subprocess.call(
+                                    'sudo docker run -d \
+                                    -p 5432:5432 \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
 	    --restart=always \
 	    --name db-odoo ' + \
-        POSTGRES, shell=True)
+                    POSTGRES, shell=True):
+        msgerr('Fail running environment.')
+    else:
+        msgdone('Environment up and running.')
 
     return True
 
@@ -201,6 +205,7 @@ def run_developer():
 def run_client():
     for cli in args.client:
         msgrun('Running image for client ' + cli)
+
         if ODOOVER == '8.0':
             subprocess.call(
                 'sudo docker run -d \
@@ -249,15 +254,15 @@ def stop_environment():
         images = ['db-odoo']
 
     for name in images:
-        msgrun
-        'Stoping image ' + name
+        msgrun('Stopping image ' + name)
         if subprocess.call('sudo docker stop ' + name, shell=True):
             msgerr('Fail stopping ' + name)
             return False
         if subprocess.call('sudo docker rm ' + name, shell=True):
             msgerr('Fail removing ' + name)
             return False
-    msgdone('Environmen stopped')
+    msgdone('Environment stopped')
+
     return True
 
 
@@ -268,20 +273,23 @@ def pull_all_images():
         msginf('Pulling ' + image)
         if subprocess.call('sudo docker pull ' + image, shell=True):
             msgerr('Fail pulling image ' + image + ' - Aborting.')
-            return False
 
     msgdone('All images ok ' + ODOOVER)
+
     return True
 
 
 def list_data():
     msgrun('Data for this environment - Odoo ' + ODOOVER)
+
     msgrun('Repos ' + 20 * '-')
     for rep in REPOS:
         msgrun('jobiols/' + rep)
+
     msgrun('Clients ' + 18 * '-')
     for cli in CLIENTS:
         msgrun(cli['port'] + ' ' + cli['client'])
+
     return True
 
 
@@ -351,6 +359,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+#   Check if client is valid
     if args.client != None:
         for cli in args.client:
             client_port(cli)
