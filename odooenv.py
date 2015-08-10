@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 ODOOVER = '8.0.1'
-HOME = '~/odoo-beta-' + ODOOVER + '/'
+HOME = '~/odoo-' + ODOOVER + '/'
 PSQL = '~/postgresql-beta/'
 
 if ODOOVER == '8.0':
@@ -81,8 +81,8 @@ elif ODOOVER == '8.0.1':
                {'client': 'makeover', 'port': '8070'}]
 
     # repos
-    REPOS = [{'repo': 'adhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-             {'repo': 'adhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+    REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+             {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
              {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
              {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
              {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
@@ -174,7 +174,7 @@ def install_environment():
     subprocess.call(['mkdir -p ' + HOME + 'sources'], shell=True)
 
     for repo in REPOS:
-        msginf('pulling repo ' + repo)
+        msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('git clone -b ' + repo['branch'] +
                                    ' --depth 1 http://github.com/' + repo_from_dict(repo) + ' '
                                    + HOME + 'sources/' + repo['dir'], shell=True):
@@ -197,8 +197,8 @@ def install_client():
         msgrun('Installing Odoo image for client ' + cli)
 
         # Creating directory's for client
-        subprocess.call('mkdir -p ' + HOME + cli + '/config', shell='True')
-        subprocess.call('mkdir -p ' + HOME + cli + '/data_dir', shell='True')
+        subprocess.call('mkdir -p ' + HOME + cli + '/config', shell=True)
+        subprocess.call('mkdir -p ' + HOME + cli + '/data_dir', shell=True)
         subprocess.call(['chmod 777 -R ' + HOME + cli], shell=True)
 
         # creating config file for client
@@ -428,10 +428,15 @@ if __name__ == '__main__':
                         help="Client name. You can specify more than one as \
                         -c alexor -c danone -c tenaris ... etc. Requiered -i option")
     parser.add_argument('-n', '--no-ip-install', action='store_true', help="Install no-ip on this server")
-    parser.add_argument('-d', '--docker-install', action='store_true', help="Install docker on this server")
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s 7.0')
+    parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
+    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + ODOOVER)
+
+    parser.add_argument('-u', '--update', dest='module', action='append', help="Update database requieres -d option")
+    parser.add_argument('-d', '--database', dest='database', action='store_true', help="Database to update")
+
 
     args = parser.parse_args()
+    print args
 
     #   Check if client is valid
     if args.client != None:
