@@ -3,16 +3,24 @@ import argparse
 import subprocess
 import sys
 
-ODOOVER = '7.0'
+ODOOVER = '8.0.1'
 HOME = '~/odoo-beta-' + ODOOVER + '/'
 PSQL = '~/postgresql-beta/'
 
 if ODOOVER == '8.0':
     # images
-    ODOO = 'jobiols/odoo-adhoc:' + ODOOVER
-    AEROO = "jobiols/aeroo-docs"
-    POSTGRES = "postgres:9.4"
-    BACKUP = "jobiols/backup"
+    ODOO = {'repo': 'jobiols',
+            'dir': 'odoo-adhoc',
+            'ver': '8.0'}
+    AEROO = {'repo': 'jobiols',
+             'dir': 'aeroo-docs',
+             'ver': ''}
+    POSTGRES = {'repo': 'postgres',
+                'dir': '',
+                'ver': '9.4'}
+    BACKUP = {'repo': 'jobiols',
+              'dir': 'backup',
+              'ver': ''}
     IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
     # clients
@@ -20,13 +28,26 @@ if ODOOVER == '8.0':
                {'client': 'makeover', 'port': '8070'}]
 
     # repos
-    REPOS = ['odoo-addons', 'odoo-argentina', 'aeroo_reports', 'server-tools', 'web',
-             'management-system', 'knowledge', 'str']
+    REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+
 elif ODOOVER == '7.0':
     # images
-    ODOO = 'jobiols/odoo-adhoc:' + ODOOVER
-    POSTGRES = "postgres:9.4"
-    BACKUP = "jobiols/backup"
+    ODOO = {'repo': 'jobiols',
+            'dir': 'odoo-adhoc',
+            'ver': '7.0'}
+    POSTGRES = {'repo': 'postgres',
+                'dir': '',
+                'ver': '9.4'}
+    BACKUP = {'repo': 'jobiols',
+              'dir': 'backup',
+              'ver': ''}
     IMAGES = [ODOO, POSTGRES, BACKUP]
 
     # clients
@@ -34,13 +55,61 @@ elif ODOOVER == '7.0':
                {'client': 'pirulo', 'port': '8070'}]
 
     # repos
-    REPOS = ['odoo-addons', 'localizacion', 'str']
+    REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+             {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+             {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
+             ]
+
+elif ODOOVER == '8.0.1':
+    # images
+    ODOO = {'repo': 'adhoc',
+            'dir': 'odoo-adhoc',
+            'ver': '8.0'}
+    AEROO = {'repo': 'jobiols',
+             'dir': 'aeroo-docs',
+             'ver': ''}
+    POSTGRES = {'repo': 'postgres',
+                'dir': '',
+                'ver': '9.4'}
+    BACKUP = {'repo': 'jobiols',
+              'dir': 'backup',
+              'ver': ''}
+    IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
+
+    # clients
+    CLIENTS = [{'client': 'str', 'port': '8069'},
+               {'client': 'makeover', 'port': '8070'}]
+
+    # repos
+    REPOS = [{'repo': 'adhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+             {'repo': 'adhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+             {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
+
+
+def image_from_dict(dict):
+    ret = ''
+    ret += dict['repo']
+    if dict['dir'] != '':
+        ret += '/'
+        ret += dict['dir']
+    if dict['ver'] != '':
+        ret += ':' + dict['ver']
+    return ret
+
+
+def repo_from_dict(dict):
+    return dict['repo'] + '/' + dict['dir']
 
 
 def green(string):
@@ -106,9 +175,9 @@ def install_environment():
 
     for repo in REPOS:
         msginf('pulling repo ' + repo)
-        if subprocess.call('git clone -b ' + ODOOVER +
-                                   ' --depth 1 http://github.com/jobiols/' + repo + ' '
-                                   + HOME + 'sources/' + repo, shell=True):
+        if subprocess.call('git clone -b ' + repo['branch'] +
+                                   ' --depth 1 http://github.com/' + repo_from_dict(repo) + ' '
+                                   + HOME + 'sources/' + repo['dir'], shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
     msgdone('Install Done ' + ODOOVER)
@@ -120,9 +189,9 @@ def install_client():
 
     # Calculate addon_path
     path = '/mnt/extra-addons/'
-    addon_path = path + REPOS[0]
+    addon_path = path + REPOS[0]['dir']
     for rep in REPOS[1:]:
-        addon_path += ',' + path + rep
+        addon_path += ',' + path + rep['dir']
 
     for cli in args.client:
         msgrun('Installing Odoo image for client ' + cli)
@@ -139,7 +208,7 @@ def install_client():
             -v ' + HOME + 'sources:/mnt/extra-addons \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             --name ' + cli + ' ' + \
-            ODOO + ' -- --stop-after-init -s \
+            image_from_dict(ODOO) + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + \
             ' --db-filter=' + cli + '_.*'
             , shell=True)
@@ -154,7 +223,7 @@ def run_aeroo_image():
                     -p 127.0.0.1:8989:8989 \
                     --name="aeroo_docs" \
                     --restart=always ' + \
-                    AEROO, shell=True):
+                    image_from_dict(AEROO), shell=True):
         msgerr('Fail running environment.')
         return False
     return True
@@ -172,7 +241,7 @@ def run_environment():
                                     -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
-                    POSTGRES, shell=True):
+                    image_from_dict(POSTGRES), shell=True):
         msgerr('Fail running environment')
     else:
         msgdone("Environment up and running")
@@ -194,7 +263,7 @@ def run_developer():
                                     -v ' + PSQL + ':/var/lib/postgresql/data \
 	    --restart=always \
 	    --name db-odoo ' + \
-                    POSTGRES, shell=True):
+                    image_from_dict(POSTGRES), shell=True):
         msgerr('Fail running environment.')
     else:
         msgdone('Environment up and running.')
@@ -217,7 +286,7 @@ def run_client():
                 --link db-odoo:db \
                 --restart=always \
                 --name ' + cli + ' ' + \
-                ODOO + ' -- --db-filter=' + cli + '_.*', shell=True)
+                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*', shell=True)
         else:
             subprocess.call(
                 'sudo docker run -d \
@@ -228,7 +297,7 @@ def run_client():
                 --link db-odoo:db \
                 --restart=always \
                 --name ' + cli + ' ' + \
-                ODOO + ' -- --db-filter=' + cli + '_.*' +
+                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
 
@@ -272,9 +341,9 @@ def pull_all_images():
     msgrun('Pulling all images for ' + ODOOVER)
 
     for image in IMAGES:
-        msginf('Pulling ' + image)
-        if subprocess.call('sudo docker pull ' + image, shell=True):
-            msgerr('Fail pulling image ' + image + ' - Aborting.')
+        msginf('Pulling ' + image_from_dict(image))
+        if subprocess.call('sudo docker pull ' + image_from_dict(image), shell=True):
+            msgerr('Fail pulling image ' + image_from_dict(image) + ' - Aborting.')
 
     msgdone('All images ok ' + ODOOVER)
 
@@ -283,10 +352,13 @@ def pull_all_images():
 
 def list_data():
     msgrun('Data for this environment - Odoo ' + ODOOVER)
+    msgrun('Images ' + 19 * '-')
+    for img in IMAGES:
+        msgdone(image_from_dict(img))
 
     msgrun('Repos ' + 20 * '-')
     for rep in REPOS:
-        msgrun('jobiols/' + rep)
+        msgdone(repo_from_dict(rep) + '  b ' + rep['branch'])
 
     msgrun('Clients ' + 18 * '-')
     for cli in CLIENTS:
@@ -361,7 +433,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-#   Check if client is valid
+    #   Check if client is valid
     if args.client != None:
         for cli in args.client:
             client_port(cli)
