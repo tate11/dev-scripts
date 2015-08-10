@@ -431,7 +431,7 @@ if __name__ == '__main__':
     parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + ODOOVER)
 
-    parser.add_argument('-u', '--update-database', help="Update database requires -d and -m option")
+    parser.add_argument('-u', '--update-database', action='store_true',help="Update database requires -d and -m option")
     parser.add_argument('-d', '--database', dest='database', action='store' , nargs=1,help="Database to update")
     parser.add_argument('-m', '--module', dest='module', action='append', nargs=1, help="Module to update or all, you can specify multiple -m options")
 
