@@ -58,7 +58,7 @@ elif ODOOVER == '7.0':
     REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-             ]
+    ]
 
 elif ODOOVER == '8.0.1':
     # images
@@ -181,6 +181,12 @@ def install_environment():
             msgerr('Fail installing environment, uninstall and try again.')
 
     msgdone('Install Done ' + ODOOVER)
+    return True
+
+
+def update_database():
+    msgrun('Performing update database on ' + args.database + ' with module ' + args.module[0])
+
     return True
 
 
@@ -431,14 +437,16 @@ if __name__ == '__main__':
     parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
     parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + ODOOVER)
 
-    parser.add_argument('-u', '--update-database', action='store_true',help="Update database requires -d and -m option")
-    parser.add_argument('-d', '--database', dest='database', action='store' , nargs=1,help="Database to update")
-    parser.add_argument('-m', '--module', dest='module', action='append', nargs=1, help="Module to update or all, you can specify multiple -m options")
+    parser.add_argument('-u', '--update-database', action='store_true',
+                        help="Update database requires -d and -m option")
+    parser.add_argument('-d', '--database', dest='database', action='store', nargs=1, help="Database to update")
+    parser.add_argument('-m', '--module', dest='module', action='append', nargs=1,
+                        help="Module to update or all, you can specify multiple -m options")
 
     args = parser.parse_args()
     print args
 
-    #   Check if client is valid
+    # Check if client is valid
     if args.client != None:
         for cli in args.client:
             client_port(cli)
@@ -467,3 +475,6 @@ if __name__ == '__main__':
         no_ip_install()
     if args.docker_install:
         docker_install()
+    if args.update_database:
+        update_database()
+
