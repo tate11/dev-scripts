@@ -190,7 +190,7 @@ def update_database():
         print d
 
     for m in args.module:
-        print m
+        print m[0]
 
     return True
 
