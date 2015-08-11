@@ -145,10 +145,10 @@ def msginf(msg):
     print yellow_light(msg)
 
 
-def client_port(client):
+def client_port(cli):
     port = ''
     for client in CLIENTS:
-        if client['client'] == client:
+        if client['client'] == cli:
             port = client['port']
     if port == '':
         msgerr('no ' + client + ' client in this environment')
@@ -185,38 +185,36 @@ def install_environment():
 
 
 def update_database():
-    msgrun('Performing update database on ' + args.database[0] + ' with module ' + ', '.join(args.module))
-    for d in args.database:
-        print d
+    db = args.database[0]
+    mods = args.module[0]
+    cli = args.client[0]
+    msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
 
-    for m in args.module:
-        print m[0]
-
-        if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
-            subprocess.call(
-                'sudo docker run --rm -it \
-                -p ' + client_port(cli) + ':8069 \
-                -v ' + HOME + cli + '/config:/etc/odoo \
-                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-                -v ' + HOME + '/sources:/mnt/extra-addons \
-                --link db-odoo:db \
-                --name ' + cli + '-update ' + \
-                image_from_dict(ODOO) +
-                ' --stop-after-init -d ' + args.database + ' -u ' + args.module
-                , shell=True)
-        elif ODOOVER == '7.0':
-            subprocess.call(
-                'sudo docker run --rm -it \
-                -p ' + client_port(cli) + ':8069 \
-                -v ' + HOME + cli + '/config:/etc/odoo \
-                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-                -v ' + HOME + 'sources:/mnt/extra-addons \
-                --link db-odoo:db \
-                --name ' + cli + '-update ' + \
-                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
-                ' --db_user=odoo --db_password=odoo --db_host=db ' +
-                ' --stop-after-init -d ' + args.database + ' -u ' + args.module
-                , shell=True)
+    if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
+        subprocess.call(
+            'sudo docker run --rm -it \
+            -p ' + client_port(cli) + ':8069 \
+            -v ' + HOME + cli + '/config:/etc/odoo \
+            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+            -v ' + HOME + '/sources:/mnt/extra-addons \
+            --link db-odoo:db \
+            --name ' + cli + '-update ' + \
+            image_from_dict(ODOO) + ' -- '
+                                    ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
+            , shell=True)
+    elif ODOOVER == '7.0':
+        subprocess.call(
+            'sudo docker run --rm -it \
+            -p ' + client_port(cli) + ':8069 \
+            -v ' + HOME + cli + '/config:/etc/odoo \
+            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+            -v ' + HOME + 'sources:/mnt/extra-addons \
+            --link db-odoo:db \
+            --name ' + cli + '-update ' + \
+            image_from_dict(ODOO) + ' -- '
+                                    ' --db_user=odoo --db_password=odoo --db_host=db ' +
+            ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
+            , shell=True)
 
     return True
 
@@ -268,7 +266,6 @@ def run_aeroo_image():
 
 def run_environment():
     msgrun('Running environment images')
-    print ODOOVER
     if ODOOVER == '8.0.1':
         run_aeroo_image()
 
@@ -356,20 +353,18 @@ def stop_client():
 
 def stop_environment():
     msgrun('Stopping environment')
-
-    if ODOOVER == '8.0':
+    if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
         images = ['db-odoo', 'aeroo_docs']
     else:
         images = ['db-odoo']
 
     for name in images:
         msgrun('Stopping image ' + name)
-        if subprocess.call('sudo docker stop ' + name, shell=True):
-            msgerr('Fail stopping ' + name)
-            return False
-        if subprocess.call('sudo docker rm ' + name, shell=True):
-            msgerr('Fail removing ' + name)
-            return False
+        r1 = subprocess.call('sudo docker stop ' + name, shell=True)
+        r2 = subprocess.call('sudo docker rm ' + name, shell=True)
+    if r1 + r2:
+        msgerr('Fail removing ' + name)
+        return False
     msgdone('Environment stopped')
 
     return True
