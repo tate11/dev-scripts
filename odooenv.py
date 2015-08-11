@@ -3,9 +3,9 @@ import argparse
 import subprocess
 import sys
 
-ODOOVER = '8.0.1'
+ODOOVER = '7.0'
 HOME = '~/odoo-' + ODOOVER + '/'
-PSQL = '~/postgresql-beta/'
+PSQL = '~/postgresql-' + ODOOVER + '/'
 
 if ODOOVER == '8.0':
     # images
@@ -335,6 +335,7 @@ def run_client():
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
+        msgdone('Client ' + cli + 'up and running')
 
     return True
 
