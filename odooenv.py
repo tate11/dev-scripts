@@ -186,10 +186,10 @@ def install_environment():
 
 def update_database():
 #    msgrun('Performing update database on ' + args.database[0] + ' with module ' + args.module[0]).
-    for d in args.database
+    for d in args.database:
         print d
 
-    for m in args.module
+    for m in args.module:
         print m
 
     return True
