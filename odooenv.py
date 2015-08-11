@@ -58,7 +58,7 @@ elif ODOOVER == '7.0':
     REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-    ]
+            ]
 
 elif ODOOVER == '8.0.1':
     # images
@@ -97,14 +97,14 @@ YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
 
-def image_from_dict(dict):
+def image_from_dict(image):
     ret = ''
-    ret += dict['repo']
-    if dict['dir'] != '':
+    ret += image['repo']
+    if image['dir'] != '':
         ret += '/'
-        ret += dict['dir']
-    if dict['ver'] != '':
-        ret += ':' + dict['ver']
+        ret += image['dir']
+    if image['ver'] != '':
+        ret += ':' + image['ver']
     return ret
 
 
@@ -147,9 +147,9 @@ def msginf(msg):
 
 def client_port(client):
     port = ''
-    for cli in CLIENTS:
-        if cli['client'] == client:
-            port = cli['port']
+    for client in CLIENTS:
+        if client['client'] == client:
+            port = client['port']
     if port == '':
         msgerr('no ' + client + ' client in this environment')
     return port
@@ -191,6 +191,32 @@ def update_database():
 
     for m in args.module:
         print m[0]
+
+        if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
+            subprocess.call(
+                'sudo docker run --rm -it \
+                -p ' + client_port(cli) + ':8069 \
+                -v ' + HOME + cli + '/config:/etc/odoo \
+                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+                -v ' + HOME + '/sources:/mnt/extra-addons \
+                --link db-odoo:db \
+                --name ' + cli + '-update ' + \
+                image_from_dict(ODOO) +
+                ' --stop-after-init -d '+args.database+ ' -u '+args.module
+                , shell=True)
+        elif ODOOVER == '7.0':
+            subprocess.call(
+                'sudo docker run --rm -it \
+                -p ' + client_port(cli) + ':8069 \
+                -v ' + HOME + cli + '/config:/etc/odoo \
+                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+                -v ' + HOME + 'sources:/mnt/extra-addons \
+                --link db-odoo:db \
+                --name ' + cli + '-update ' + \
+                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
+                ' --db_user=odoo --db_password=odoo --db_host=db '+
+                ' --stop-after-init -d '+args.database+ ' -u '+args.module
+                , shell=True)
 
     return True
 
@@ -372,8 +398,8 @@ def list_data():
         msgdone(repo_from_dict(rep) + '  b ' + rep['branch'])
 
     msgrun('Clients ' + 18 * '-')
-    for cli in CLIENTS:
-        msgrun(cli['port'] + ' ' + cli['client'])
+    for client in CLIENTS:
+        msgrun(client['port'] + ' ' + client['client'])
 
     return True
 
