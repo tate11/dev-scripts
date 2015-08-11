@@ -268,14 +268,16 @@ def run_aeroo_image():
 
 def run_environment():
     msgrun('Running environment images')
-    if ODOOVER == '8.0':
+    print ODOOVER
+    if ODOOVER == '8.0.1':
+        print "runnnnnnnnnnnnnnnnn"
         run_aeroo_image()
 
     if subprocess.call(
-                                    'sudo docker run -d \
-                                    -e POSTGRES_USER=odoo \
-                                    -e POSTGRES_PASSWORD=odoo \
-                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    'sudo docker run -d \
+                    -e POSTGRES_USER=odoo \
+                    -e POSTGRES_PASSWORD=odoo \
+                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -475,7 +477,7 @@ if __name__ == '__main__':
                         help="Module to update or all, you can specify multiple -m options")
 
     args = parser.parse_args()
-    print args
+
 
     # Check if client is valid
     if args.client != None:
