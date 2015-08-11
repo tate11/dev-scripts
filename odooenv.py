@@ -58,7 +58,7 @@ elif ODOOVER == '7.0':
     REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
              {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-            ]
+    ]
 
 elif ODOOVER == '8.0.1':
     # images
@@ -202,7 +202,7 @@ def update_database():
                 --link db-odoo:db \
                 --name ' + cli + '-update ' + \
                 image_from_dict(ODOO) +
-                ' --stop-after-init -d '+args.database+ ' -u '+args.module
+                ' --stop-after-init -d ' + args.database + ' -u ' + args.module
                 , shell=True)
         elif ODOOVER == '7.0':
             subprocess.call(
@@ -214,8 +214,8 @@ def update_database():
                 --link db-odoo:db \
                 --name ' + cli + '-update ' + \
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
-                ' --db_user=odoo --db_password=odoo --db_host=db '+
-                ' --stop-after-init -d '+args.database+ ' -u '+args.module
+                ' --db_user=odoo --db_password=odoo --db_host=db ' +
+                ' --stop-after-init -d ' + args.database + ' -u ' + args.module
                 , shell=True)
 
     return True
@@ -294,13 +294,13 @@ def run_developer():
         run_aeroo_image()
 
     if subprocess.call(
-        'sudo docker run -d \
-        -p 5432:5432 \
-        -e POSTGRES_USER=odoo \
-        -e POSTGRES_PASSWORD=odoo \
-        -v ' + PSQL + ':/var/lib/postgresql/data \
-	    --restart=always \
-	    --name db-odoo ' + \
+                    'sudo docker run -d \
+                    -p 5432:5432 \
+                    -e POSTGRES_USER=odoo \
+                    -e POSTGRES_PASSWORD=odoo \
+                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    --restart=always \
+                    --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
         msgerr('Fail running environment.')
     else:
