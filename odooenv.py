@@ -24,8 +24,8 @@ if ODOOVER == '8.0':
     IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
     # clients
-    CLIENTS = [{'client': 'str', 'port': '8069'},
-               {'client': 'makeover', 'port': '8070'}]
+    CLIENTS = [{'client': 'str', 'port': '8070'},
+               {'client': 'makeover', 'port': '8069'}]
 
     # repos
     REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
