@@ -266,7 +266,7 @@ def run_aeroo_image():
 
 def run_environment():
     msgrun('Running environment images')
-    if ODOOVER == '8.0.1':
+    if ODOOVER == '8.0.1' or ODOOVER == '8.0':
         run_aeroo_image()
 
     if subprocess.call(
@@ -287,7 +287,7 @@ def run_environment():
 def run_developer():
     msgrun('Running environment in developer mode.')
 
-    if ODOOVER == '8.0':
+    if ODOOVER == '8.0.1' or ODOOVER == '8.0':
         run_aeroo_image()
 
     if subprocess.call(
