@@ -3,93 +3,6 @@ import argparse
 import subprocess
 import sys
 
-ODOOVER = '7.0'
-HOME = '~/odoo-' + ODOOVER + '/'
-PSQL = '~/postgresql-' + ODOOVER + '/'
-
-if ODOOVER == '8.0':
-    # images
-    ODOO = {'repo': 'jobiols',
-            'dir': 'odoo-adhoc',
-            'ver': '8.0'}
-    AEROO = {'repo': 'jobiols',
-             'dir': 'aeroo-docs',
-             'ver': 'latest'}
-    POSTGRES = {'repo': 'postgres',
-                'dir': '',
-                'ver': '9.4'}
-    BACKUP = {'repo': 'jobiols',
-              'dir': 'backup',
-              'ver': ''}
-    IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-
-    # clients
-    CLIENTS = [{'client': 'str', 'port': '8070'},
-               {'client': 'makeover', 'port': '8069'}]
-
-    # repos
-    REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
-
-elif ODOOVER == '7.0':
-    # images
-    ODOO = {'repo': 'jobiols',
-            'dir': 'odoo-adhoc',
-            'ver': '7.0'}
-    POSTGRES = {'repo': 'postgres',
-                'dir': '',
-                'ver': '9.4'}
-    BACKUP = {'repo': 'jobiols',
-              'dir': 'backup',
-              'ver': ''}
-    IMAGES = [ODOO, POSTGRES, BACKUP]
-
-    # clients
-    CLIENTS = [{'client': 'makeover', 'port': '8069'},
-               {'client': 'pirulo', 'port': '8070'}]
-
-    # repos
-    REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-             {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-             {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-    ]
-
-elif ODOOVER == '8.0.1':
-    # images
-    ODOO = {'repo': 'adhoc',
-            'dir': 'odoo-adhoc',
-            'ver': '8.0'}
-    AEROO = {'repo': 'jobiols',
-             'dir': 'aeroo-docs',
-             'ver': 'latest'}
-    POSTGRES = {'repo': 'postgres',
-                'dir': '',
-                'ver': '9.4'}
-    BACKUP = {'repo': 'jobiols',
-              'dir': 'backup',
-              'ver': ''}
-    IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-
-    # clients
-    CLIENTS = [{'client': 'str', 'port': '8069'},
-               {'client': 'makeover', 'port': '8070'}]
-
-    # repos
-    REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-             {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-             {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
-
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
@@ -188,6 +101,7 @@ def update_database():
     db = args.database[0]
     mods = args.module[0]
     cli = args.client[0]
+
     msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
 
     if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
@@ -202,6 +116,7 @@ def update_database():
             image_from_dict(ODOO) + ' -- '
                                     ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
             , shell=True)
+
     elif ODOOVER == '7.0':
         subprocess.call(
             'sudo docker run --rm -it \
@@ -270,10 +185,10 @@ def run_environment():
         run_aeroo_image()
 
     if subprocess.call(
-                    'sudo docker run -d \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                                    'sudo docker run -d \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -291,11 +206,11 @@ def run_developer():
         run_aeroo_image()
 
     if subprocess.call(
-                    'sudo docker run -d \
-                    -p 5432:5432 \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                                    'sudo docker run -d \
+                                    -p 5432:5432 \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -442,7 +357,8 @@ def docker_install():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Odoo environment setup v' + ODOOVER)
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.0')
+    parser.add_argument('version', choices=['7.0', '8.0', '8.0.1'])
     parser.add_argument('-U', '--uninstall-env', action='store_true',
                         help='Uninstall and erase all files from environment including \
                               databases. WARNING all database files will be erased.')
@@ -463,16 +379,105 @@ if __name__ == '__main__':
                         -c alexor -c danone -c tenaris ... etc. Requiered -i option")
     parser.add_argument('-n', '--no-ip-install', action='store_true', help="Install no-ip on this server")
     parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s ' + ODOOVER)
 
     parser.add_argument('-u', '--update-database', action='store_true',
-                        help="Update database requires -d and -m option")
+                        help="Update database requires -d -c and -m options")
     parser.add_argument('-d', '--database', dest='database', action='store', nargs=1, help="Database to update")
     parser.add_argument('-m', '--module', dest='module', action='append', nargs=1,
                         help="Module to update or all, you can specify multiple -m options")
 
     args = parser.parse_args()
 
+    ######################################## Constant Definitins
+    ODOOVER = args.version
+
+    HOME = '~/odoo-' + ODOOVER + '/'
+    PSQL = '~/postgresql-' + ODOOVER + '/'
+
+    if ODOOVER == '8.0':
+        # images
+        ODOO = {'repo': 'jobiols',
+                'dir': 'odoo-adhoc',
+                'ver': '8.0'}
+        AEROO = {'repo': 'jobiols',
+                 'dir': 'aeroo-docs',
+                 'ver': 'latest'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols',
+                  'dir': 'backup',
+                  'ver': ''}
+        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
+
+        # clients
+        CLIENTS = [{'client': 'str', 'port': '8070'},
+                   {'client': 'makeover', 'port': '8069'}]
+
+        # repos
+        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+
+    elif ODOOVER == '7.0':
+        # images
+        ODOO = {'repo': 'jobiols',
+                'dir': 'odoo-adhoc',
+                'ver': '7.0'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols',
+                  'dir': 'backup',
+                  'ver': ''}
+        IMAGES = [ODOO, POSTGRES, BACKUP]
+
+        # clients
+        CLIENTS = [{'client': 'makeover', 'port': '8069'},
+                   {'client': 'pirulo', 'port': '8070'}]
+
+        # repos
+        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
+                 ]
+
+    elif ODOOVER == '8.0.1':
+        # images
+        ODOO = {'repo': 'adhoc',
+                'dir': 'odoo-adhoc',
+                'ver': '8.0'}
+        AEROO = {'repo': 'jobiols',
+                 'dir': 'aeroo-docs',
+                 'ver': 'latest'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols',
+                  'dir': 'backup',
+                  'ver': ''}
+        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
+
+        # clients
+        CLIENTS = [{'client': 'str', 'port': '8069'},
+                   {'client': 'makeover', 'port': '8070'}]
+
+        # repos
+        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+                 {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+
+    ########################################
 
     # Check if client is valid
     if args.client != None:
