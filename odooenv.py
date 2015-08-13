@@ -396,18 +396,10 @@ if __name__ == '__main__':
 
     if ODOOVER == '8.0':
         # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
-                'ver': '8.0'}
-        AEROO = {'repo': 'jobiols',
-                 'dir': 'aeroo-docs',
-                 'ver': 'latest'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
+        ODOO = {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'}
+        AEROO = {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'}
+        POSTGRES = {'repo': 'postgres', 'dir': '', 'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
@@ -447,6 +439,26 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
                  ]
 
+    elif ODOOVER == 'OU_8.0':
+        # images
+        ODOO = {'repo': 'jobiols',
+                'dir': 'odoo-adhoc',
+                'ver': '8.0'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        IMAGES = [ODOO, POSTGRES]
+
+        # clients
+        CLIENTS = [{'client': 'makeover', 'port': '8069'},
+                   {'client': 'pirulo', 'port': '8070'}]
+
+        # repos
+        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
+                 ]
+
     elif ODOOVER == '8.0.1':
         # images
         ODOO = {'repo': 'adhoc',
@@ -472,53 +484,9 @@ if __name__ == '__main__':
                  {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
-
-    elif ODOOVER == 'OU_8.0':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
-                'ver': '7.0'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
-        IMAGES = [ODOO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'makeover', 'port': '8069'},
-                   {'client': 'pirulo', 'port': '8070'}]
-
-        # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-                 ]
-
-    elif ODOOVER == '8.0.1':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'docker-openupgrade',
-                'ver': '8.0'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        IMAGES = [ODOO, POSTGRES]
-
-        # clients
-        CLIENTS = [{'client': 'str', 'port': '8069'}]
-
-        # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-                 {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
 
 
