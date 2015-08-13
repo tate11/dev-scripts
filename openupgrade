@@ -1,0 +1,13 @@
+#!/bin/bash
+#Include file lib in same dir as this file
+. $(dirname $0)"/lib"
+
+sudo docker run -it --rm \
+        -p 8069:8069 \
+        -v ~/openupgrade80/str/config:/etc/odoo \
+        -v ~/openupgrade80/str/data_dir:/var/lib/odoo \
+        -v ~/openupgrade80/sources:/mnt/extra-addons \
+        --link db-odoo:db \
+        --entrypoint=/bin/bash \
+        --name openupgrade \
+	    jobiols/docker-openupgrade:8.0 $*
