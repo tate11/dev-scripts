@@ -442,7 +442,7 @@ if __name__ == '__main__':
     elif ODOOVER == 'OU_8.0':
         # images
         ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
+                'dir': 'docker-openupgrade',
                 'ver': '8.0'}
         POSTGRES = {'repo': 'postgres',
                     'dir': '',
