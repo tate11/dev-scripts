@@ -455,7 +455,7 @@ if __name__ == '__main__':
 
         # repos
         REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
                  ]
 
