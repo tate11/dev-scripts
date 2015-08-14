@@ -149,7 +149,7 @@ def install_client():
         # Creating directory's for client
         subprocess.call('mkdir -p ' + HOME + cli + '/config', shell=True)
         subprocess.call('mkdir -p ' + HOME + cli + '/data_dir', shell=True)
-        subprocess.call(['chmod 777 -R ' + HOME + cli], shell=True)
+        subprocess.call('chmod 777 -R ' + HOME + cli, shell=True)
 
         # creating config file for client
         subprocess.call(
@@ -250,7 +250,7 @@ def run_client():
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
-        msgdone('Client ' + cli + 'up and running')
+        msgdone('Client ' + cli + ' up and running')
 
     return True
 
@@ -356,9 +356,17 @@ def docker_install():
     return True
 
 
+def check_conflict_names():
+    for client in CLIENTS:
+        for repo in REPOS:
+            if client['client'] == repo['dir']:
+                msgerr('Error, conflicting names both repo and client are "' + client['client'] + '"')
+    return True
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.0')
-    parser.add_argument('version', choices=['7.0', '8.0', '8.0.1', 'OU_8.0'])
+    parser.add_argument('version', choices=['7.0', '8.0', '8.0.1', 'ou-8.0'])
     parser.add_argument('-U', '--uninstall-env', action='store_true',
                         help='Uninstall and erase all files from environment including \
                               databases. WARNING all database files will be erased.')
@@ -403,7 +411,7 @@ if __name__ == '__main__':
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
-        CLIENTS = [{'client': 'str', 'port': '8070'},
+        CLIENTS = [{'client': 'strsrl', 'port': '8070'},
                    {'client': 'makeover', 'port': '8069'}]
 
         # repos
@@ -436,10 +444,11 @@ if __name__ == '__main__':
         # repos
         REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
                  ]
 
-    elif ODOOVER == 'OU_8.0':
+    elif ODOOVER == 'ou-8.0':
         # images
         ODOO = {'repo': 'jobiols',
                 'dir': 'docker-openupgrade',
@@ -476,7 +485,7 @@ if __name__ == '__main__':
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
-        CLIENTS = [{'client': 'str', 'port': '8069'},
+        CLIENTS = [{'client': 'strsrl', 'port': '8069'},
                    {'client': 'makeover', 'port': '8070'}]
 
         # repos
@@ -496,6 +505,9 @@ if __name__ == '__main__':
     if args.client != None:
         for cli in args.client:
             client_port(cli)
+
+    # check conflict names
+    check_conflict_names()
 
     if args.uninstall_env:
         uninstall_environment()

@@ -4,10 +4,10 @@
 
 sudo docker run -it --rm \
         -p 8069:8069 \
-        -v ~/openupgrade80/str/config:/etc/odoo \
-        -v ~/openupgrade80/str/data_dir:/var/lib/odoo \
-        -v ~/openupgrade80/sources:/mnt/extra-addons \
+        -v ~/odoo-OU_8.0/makeover/config:/etc/odoo \
+        -v ~/odoo-OU_8.0/makeover/data_dir:/var/lib/odoo \
+        -v ~/odoo-OU_8.0/makeover:/mnt/extra-addons \
         --link db-odoo:db \
         --entrypoint=/bin/bash \
-        --name openupgrade \
+        --name makeover \
 	    jobiols/docker-openupgrade:8.0 $*
