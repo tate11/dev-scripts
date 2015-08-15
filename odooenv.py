@@ -104,7 +104,7 @@ def update_database():
 
     msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
 
-    if (ODOOVER == '8.0') or (ODOOVER == '8.0.1'):
+    if (ODOOVER == '8.0') or (ODOOVER == '8.0.1') or (ODOOVER == 'ou-8.0'):
         subprocess.call(
             'sudo docker run --rm -it \
             -p ' + client_port(cli) + ':8069 \
@@ -323,44 +323,23 @@ def no_ip_install():
     subprocess.call('wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
                     shell=True)
     subprocess.call('tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
-    subprocess.call('make install', shell=True)
-    """
-        cd /usr/local/src/
-        wget http://www.noip.com/client/linux/noip-duc-linux.tar.gz
+    subprocess.call('sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz', shell=True)
+    subprocess.call('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/', shell=True)
+    subprocess.call('cd /usr/local/src/noip-2.1.9-1 && sudo make install', shell=True)
+    msginf("Please answer some questions")
+    subprocess.call('sudo rm /usr/local/src/noip-duc-linux.tar.gz', shell=True)
+    subprocess.call('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/', shell=True)
+    subprocess.call('chmod +x /etc/init.d/debian.noip2.sh', shell=True)
+    subprocess.call('update-rc.d debian.noip2.sh defaults', shell=True)
+    subprocess.call('/etc/init.d/debian.noip2.sh restart', shell=True)
+    msgdone('no-ip service running')
 
-        tar xf noip-duc-linux.tar.gz
-        cd noip-2.1.9-1/
-        make install
-        msginfo "Please answer some questions"
-        #Please enter login/email: jobiols
-        #Please enter password: veconceR
-        #contestar preguntas sobre defaults y grupos.
-        rm /usr/local/src/noip-duc-linux.tar.gz
-        #Poner el script en init.d
-        cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/
-        #Make script executable
-        chmod +x /etc/init.d/debian.noip2.sh
-        #hacer que se ejecute al booteo
-        update-rc.d debian.noip2.sh defaults
-        #arrancar y parar el demonio
-        msgrun "Starting no-ip daemon"
-        /etc/init.d/debian.noip2.sh restart
-        msgdone "no-ip service running"
-    """
     return True
 
 
 def docker_install():
     msgrun('Installing docker')
     subprocess.call('wget -qO- https://get.docker.com/ | sh', shell=True)
-    return True
-
-
-def check_conflict_names():
-    for client in CLIENTS:
-        for repo in REPOS:
-            if client['client'] == repo['dir']:
-                msgerr('Error, conflicting names both repo and client are "' + client['client'] + '"')
     return True
 
 
@@ -373,18 +352,18 @@ if __name__ == '__main__':
     parser.add_argument('-I', '--install-env', action='store_true',
                         help="Install all files and odoo repos needed")
     parser.add_argument('-i', '--install-cli', action='store_true',
-                        help="Install all clients, required at least one -c option")
+                        help="Install all clients, requires -c options")
     parser.add_argument('-R', '--run-env', action='store_true', help="Run database and aeroo images.")
     parser.add_argument('-D', '--run-dev', action='store_true',
                         help="Run database and aeroo images for developer mode (local db access).")
-    parser.add_argument('-r', '--run-cli', action='store_true', help="Run client odoo images, requieres -c option.")
+    parser.add_argument('-r', '--run-cli', action='store_true', help="Run client odoo images, requieres -c options.")
     parser.add_argument('-S', '--stop-env', action='store_true', help="Stop database and aeroo images.")
-    parser.add_argument('-s', '--stop-cli', action='store_true', help="Stop client images, requieres -c option.")
+    parser.add_argument('-s', '--stop-cli', action='store_true', help="Stop client images, requieres -c options.")
     parser.add_argument('-p', '--pull-all', action='store_true', help="Pull all images")
     parser.add_argument('-l', '--list', action='store_true', help="List all data in this server. Clients and images.")
     parser.add_argument('-c', '--client', dest='client', action='append',
                         help="Client name. You can specify more than one as \
-                        -c alexor -c danone -c tenaris ... etc. Requiered -i option")
+                        -c alexor -c danone -c tenaris ... etc.")
     parser.add_argument('-n', '--no-ip-install', action='store_true', help="Install no-ip on this server")
     parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
 
@@ -505,9 +484,6 @@ if __name__ == '__main__':
     if args.client != None:
         for cli in args.client:
             client_port(cli)
-
-    # check conflict names
-    check_conflict_names()
 
     if args.uninstall_env:
         uninstall_environment()
