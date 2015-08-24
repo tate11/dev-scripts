@@ -296,6 +296,15 @@ def pull_all_images():
 
     msgdone('All images ok ' + ODOOVER)
 
+    msgrun('Pulling all repos for ' + ODOOVER)
+    for repo in REPOS:
+        msginf('pulling repo ' + repo_from_dict(repo))
+        if subprocess.call('cd ' + HOME + 'sources/' + repo[
+            'dir'] + '&&' + ' sudo git pull', shell=True):
+            msgerr('Fail pulling repos, uninstall and try again.')
+
+    msgdone('All repos ok ' + ODOOVER)
+
     return True
 
 
@@ -390,7 +399,7 @@ if __name__ == '__main__':
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
-        CLIENTS = [{'client': 'strsrl', 'port': '8070'},
+        CLIENTS = [{'client': 'str', 'port': '8070'},
                    {'client': 'makeover', 'port': '8069'}]
 
         # repos
@@ -464,7 +473,7 @@ if __name__ == '__main__':
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
-        CLIENTS = [{'client': 'strsrl', 'port': '8069'},
+        CLIENTS = [{'client': 'str', 'port': '8069'},
                    {'client': 'makeover', 'port': '8070'}]
 
         # repos
