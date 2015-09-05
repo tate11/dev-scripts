@@ -1,4 +1,26 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+###############################################################################
+#
+#    Jorge Obiols Software,
+#    Copyright (C) 2015-Today JEO <jorge.obiols@gmail.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+###############################################################################
+
+
 import argparse
 import subprocess
 import sys
@@ -89,7 +111,8 @@ def install_environment():
     for repo in REPOS:
         msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('git clone -b ' + repo['branch'] +
-                                   ' --depth 1 http://github.com/' + repo_from_dict(repo) + ' '
+                                   ' --depth 1 http://github.com/' + repo_from_dict(
+            repo) + ' '
                                    + HOME + 'sources/' + repo['dir'], shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
@@ -114,7 +137,8 @@ def update_database():
             --link db-odoo:db \
             --name ' + cli + '-update ' + \
             image_from_dict(ODOO) + ' -- '
-                                    ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
+                                    ' --stop-after-init -d ' + db + ' -u ' + ', '.join(
+                mods)
             , shell=True)
 
     elif ODOOVER == '7.0':
@@ -152,7 +176,7 @@ def install_client():
         subprocess.call('chmod 777 -R ' + HOME + cli, shell=True)
 
         # creating config file for client
-        subprocess.call(
+        if subprocess.call(
             'sudo docker run --rm \
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
@@ -161,7 +185,9 @@ def install_client():
             image_from_dict(ODOO) + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + \
             ' --db-filter=' + cli + '_.*'
-            , shell=True)
+                , shell=True):
+            msgerr('failiing to write config file. Aborting')
+            exit(1)
 
     msgdone('Installing done')
     return True
@@ -329,15 +355,20 @@ def no_ip_install():
     msgrun('Installing no-ip client')
     subprocess.call('apt-get install make', shell=True)
     subprocess.call('apt-get -y install gcc', shell=True)
-    subprocess.call('wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
-                    shell=True)
+    subprocess.call(
+        'wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
+        shell=True)
     subprocess.call('tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
-    subprocess.call('sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz', shell=True)
-    subprocess.call('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/', shell=True)
+    subprocess.call(
+        'sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
+        shell=True)
+    subprocess.call('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/',
+                    shell=True)
     subprocess.call('cd /usr/local/src/noip-2.1.9-1 && sudo make install', shell=True)
     msginf("Please answer some questions")
     subprocess.call('sudo rm /usr/local/src/noip-duc-linux.tar.gz', shell=True)
-    subprocess.call('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/', shell=True)
+    subprocess.call('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
+                    shell=True)
     subprocess.call('chmod +x /etc/init.d/debian.noip2.sh', shell=True)
     subprocess.call('update-rc.d debian.noip2.sh defaults', shell=True)
     subprocess.call('/etc/init.d/debian.noip2.sh restart', shell=True)
@@ -354,7 +385,8 @@ def docker_install():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.0')
-    parser.add_argument('version', choices=['7.0', '8.0', '8.0.1', 'ou-8.0'])
+    parser.add_argument('version',
+                        choices=['7.0', '7.0.1', '8.0', '8.0.1', '8.0.2', 'ou-8.0'])
     parser.add_argument('-U', '--uninstall-env', action='store_true',
                         help='Uninstall and erase all files from environment including \
                               databases. WARNING all database files will be erased.')
@@ -362,34 +394,44 @@ if __name__ == '__main__':
                         help="Install all files and odoo repos needed")
     parser.add_argument('-i', '--install-cli', action='store_true',
                         help="Install all clients, requires -c options")
-    parser.add_argument('-R', '--run-env', action='store_true', help="Run database and aeroo images.")
+    parser.add_argument('-R', '--run-env', action='store_true',
+                        help="Run database and aeroo images.")
     parser.add_argument('-D', '--run-dev', action='store_true',
                         help="Run database and aeroo images for developer mode (local db access).")
-    parser.add_argument('-r', '--run-cli', action='store_true', help="Run client odoo images, requieres -c options.")
-    parser.add_argument('-S', '--stop-env', action='store_true', help="Stop database and aeroo images.")
-    parser.add_argument('-s', '--stop-cli', action='store_true', help="Stop client images, requieres -c options.")
+    parser.add_argument('-r', '--run-cli', action='store_true',
+                        help="Run client odoo images, requieres -c options.")
+    parser.add_argument('-S', '--stop-env', action='store_true',
+                        help="Stop database and aeroo images.")
+    parser.add_argument('-s', '--stop-cli', action='store_true',
+                        help="Stop client images, requieres -c options.")
     parser.add_argument('-p', '--pull-all', action='store_true', help="Pull all images")
-    parser.add_argument('-l', '--list', action='store_true', help="List all data in this server. Clients and images.")
+    parser.add_argument('-l', '--list', action='store_true',
+                        help="List all data in this server. Clients and images.")
     parser.add_argument('-c', '--client', dest='client', action='append',
                         help="Client name. You can specify more than one as \
                         -c alexor -c danone -c tenaris ... etc.")
-    parser.add_argument('-n', '--no-ip-install', action='store_true', help="Install no-ip on this server")
-    parser.add_argument('-k', '--docker-install', action='store_true', help="Install docker on this server")
+    parser.add_argument('-n', '--no-ip-install', action='store_true',
+                        help="Install no-ip on this server")
+    parser.add_argument('-k', '--docker-install', action='store_true',
+                        help="Install docker on this server")
 
     parser.add_argument('-u', '--update-database', action='store_true',
                         help="Update database requires -d -c and -m options")
-    parser.add_argument('-d', '--database', dest='database', action='store', nargs=1, help="Database to update")
+    parser.add_argument('-d', '--database', dest='database', action='store', nargs=1,
+                        help="Database to update")
     parser.add_argument('-m', '--module', dest='module', action='append', nargs=1,
                         help="Module to update or all, you can specify multiple -m options")
 
     args = parser.parse_args()
 
-    ######################################## Constant Definitins
+    ########################################
+    # Constant Definitins
     ODOOVER = args.version
 
     HOME = '~/odoo-' + ODOOVER + '/'
     PSQL = '~/postgresql-' + ODOOVER + '/'
 
+    # version estable
     if ODOOVER == '8.0':
         # images
         ODOO = {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'}
@@ -436,6 +478,32 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
                  ]
 
+    # Version de experimentación
+    elif ODOOVER == '7.0.1':
+        # images
+        ODOO = {'repo': 'jobiols',
+                'dir': 'odoo-adhoc',
+                'ver': '7.0.1'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols',
+                  'dir': 'backup',
+                  'ver': ''}
+        IMAGES = [ODOO, POSTGRES, BACKUP]
+
+        # clients
+        CLIENTS = [{'client': 'makeover', 'port': '8069'},
+                   {'client': 'pirulo', 'port': '8070'}]
+
+        # repos
+        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
+                 ]
+    # utlima version estable de la Open Upgrade
     elif ODOOVER == 'ou-8.0':
         # images
         ODOO = {'repo': 'jobiols',
@@ -456,6 +524,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
                  ]
 
+    # ultima version estable de adhoc
     elif ODOOVER == '8.0.1':
         # images
         ODOO = {'repo': 'adhoc',
@@ -486,10 +555,40 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
 
+    # version experimental
+    elif ODOOVER == '8.0.2':
+        # images
+        ODOO = {'repo': 'jobiols',
+                'dir': 'odoo-adhoc',
+                'ver': '8.0.2'}
+        AEROO = {'repo': 'jobiols',
+                 'dir': 'aeroo-docs',
+                 'ver': 'latest'}
+        POSTGRES = {'repo': 'postgres',
+                    'dir': '',
+                    'ver': '9.4'}
+        BACKUP = {'repo': 'jobiols',
+                  'dir': 'backup',
+                  'ver': ''}
+        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
+
+        # clients
+        CLIENTS = [{'client': 'str', 'port': '8069'},
+                   {'client': 'makeover', 'port': '8070'}]
+
+        # repos jobiols
+        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
 
     ########################################
-
-    # Check if client is valid
+    # Check for valid client
     if args.client != None:
         for cli in args.client:
             client_port(cli)
