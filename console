@@ -4,9 +4,9 @@
 
 sudo docker run -it --rm \
         -p 8069:8069 \
-        -v ~/odoo80/str/config:/etc/odoo \
-        -v ~/odoo80/str/data_dir:/var/lib/odoo \
-        -v ~/odoo80/sources:/mnt/extra-addons \
+        -v ~/odoo-7.0/makeover/config:/etc/odoo \
+        -v ~/odoo-7.0/makeover/data_dir:/var/lib/odoo \
+        -v ~/odoo-7.0/sources:/mnt/extra-addons \
 	--entrypoint=/bin/bash \
         --link db-odoo:db \
         --name makeover \

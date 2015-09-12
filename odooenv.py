@@ -251,7 +251,7 @@ def run_client():
     for cli in args.client:
         msgrun('Running image for client ' + cli)
 
-        if ODOOVER == '8.0':
+        if ODOOVER == '8.0' or ODOOVER == '8.0.1':
             subprocess.call(
                 'sudo docker run -d \
                 --link aeroo_docs:aeroo \
@@ -549,11 +549,10 @@ if __name__ == '__main__':
         REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
                  {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'}]
 
     # version experimental
     elif ODOOVER == '8.0.2':
