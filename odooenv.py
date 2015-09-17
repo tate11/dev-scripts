@@ -452,7 +452,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+                 ]
 
     elif ODOOVER == '7.0':
         # images
@@ -552,7 +552,9 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'}]
+                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
+                 ]
 
     # version experimental
     elif ODOOVER == '8.0.2':
