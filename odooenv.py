@@ -559,9 +559,9 @@ if __name__ == '__main__':
     # version experimental
     elif ODOOVER == '8.0.2':
         # images
-        ODOO = {'repo': 'jobiols',
+        ODOO = {'repo': 'adhoc',
                 'dir': 'odoo-adhoc',
-                'ver': '8.0.2'}
+                'ver': '8.0'}
         AEROO = {'repo': 'jobiols',
                  'dir': 'aeroo-docs',
                  'ver': 'latest'}
@@ -578,15 +578,15 @@ if __name__ == '__main__':
                    {'client': 'makeover', 'port': '8070'}]
 
         # repos jobiols
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}]
+        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0.x'},
+                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0.x'},
+                 {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
+                 ]
 
     ########################################
     # Check for valid client
