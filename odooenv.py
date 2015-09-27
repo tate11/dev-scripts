@@ -327,7 +327,7 @@ def pull_all_images():
         msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('cd ' + HOME + 'sources/' + repo[
             'dir'] + '&&' + ' sudo git pull', shell=True):
-            msgerr('Fail pulling repos, uninstall and try again.')
+            msgerr('Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
 
     msgdone('All repos ok ' + ODOOVER)
 
