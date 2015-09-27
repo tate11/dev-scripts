@@ -250,9 +250,8 @@ def run_developer():
 def run_client():
     for cli in args.client:
         msgrun('Running image for client ' + cli)
-
         if ODOOVER == '8.0' or ODOOVER == '8.0.1':
-            subprocess.call(
+            ok = subprocess.call(
                 'sudo docker run -d \
                 --link aeroo_docs:aeroo \
                 -p ' + client_port(cli) + ':8069 \
@@ -264,7 +263,7 @@ def run_client():
                 --name ' + cli + ' ' + \
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*', shell=True)
         else:
-            subprocess.call(
+            ok = subprocess.call(
                 'sudo docker run -d \
                 -p ' + client_port(cli) + ':8069 \
                 -v ' + HOME + cli + '/config:/etc/odoo \
@@ -276,7 +275,10 @@ def run_client():
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
-        msgdone('Client ' + cli + ' up and running')
+        if ok:
+            msgdone('Client ' + cli + ' up and running')
+        else:
+            msgerr("Can't run client " + cli )
 
     return True
 
