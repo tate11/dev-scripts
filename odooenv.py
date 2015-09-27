@@ -275,7 +275,7 @@ def run_client():
                 image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
-        if ok:
+        if not ok:
             msgdone('Client ' + cli + ' up and running')
         else:
             msgerr("Can't run client " + cli )
