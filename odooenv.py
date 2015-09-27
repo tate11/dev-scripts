@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-###############################################################################
+# ##############################################################################
 #
 #    Jorge Obiols Software,
 #    Copyright (C) 2015-Today JEO <jorge.obiols@gmail.com>
@@ -112,7 +112,7 @@ def install_environment():
         msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('git clone -b ' + repo['branch'] +
                                    ' --depth 1 http://github.com/' + repo_from_dict(
-            repo) + ' '
+                repo) + ' '
                                    + HOME + 'sources/' + repo['dir'], shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
@@ -182,7 +182,7 @@ def install_client():
             -v ' + HOME + 'sources:/mnt/extra-addons \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             --name ' + cli + ' ' + \
-            image_from_dict(ODOO) + ' -- --stop-after-init -s \
+             image_from_dict(ODOO) + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + \
             ' --db-filter=' + cli + '_.*'
                 , shell=True):
@@ -278,7 +278,7 @@ def run_client():
         if not ok:
             msgdone('Client ' + cli + ' up and running')
         else:
-            msgerr("Can't run client " + cli +", by the way... did you run -R ?")
+            msgerr("Can't run client " + cli + ", by the way... did you run -R ?")
 
     return True
 
@@ -454,7 +454,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-                 ]
+        ]
 
     elif ODOOVER == '7.0':
         # images
@@ -478,7 +478,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-                 ]
+        ]
 
     # Version de experimentación
     elif ODOOVER == '7.0.1':
@@ -504,7 +504,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
-                 ]
+        ]
     # utlima version estable de la Open Upgrade
     elif ODOOVER == 'ou-8.0':
         # images
@@ -524,7 +524,7 @@ if __name__ == '__main__':
         REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
-                 ]
+        ]
 
     # ultima version estable de adhoc
     elif ODOOVER == '8.0.1':
@@ -556,7 +556,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
-                 ]
+        ]
 
     # version experimental
     elif ODOOVER == '8.0.2':
@@ -588,7 +588,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
-                 ]
+        ]
 
     ########################################
     # Check for valid client
