@@ -278,7 +278,7 @@ def run_client():
         if not ok:
             msgdone('Client ' + cli + ' up and running')
         else:
-            msgerr("Can't run client " + cli )
+            msgerr("Can't run client " + cli +", by the way... did you run -R ?")
 
     return True
 
