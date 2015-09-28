@@ -211,10 +211,10 @@ def run_environment():
         run_aeroo_image()
 
     if subprocess.call(
-                                    'sudo docker run -d \
-                                    -e POSTGRES_USER=odoo \
-                                    -e POSTGRES_PASSWORD=odoo \
-                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    'sudo docker run -d \
+                    -e POSTGRES_USER=odoo \
+                    -e POSTGRES_PASSWORD=odoo \
+                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -232,11 +232,11 @@ def run_developer():
         run_aeroo_image()
 
     if subprocess.call(
-                                    'sudo docker run -d \
-                                    -p 5432:5432 \
-                                    -e POSTGRES_USER=odoo \
-                                    -e POSTGRES_PASSWORD=odoo \
-                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    'sudo docker run -d \
+                    -p 5432:5432 \
+                    -e POSTGRES_USER=odoo \
+                    -e POSTGRES_PASSWORD=odoo \
+                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -505,6 +505,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
         ]
+
     # utlima version estable de la Open Upgrade
     elif ODOOVER == 'ou-8.0':
         # images
@@ -526,7 +527,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
         ]
 
-    # ultima version estable de adhoc
+    # ultima version de adhoc
     elif ODOOVER == '8.0.1':
         # images
         ODOO = {'repo': 'adhoc',
