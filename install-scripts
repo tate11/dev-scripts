@@ -11,8 +11,6 @@ git pull
 
 msgrun "Installing scripts odoo v8 adhoc"
 cp sd /usr/bin
-cp odooenv /usr/bin
 cp lib /usr/bin
-cp sites-available-PS01 /etc/nginx/sites-available/
 
 msgdone "Scripts installed"
