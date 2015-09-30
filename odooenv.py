@@ -355,12 +355,12 @@ def list_data():
 
 def no_ip_install():
     msgrun('Installing no-ip client')
-    subprocess.call('apt-get install make', shell=True)
-    subprocess.call('apt-get -y install gcc', shell=True)
+    subprocess.call('sudo apt-get install make', shell=True)
+    subprocess.call('sudo apt-get -y install gcc', shell=True)
     subprocess.call(
         'wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
         shell=True)
-    subprocess.call('tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
+    subprocess.call('sudo tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
     subprocess.call(
         'sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
         shell=True)
@@ -371,9 +371,9 @@ def no_ip_install():
     subprocess.call('sudo rm /usr/local/src/noip-duc-linux.tar.gz', shell=True)
     subprocess.call('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
                     shell=True)
-    subprocess.call('chmod +x /etc/init.d/debian.noip2.sh', shell=True)
-    subprocess.call('update-rc.d debian.noip2.sh defaults', shell=True)
-    subprocess.call('/etc/init.d/debian.noip2.sh restart', shell=True)
+    subprocess.call('sudo chmod +x /etc/init.d/debian.noip2.sh', shell=True)
+    subprocess.call('sudo update-rc.d debian.noip2.sh defaults', shell=True)
+    subprocess.call('sudo /etc/init.d/debian.noip2.sh restart', shell=True)
     msgdone('no-ip service running')
 
     return True
