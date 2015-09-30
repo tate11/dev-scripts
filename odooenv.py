@@ -376,6 +376,11 @@ def no_ip_install():
     subprocess.call('sudo /etc/init.d/debian.noip2.sh restart', shell=True)
     msgdone('no-ip service running')
 
+    # To config defaults noip2 with capital C
+    # sudo /usr/local/bin/noip2 -C
+
+
+
     return True
 
 
@@ -545,8 +550,8 @@ if __name__ == '__main__':
         IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
 
         # clients
-        CLIENTS = [{'client': 'str', 'port': '8069'},
-                   {'client': 'makeover', 'port': '8070'}]
+        CLIENTS = [{'client': 'jeo', 'port': '8070'},
+                   {'client': 'makeover', 'port': '8050'}]
 
         # repos
         REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
