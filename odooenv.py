@@ -554,8 +554,8 @@ if __name__ == '__main__':
                    {'client': 'makeover', 'port': '8050'}]
 
         # repos
-        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0.x'},
+                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0.x'},
                  {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
