@@ -534,7 +534,7 @@ if __name__ == '__main__':
         REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
                  {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
         ]
 
     # ultima version de adhoc
