@@ -158,6 +158,10 @@ def update_database():
     return True
 
 
+def _(t):
+    print ">", t
+    return t
+
 def install_client():
     msgrun('Install clients')
 
@@ -166,7 +170,7 @@ def install_client():
     addon_path = path + REPOS[0]['dir']
     for rep in REPOS[1:]:
         addon_path += ',' + path + rep['dir']
-
+    #    addon_path += ',/opt/openupgrade/addons'
     for cli in args.client:
         msgrun('Installing Odoo image for client ' + cli)
 
@@ -524,12 +528,13 @@ if __name__ == '__main__':
 
         # clients
         CLIENTS = [{'client': 'makeover', 'port': '8069'},
-                   {'client': 'pirulo', 'port': '8070'}]
+                   {'client': 'jeo', 'port': '8070'}]
 
         # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
+        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
         ]
 
     # ultima version de adhoc
@@ -561,7 +566,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
+                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
         ]
 
