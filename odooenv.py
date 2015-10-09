@@ -540,7 +540,7 @@ if __name__ == '__main__':
     # ultima version de adhoc
     elif ODOOVER == '8.0.1':
         # images
-        ODOO = {'repo': 'adhoc',
+        ODOO = {'repo': 'jobiols',
                 'dir': 'odoo-adhoc',
                 'ver': '8.0'}
         AEROO = {'repo': 'jobiols',
