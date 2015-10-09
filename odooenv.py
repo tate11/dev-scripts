@@ -567,6 +567,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
         ]
 
