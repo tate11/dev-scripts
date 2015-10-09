@@ -31,6 +31,82 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+data = {
+    # Version 7.0 de producción Makeover
+    '7.0': {
+        'images': [
+            {
+                'odoo': {'repo': 'jobiols',
+                         'dir': 'odoo-adhoc',
+                         'ver': '7.0'},
+            },
+            {
+                'postgres': {'repo': 'postgres',
+                             'dir': '',
+                             'ver': '9.4'},
+            },
+            {
+                'backup': {'repo': 'jobiols',
+                           'dir': 'backup',
+                           'ver': ''}
+            }
+        ],
+        'clients': [{'client': 'makeover', 'port': '8069'},
+                    {'client': 'pirulo', 'port': '8070'}
+                    ],
+
+        'repos': [
+            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+            {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
+            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
+        ]
+    },
+
+    # Version 7.0.1 experimental
+    '7.0.1': {
+        'images': [
+            {
+                'odoo': {'repo': 'jobiols',
+                         'dir': 'odoo-adhoc',
+                         'ver': '7.0.1'},
+            },
+            {
+                'postgres': {'repo': 'postgres',
+                             'dir': '',
+                             'ver': '9.4'},
+            },
+            {
+                'backup': {'repo': 'jobiols',
+                           'dir': 'backup',
+                           'ver': ''}
+            }
+        ],
+        'clients': [{'client': 'makeover', 'port': '8069'},
+                    {'client': 'pirulo', 'port': '8070'}
+                    ],
+
+        'repos': [
+                 {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
+                 {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
+        ]
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 def image_from_dict(image):
     ret = ''
@@ -112,7 +188,7 @@ def install_environment():
         msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('git clone -b ' + repo['branch'] +
                                    ' --depth 1 http://github.com/' + repo_from_dict(
-                repo) + ' '
+            repo) + ' '
                                    + HOME + 'sources/' + repo['dir'], shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
@@ -162,6 +238,7 @@ def _(t):
     print ">", t
     return t
 
+
 def install_client():
     msgrun('Install clients')
 
@@ -170,7 +247,7 @@ def install_client():
     addon_path = path + REPOS[0]['dir']
     for rep in REPOS[1:]:
         addon_path += ',' + path + rep['dir']
-    #    addon_path += ',/opt/openupgrade/addons'
+    # addon_path += ',/opt/openupgrade/addons'
     for cli in args.client:
         msgrun('Installing Odoo image for client ' + cli)
 
@@ -181,14 +258,14 @@ def install_client():
 
         # creating config file for client
         if subprocess.call(
-            'sudo docker run --rm \
-            -v ' + HOME + cli + '/config:/etc/odoo \
+                                                                                                                                                'sudo docker run --rm \
+                                                                                                                                                -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             --name ' + cli + ' ' + \
-             image_from_dict(ODOO) + ' -- --stop-after-init -s \
+                                                                image_from_dict(ODOO) + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + \
-            ' --db-filter=' + cli + '_.*'
+                                        ' --db-filter=' + cli + '_.*'
                 , shell=True):
             msgerr('failiing to write config file. Aborting')
             exit(1)
@@ -215,10 +292,10 @@ def run_environment():
         run_aeroo_image()
 
     if subprocess.call(
-                    'sudo docker run -d \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                                    'sudo docker run -d \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -236,11 +313,11 @@ def run_developer():
         run_aeroo_image()
 
     if subprocess.call(
-                    'sudo docker run -d \
-                    -p 5432:5432 \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                                    'sudo docker run -d \
+                                    -p 5432:5432 \
+                                    -e POSTGRES_USER=odoo \
+                                    -e POSTGRES_PASSWORD=odoo \
+                                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
                     image_from_dict(POSTGRES), shell=True):
@@ -333,7 +410,8 @@ def pull_all_images():
         msginf('pulling repo ' + repo_from_dict(repo))
         if subprocess.call('cd ' + HOME + 'sources/' + repo[
             'dir'] + '&&' + ' sudo git pull', shell=True):
-            msgerr('Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
+            msgerr(
+                'Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
 
     msgdone('All repos ok ' + ODOOVER)
 
@@ -463,7 +541,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-        ]
+                 ]
 
     elif ODOOVER == '7.0':
         # images
@@ -487,7 +565,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-        ]
+                 ]
 
     # Version de experimentación
     elif ODOOVER == '7.0.1':
@@ -535,7 +613,7 @@ if __name__ == '__main__':
                  {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
-        ]
+                 ]
 
     # ultima version de adhoc
     elif ODOOVER == '8.0.1':
@@ -569,7 +647,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
-        ]
+                 ]
 
     # version experimental
     elif ODOOVER == '8.0.2':
@@ -601,7 +679,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
-        ]
+                 ]
 
     ########################################
     # Check for valid client
@@ -635,3 +713,4 @@ if __name__ == '__main__':
         docker_install()
     if args.update_database:
         update_database()
+

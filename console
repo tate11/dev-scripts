@@ -9,4 +9,4 @@ sudo docker run -it --rm \
         -v ~/odoo-ou-8.0/sources:/mnt/extra-addons \
 	--entrypoint=/bin/bash \
         --link db-odoo:db \
-        --name makeover jobiols/docker-openupgrade:8.0 $*
+        --name makeover jobiols/odoo-adhoc:8.0 $*
