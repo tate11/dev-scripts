@@ -39,6 +39,7 @@ CLEAR = "\033[0;m"
 
 # TODO la base de datos no tiene que estar atada a la versión sufi con el filtro en bd
 # TODO sacar la info a un xml "http://lxml.de/tutorial.html"
+# TODO cuando hacemos un -i no ponerle nombre a la imagen para no tener que bajar el server
 
 data = {
     # Version 7.0 de producción Makeover
