@@ -472,7 +472,7 @@ def stopClient(ver):
 
 def stopEnvironment(ver):
     r1 = r2 = 0
-    msgrun('Stopping environment')
+    msgrun('Stopping environment '+ver)
     for name in data[ver]['images']:
         msgrun('Stopping image ' + name)
         r1 += subprocess.call('sudo docker stop ' + name, shell=True)
