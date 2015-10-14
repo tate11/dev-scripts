@@ -779,7 +779,7 @@ if __name__ == '__main__':
     # Check for valid client
     if args.client != None:
         for cli in args.client:
-            getClientPort(ver, cli)
+            getClientPort(args.version, cli)
 
     if args.uninstall_env:
         uninstallEnvironment(args.version)
