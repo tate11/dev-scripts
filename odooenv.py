@@ -570,9 +570,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.2')
     parser.add_argument('version', choices=choices)
     parser.add_argument('-U', '--uninstall-env', action='store_true',
-                        help='Uninstall and erase all files from environment including \
-                              databases. WARNING all database files will be erased with \
-                              warning.')
+                        help='Uninstall and erase all files from environment (only current \
+                              ver)including database. The command ask for permission to \
+                              erase database. /n'
+                             'BE WARNED if say yes, all database files will be erased.')
     parser.add_argument('-I', '--install-env', action='store_true',
                         help="Install all files and odoo repos needed")
     parser.add_argument('-i', '--install-cli', action='store_true',
