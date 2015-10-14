@@ -238,7 +238,6 @@ def image_from_dict(image):
         ret += ':' + image['ver']
     return ret
 
-
 def repo_from_dict(dict):
     return dict['repo'] + '/' + dict['dir']
 
@@ -276,13 +275,13 @@ def msginf(msg):
     print yellow_light(msg)
 
 
-def client_port(cli):
+def getClientPort(ver,clientName):
     port = ''
-    for client in CLIENTS:
-        if client['client'] == cli:
+    for client in data[ver]['clients']:
+        if client['client'] == clientName:
             port = client['port']
     if port == '':
-        msgerr('no ' + client + ' client in this environment')
+        msgerr('There is no ' + clientName + ' client in this environment.')
     return port
 
 
@@ -329,7 +328,7 @@ def update_database():
     if (ODOOVER == '8.0') or (ODOOVER == '8.0.1') or (ODOOVER == 'ou-8.0'):
         subprocess.call(
             'sudo docker run --rm -it \
-            -p ' + client_port(cli) + ':8069 \
+            -p ' + getClientPort(cli) + ':8069 \
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             -v ' + HOME + '/sources:/mnt/extra-addons \
@@ -343,7 +342,7 @@ def update_database():
     elif ODOOVER == '7.0':
         subprocess.call(
             'sudo docker run --rm -it \
-            -p ' + client_port(cli) + ':8069 \
+            -p ' + getClientPort(cli) + ':8069 \
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
@@ -452,7 +451,7 @@ def run_client():
             ok = subprocess.call(
                 'sudo docker run -d \
                 --link aeroo_docs:aeroo \
-                -p ' + client_port(cli) + ':8069 \
+                -p ' + getClientPort(cli) + ':8069 \
                 -v ' + HOME + cli + '/config:/etc/odoo \
                 -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
                 -v ' + HOME + '/sources:/mnt/extra-addons \
@@ -463,7 +462,7 @@ def run_client():
         else:
             ok = subprocess.call(
                 'sudo docker run -d \
-                -p ' + client_port(cli) + ':8069 \
+                -p ' + getClientPort(cli) + ':8069 \
                 -v ' + HOME + cli + '/config:/etc/odoo \
                 -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
                 -v ' + HOME + 'sources:/mnt/extra-addons \
@@ -800,7 +799,7 @@ if __name__ == '__main__':
     # Check for valid client
     if args.client != None:
         for cli in args.client:
-            client_port(cli)
+            getClientPort(cli)
 
     if args.uninstall_env:
         uninstall_environment(args.version)
@@ -829,4 +828,5 @@ if __name__ == '__main__':
     if args.update_database:
         update_database()
 
-print getEnvironmentImages(args.version)
+
+print getClientPort(args.version,'jeo')
