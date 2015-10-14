@@ -484,7 +484,7 @@ def stopEnvironment(ver):
     return True
 
 
-def pullAllImages(ver):
+def pullAll(ver):
     msgrun('Pulling all images for ' + ver)
 
     for image_name in data[ver]['images']:
@@ -511,10 +511,8 @@ def pullAllImages(ver):
 def listData(ver):
     msgrun('Data for this environment - Odoo ' + ver)
     msgrun('Images ' + 19 * '-')
-
-    im = data[ver]
-    for i in im['images']:
-        msgdone(getImageFromName(ver, i))
+    for image in data[ver]['images']:
+        msgdone(getImageFromName(ver, image))
 
     msgrun('Repos ' + 20 * '-')
     for rep in getReposList(ver):
@@ -523,6 +521,8 @@ def listData(ver):
     msgrun('Clients ' + 18 * '-')
     for client in data2clients(ver):
         msgrun(client['port'] + ' ' + client['client'])
+
+    msgdone('Repos ' + 20 * '-')
     return True
 
 
@@ -557,6 +557,7 @@ def noIpInstall(ver):
 def dockerInstall(ver):
     msgrun('Installing docker')
     subprocess.call('wget -qO- https://get.docker.com/ | sh', shell=True)
+    msgdone('Done.')
     return True
 
 
@@ -631,7 +632,7 @@ if __name__ == '__main__':
     if args.run_cli:
         run_client(args.version)
     if args.pull_all:
-        pullAllImages(args.version)
+        pullAll(args.version)
     if args.list:
         listData(args.version)
     if args.no_ip_install:
