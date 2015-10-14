@@ -503,7 +503,7 @@ def pullAllImages(ver):
             msgerr(
                 'Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
 
-    msgdone('All repos ok ' + ODOOVER)
+    msgdone('All repos ok ' + ver)
 
     return True
 
