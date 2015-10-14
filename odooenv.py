@@ -336,7 +336,7 @@ def update_database(ver):
     return True
 
 
-def install_client(ver):
+def installClient(ver):
     msgrun('Install clients')
 
     # Calculate addon_path
@@ -359,12 +359,11 @@ def install_client(ver):
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-            --name ' + cli + ' ' + getImageFromName(ver, 'odoo')
+            --name ' + cli + '_tmp ' + getImageFromName(ver, 'odoo')
                                    + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'
                 , shell=True):
-            msgerr('failiing to write config file. Aborting')
-            exit(1)
+            msgerr('failing to write config file. Aborting')
 
     msgdone('Installing done')
     return True
@@ -570,14 +569,16 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.2')
     parser.add_argument('version', choices=choices)
     parser.add_argument('-U', '--uninstall-env', action='store_true',
-                        help='Uninstall and erase all files from environment (only current \
-                              ver)including database. The command ask for permission to \
-                              erase database. /n'
-                             'BE WARNED if say yes, all database files will be erased.')
+                        help='Uninstall and erase all files from environment including \
+                        database (only current ver). The command ask for permission to \
+                        erase database. BE WARNED if say yes, all database files will be erased.')
     parser.add_argument('-I', '--install-env', action='store_true',
-                        help="Install all files and odoo repos needed.")
+                        help="Install all files and odoo repos needed. It will try to \
+                        install postgres dir if doesn't exist")
+
     parser.add_argument('-i', '--install-cli', action='store_true',
-                        help="Install all clients, requires -c options")
+                        help="Install clients, requires -c option. You can define multiple clients")
+
     parser.add_argument('-R', '--run-env', action='store_true',
                         help="Run database and aeroo images.")
     parser.add_argument('-D', '--run-dev', action='store_true',
@@ -610,7 +611,7 @@ if __name__ == '__main__':
 
     # Constant Definitins
     HOME = '~/odoo-' + args.version + '/'
-    PSQL = '~/postgresql-' + args.version + '/'
+    PSQL = '~/postgresql' + '/'
 
     # Check for valid client
     if args.client != None:
@@ -621,7 +622,7 @@ if __name__ == '__main__':
     if args.install_env:
         installEnvironment(args.version)
     if args.install_cli:
-        install_client(args.version)
+        installClient(args.version)
     if args.stop_env:
         stopEnvironment(args.version)
     if args.run_env:
