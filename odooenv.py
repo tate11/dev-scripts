@@ -458,7 +458,7 @@ def run_client(ver):
     return True
 
 
-def stop_client():
+def stopClient(ver):
     msgrun('stopping clients ' + ', '.join(args.client))
     for cli in args.client:
         msginf('stop image for client ' + cli)
@@ -470,7 +470,7 @@ def stop_client():
     return True
 
 
-def stop_environment(ver):
+def stopEnvironment(ver):
     msgrun('Stopping environment')
     for name in data[ver]['images']:
         msgrun('Stopping image ' + name)
@@ -484,7 +484,7 @@ def stop_environment(ver):
     return True
 
 
-def pull_all_images(ver):
+def pullAllImages(ver):
     msgrun('Pulling all images for ' + ver)
 
     for image_name in data[ver]['images']:
@@ -508,7 +508,7 @@ def pull_all_images(ver):
     return True
 
 
-def list_data(ver):
+def listData(ver):
     msgrun('Data for this environment - Odoo ' + ver)
     msgrun('Images ' + 19 * '-')
 
@@ -526,7 +526,7 @@ def list_data(ver):
     return True
 
 
-def no_ip_install():
+def noIpInstall(ver):
     msgrun('Installing no-ip client')
     subprocess.call('sudo apt-get install make', shell=True)
     subprocess.call('sudo apt-get -y install gcc', shell=True)
@@ -554,20 +554,20 @@ def no_ip_install():
     return True
 
 
-def docker_install():
+def dockerInstall(ver):
     msgrun('Installing docker')
     subprocess.call('wget -qO- https://get.docker.com/ | sh', shell=True)
     return True
 
 
+# get choices from data structure
 choices = []
 for opt in data:
     choices.append(opt)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.0')
-    parser.add_argument('version',
-                        choices=choices)
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.2')
+    parser.add_argument('version', choices=choices)
     parser.add_argument('-U', '--uninstall-env', action='store_true',
                         help='Uninstall and erase all files from environment including \
                               databases. WARNING all database files will be erased with \
@@ -606,11 +606,40 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # #######################################
     # Constant Definitins
-
     HOME = '~/odoo-' + args.version + '/'
     PSQL = '~/postgresql-' + args.version + '/'
+
+    # Check for valid client
+    if args.client != None:
+        for cli in args.client:
+            getClientPort(args.version, cli)
+    if args.uninstall_env:
+        uninstallEnvironment(args.version)
+    if args.install_env:
+        installEnvironment(args.version)
+    if args.install_cli:
+        install_client(args.version)
+    if args.stop_env:
+        stopEnvironment(args.version)
+    if args.run_env:
+        run_environment(args.version)
+    if args.run_dev:
+        run_developer(args.version)
+    if args.stop_cli:
+        stopClient(args.version)
+    if args.run_cli:
+        run_client(args.version)
+    if args.pull_all:
+        pullAllImages(args.version)
+    if args.list:
+        listData(args.version)
+    if args.no_ip_install:
+        noIpInstall(args.version)
+    if args.docker_install:
+        dockerInstall(args.version)
+    if args.update_database:
+        update_database(args.version)
 
     """
     # version estable
@@ -775,35 +804,3 @@ if __name__ == '__main__':
         ]
     """
 
-    # #######################################
-    # Check for valid client
-    if args.client != None:
-        for cli in args.client:
-            getClientPort(args.version, cli)
-
-    if args.uninstall_env:
-        uninstallEnvironment(args.version)
-    if args.install_env:
-        installEnvironment(args.version)
-    if args.install_cli:
-        install_client(args.version)
-    if args.stop_env:
-        stop_environment(args.version)
-    if args.run_env:
-        run_environment(args.version)
-    if args.run_dev:
-        run_developer(args.version)
-    if args.stop_cli:
-        stop_client(args.version)
-    if args.run_cli:
-        run_client(args.version)
-    if args.pull_all:
-        pull_all_images(args.version)
-    if args.list:
-        list_data(args.version)
-    if args.no_ip_install:
-        no_ip_install(args.version)
-    if args.docker_install:
-        docker_install(args.version)
-    if args.update_database:
-        update_database(args.version)
