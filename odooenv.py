@@ -807,5 +807,3 @@ if __name__ == '__main__':
         docker_install()
     if args.update_database:
         update_database()
-
-print getClientPort(args.version, 'jeo')
