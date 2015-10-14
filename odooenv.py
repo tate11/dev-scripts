@@ -792,18 +792,18 @@ if __name__ == '__main__':
     if args.run_env:
         run_environment(args.version)
     if args.run_dev:
-        run_developer()
+        run_developer(args.version)
     if args.stop_cli:
-        stop_client()
+        stop_client(args.version)
     if args.run_cli:
-        run_client()
+        run_client(args.version)
     if args.pull_all:
         pull_all_images(args.version)
     if args.list:
         list_data(args.version)
     if args.no_ip_install:
-        no_ip_install()
+        no_ip_install(args.version)
     if args.docker_install:
-        docker_install()
+        docker_install(args.version)
     if args.update_database:
-        update_database()
+        update_database(args.version)
