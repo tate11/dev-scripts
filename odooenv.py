@@ -472,18 +472,17 @@ def stopClient(ver):
 
 def stopEnvironment(ver):
     r1 = r2 = 0
-    msgrun('Stopping environment '+ver)
+    msgrun('Stopping environment ' + ver)
     for name in data[ver]['images']:
         msgrun('Stopping image ' + name)
         r1 += subprocess.call('sudo docker stop ' + name, shell=True)
         r2 += subprocess.call('sudo docker rm ' + name, shell=True)
-        if r1 + r2:
-            msgerr('Fail removing ' + name)
-    if r1+r2 <> 0:
+    if r1 + r2 <> 0:
         msgerr('some images can not be stopped')
-        return True
+
     msgdone('Environment stopped')
     return True
+
 
 def pullAllImages(ver):
     msgrun('Pulling all images for ' + ver)
