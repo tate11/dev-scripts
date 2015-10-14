@@ -575,7 +575,7 @@ if __name__ == '__main__':
                               erase database. /n'
                              'BE WARNED if say yes, all database files will be erased.')
     parser.add_argument('-I', '--install-env', action='store_true',
-                        help="Install all files and odoo repos needed")
+                        help="Install all files and odoo repos needed.")
     parser.add_argument('-i', '--install-cli', action='store_true',
                         help="Install all clients, requires -c options")
     parser.add_argument('-R', '--run-env', action='store_true',
