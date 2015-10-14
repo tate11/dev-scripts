@@ -2,23 +2,23 @@
 # -*- coding: utf-8 -*-
 # ##############################################################################
 #
-#    Jorge Obiols Software,
-#    Copyright (C) 2015-Today JEO <jorge.obiols@gmail.com>
+# Jorge Obiols Software,
+# Copyright (C) 2015-Today JEO <jorge.obiols@gmail.com>
 #
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
 #
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-###############################################################################
+# ##############################################################################
 
 
 import argparse
@@ -180,18 +180,16 @@ data = {
 }
 
 
-def data2image(ver, image):
-    im = data[ver]
-    im1 = im['images']
-    im2 = im1[image]
-    return im2
-
-
-def getClientImage(ver):
-    im = data[ver]
-    im1 = im['images']
-    im2 = im1['odoo']
-    return im2
+def getImageFromName(ver, image):
+    ret = ''
+    image = data[ver]['images'][image]
+    ret += image['repo']
+    if image['dir'] != '':
+        ret += '/'
+        ret += image['dir']
+    if image['ver'] != '':
+        ret += ':' + image['ver']
+    return ret
 
 
 def getEnvironmentImages(ver):
@@ -216,10 +214,8 @@ def data2clients(ver):
     return cl
 
 
-def data2repos(ver):
-    im = data[ver]
-    re = im['repos']
-    return re
+def getReposList(ver):
+    return data[ver]['repos']
 
 
 def data2clients(ver):
@@ -228,17 +224,7 @@ def data2clients(ver):
     return re
 
 
-def image_from_dict(image):
-    ret = ''
-    ret += image['repo']
-    if image['dir'] != '':
-        ret += '/'
-        ret += image['dir']
-    if image['ver'] != '':
-        ret += ':' + image['ver']
-    return ret
-
-def repo_from_dict(dict):
+def formatRepoFromDict(dict):
     return dict['repo'] + '/' + dict['dir']
 
 
@@ -275,7 +261,7 @@ def msginf(msg):
     print yellow_light(msg)
 
 
-def getClientPort(ver,clientName):
+def getClientPort(ver, clientName):
     port = ''
     for client in data[ver]['clients']:
         if client['client'] == clientName:
@@ -285,7 +271,7 @@ def getClientPort(ver,clientName):
     return port
 
 
-def uninstall_environment(ver):
+def uninstallEnvironment(ver):
     msgrun('Uninstalling odoo environment ' + ver)
     subprocess.call(['sudo rm -r ' + HOME], shell=True)
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
@@ -293,53 +279,35 @@ def uninstall_environment(ver):
     return True
 
 
-def install_environment(ver):
+def installEnvironment(ver):
     msgrun('Installing odoo environment ' + ver)
 
     # if not exist psql create it
     if subprocess.call(['ls ' + PSQL], shell=True):
         subprocess.call(['mkdir ' + PSQL], shell=True)
 
-    # install sources
+    # make sources dir
     subprocess.call(['mkdir -p ' + HOME + 'sources'], shell=True)
 
-    for repo in data2repos(ver):
-        msginf('pulling repo ' + repo_from_dict(repo))
-        if subprocess.call('git clone -b ' +
-                                   repo['branch'] +
-                                   ' --depth 1 http://github.com/' +
-                                   repo_from_dict(repo) +
-                                   ' ' +
-                                   HOME + 'sources/'
-                                   + repo['dir'], shell=True):
+    # pull each repo in sources dir
+    for repo in getReposList(ver):
+        msginf('pulling repo ' + formatRepoFromDict(repo))
+        if subprocess.call('git clone -b ' + repo['branch'] + ' --depth 1 http://github.com/' +
+                                   formatRepoFromDict(repo) + ' ' + HOME + 'sources/' + repo['dir'],
+                           shell=True):
             msgerr('Fail installing environment, uninstall and try again.')
 
     msgdone('Install Done ' + ver)
     return True
 
 
-def update_database():
+def update_database(ver):
     db = args.database[0]
     mods = args.module[0]
     cli = args.client[0]
 
     msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
-
-    if (ODOOVER == '8.0') or (ODOOVER == '8.0.1') or (ODOOVER == 'ou-8.0'):
-        subprocess.call(
-            'sudo docker run --rm -it \
-            -p ' + getClientPort(cli) + ':8069 \
-            -v ' + HOME + cli + '/config:/etc/odoo \
-            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-            -v ' + HOME + '/sources:/mnt/extra-addons \
-            --link db-odoo:db \
-            --name ' + cli + '-update ' + \
-            image_from_dict(ODOO) + ' -- '
-                                    ' --stop-after-init -d ' + db + ' -u ' + ', '.join(
-                mods)
-            , shell=True)
-
-    elif ODOOVER == '7.0':
+    if ver[1:1] == '7':
         subprocess.call(
             'sudo docker run --rm -it \
             -p ' + getClientPort(cli) + ':8069 \
@@ -348,9 +316,21 @@ def update_database():
             -v ' + HOME + 'sources:/mnt/extra-addons \
             --link db-odoo:db \
             --name ' + cli + '-update ' + \
-            image_from_dict(ODOO) + ' -- '
-                                    ' --db_user=odoo --db_password=odoo --db_host=db ' +
+            getImageFromName(ver, 'odoo') + ' -- '
+                                            ' --db_user=odoo --db_password=odoo --db_host=db ' +
             ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
+            , shell=True)
+    else:
+        subprocess.call(
+            'sudo docker run --rm -it \
+            -p ' + getClientPort(cli) + ':8069 \
+            -v ' + HOME + cli + '/config:/etc/odoo \
+            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+            -v ' + HOME + '/sources:/mnt/extra-addons \
+            --link db-odoo:db \
+            --name ' + cli + '-update ' + \
+            getImageFromName(ver, 'odoo') + ' -- '
+                                            ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
             , shell=True)
 
     return True
@@ -361,7 +341,7 @@ def install_client(ver):
 
     # Calculate addon_path
     path = '/mnt/extra-addons/'
-    repos = data2repos(ver)
+    repos = getReposList(ver)
     addon_path = path + repos[0]['dir']
     for rep in repos[1:]:
         addon_path += ',' + path + rep['dir']
@@ -379,7 +359,7 @@ def install_client(ver):
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-            --name ' + cli + ' ' + image_from_dict(data2image(ver, 'odoo'))
+            --name ' + cli + ' ' + getImageFromName(ver, 'odoo')
                                    + ' -- --stop-after-init -s \
             --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'
                 , shell=True):
@@ -396,7 +376,7 @@ def run_aeroo_image():
                     -p 127.0.0.1:8989:8989 \
                     --name="aeroo_docs" \
                     --restart=always ' + \
-                    image_from_dict(AEROO), shell=True):
+                    getImageFromName(ver, 'aeroo'), shell=True):
         msgerr('Fail running environment.')
         return False
     return True
@@ -404,17 +384,16 @@ def run_aeroo_image():
 
 def run_environment(ver):
     msgrun('Running environment images v' + ver)
-    if ODOOVER == '8.0.1' or ODOOVER == '8.0':
-        run_aeroo_image()
+    if ver[1:1] == '8':
+        run_aeroo_image(ver)
 
-    if subprocess.call(
-                                    'sudo docker run -d \
-                                    -e POSTGRES_USER=odoo \
-                                    -e POSTGRES_PASSWORD=odoo \
-                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+    if subprocess.call('sudo docker run -d \
+                    -e POSTGRES_USER=odoo \
+                    -e POSTGRES_PASSWORD=odoo \
+                    -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
-                    image_from_dict(POSTGRES), shell=True):
+                               getImageFromName(ver, 'postgres'), shell=True):
         msgerr('Fail running environment')
     else:
         msgdone("Environment up and running")
@@ -425,18 +404,17 @@ def run_environment(ver):
 def run_developer():
     msgrun('Running environment in developer mode.')
 
-    if ODOOVER == '8.0.1' or ODOOVER == '8.0':
-        run_aeroo_image()
+    if ver[1:1] == '8':
+        run_aeroo_image(ver)
 
-    if subprocess.call(
-                                    'sudo docker run -d \
-                                    -p 5432:5432 \
-                                    -e POSTGRES_USER=odoo \
-                                    -e POSTGRES_PASSWORD=odoo \
-                                    -v ' + PSQL + ':/var/lib/postgresql/data \
+    if subprocess.call('sudo docker run -d \
+                       -p 5432:5432 \
+                       -e POSTGRES_USER=odoo \
+                       -e POSTGRES_PASSWORD=odoo \
+                       -v ' + PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
-                    image_from_dict(POSTGRES), shell=True):
+                               getImageFromName(ver, 'postgres'), shell=True):
         msgerr('Fail running environment.')
     else:
         msgdone('Environment up and running.')
@@ -444,10 +422,10 @@ def run_developer():
     return True
 
 
-def run_client():
+def run_client(ver):
     for cli in args.client:
         msgrun('Running image for client ' + cli)
-        if ODOOVER == '8.0' or ODOOVER == '8.0.1':
+        if ver[1:1] == '8':
             ok = subprocess.call(
                 'sudo docker run -d \
                 --link aeroo_docs:aeroo \
@@ -458,7 +436,7 @@ def run_client():
                 --link db-odoo:db \
                 --restart=always \
                 --name ' + cli + ' ' + \
-                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*', shell=True)
+                getImageFromName(ver, 'odoo') + ' -- --db-filter=' + cli + '_.*', shell=True)
         else:
             ok = subprocess.call(
                 'sudo docker run -d \
@@ -469,7 +447,7 @@ def run_client():
                 --link db-odoo:db \
                 --restart=always \
                 --name ' + cli + ' ' + \
-                image_from_dict(ODOO) + ' -- --db-filter=' + cli + '_.*' +
+                getImageFromName(ver, 'odoo') + ' -- --db-filter=' + cli + '_.*' +
                 ' --db_user=odoo --db_password=odoo --db_host=db'
                 , shell=True)
         if not ok:
@@ -510,7 +488,7 @@ def pull_all_images(ver):
     msgrun('Pulling all images for ' + ver)
 
     for image_name in data[ver]['images']:
-        image = image_from_dict(data2image(ver, image_name))
+        image = getImageFromName(ver, image_name)
         msginf('Pulling ' + image)
         if subprocess.call('sudo docker pull ' + image, shell=True):
             msgerr('Fail pulling image ' + image + ' - Aborting.')
@@ -519,7 +497,7 @@ def pull_all_images(ver):
 
     msgrun('Pulling all repos for ' + ver)
     for repo in data[ver]['repos']:
-        msginf('pulling repo ' + repo_from_dict(repo))
+        msginf('pulling repo ' + formatRepoFromDict(repo))
         if subprocess.call('cd ' + HOME + 'sources/' + repo[
             'dir'] + '&&' + ' sudo git pull', shell=True):
             msgerr(
@@ -536,11 +514,11 @@ def list_data(ver):
 
     im = data[ver]
     for i in im['images']:
-        msgdone(image_from_dict(data2image(ver, i)))
+        msgdone(getImageFromName(ver, i))
 
     msgrun('Repos ' + 20 * '-')
-    for rep in data2repos(ver):
-        msgdone(repo_from_dict(rep) + '  b ' + rep['branch'])
+    for rep in getReposList(ver):
+        msgdone(formatRepoFromDict(rep) + '  b ' + rep['branch'])
 
     msgrun('Clients ' + 18 * '-')
     for client in data2clients(ver):
@@ -592,7 +570,8 @@ if __name__ == '__main__':
                         choices=choices)
     parser.add_argument('-U', '--uninstall-env', action='store_true',
                         help='Uninstall and erase all files from environment including \
-                              databases. WARNING all database files will be erased.')
+                              databases. WARNING all database files will be erased with \
+                              warning.')
     parser.add_argument('-I', '--install-env', action='store_true',
                         help="Install all files and odoo repos needed")
     parser.add_argument('-i', '--install-cli', action='store_true',
@@ -627,13 +606,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    ########################################
+    # #######################################
     # Constant Definitins
-    ODOOVER = args.version
 
-    HOME = '~/odoo-' + ODOOVER + '/'
-    PSQL = '~/postgresql-' + ODOOVER + '/'
+    HOME = '~/odoo-' + args.version + '/'
+    PSQL = '~/postgresql-' + args.version + '/'
 
+    """
     # version estable
     if ODOOVER == '8.0':
         # images
@@ -655,7 +634,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-                 ]
+        ]
 
     elif ODOOVER == '7.0':
         # images
@@ -679,7 +658,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-                 ]
+        ]
 
     # Version de experimentación
     elif ODOOVER == '7.0.1':
@@ -705,7 +684,7 @@ if __name__ == '__main__':
                  {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
-                 ]
+        ]
 
     # utlima version estable de la Open Upgrade
     elif ODOOVER == 'ou-8.0':
@@ -727,7 +706,7 @@ if __name__ == '__main__':
                  {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
-                 ]
+        ]
 
     # ultima version de adhoc
     elif ODOOVER == '8.0.1':
@@ -761,7 +740,7 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
                  {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
                  {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
-                 ]
+        ]
 
     # version experimental
     elif ODOOVER == '8.0.2':
@@ -793,18 +772,19 @@ if __name__ == '__main__':
                  {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
                  {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
-                 ]
+        ]
+    """
 
-    ########################################
+    # #######################################
     # Check for valid client
     if args.client != None:
         for cli in args.client:
             getClientPort(cli)
 
     if args.uninstall_env:
-        uninstall_environment(args.version)
+        uninstallEnvironment(args.version)
     if args.install_env:
-        install_environment(args.version)
+        installEnvironment(args.version)
     if args.install_cli:
         install_client(args.version)
     if args.stop_env:
@@ -828,5 +808,4 @@ if __name__ == '__main__':
     if args.update_database:
         update_database()
 
-
-print getClientPort(args.version,'jeo')
+print getClientPort(args.version, 'jeo')
