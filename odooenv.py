@@ -37,9 +37,7 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-# TODO la base de datos no tiene que estar atada a la versión sufi con el filtro en bd
 # TODO sacar la info a un xml "http://lxml.de/tutorial.html"
-# TODO cuando hacemos un -i no ponerle nombre a la imagen para no tener que bajar el server
 
 data = {
     # Version 7.0 de producción Makeover
@@ -122,8 +120,8 @@ data = {
         ],
 
         'repos': [
-            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0.x'},
-            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0.x'},
+            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
             {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
             {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
             {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
@@ -307,7 +305,7 @@ def update_database(ver):
     cli = args.client[0]
 
     msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
-    if ver[1:1] == '7':
+    if ver[0:1] == '7':
         subprocess.call(
             'sudo docker run --rm -it \
             -p ' + getClientPort(ver, cli) + ':8069 \
@@ -369,21 +367,20 @@ def installClient(ver):
     return True
 
 
-def run_aeroo_image():
-    if subprocess.call(
-                    'sudo docker run -d \
+def run_aeroo_image(ver):
+    if subprocess.call('sudo docker run -d \
                     -p 127.0.0.1:8989:8989 \
                     --name="aeroo_docs" \
                     --restart=always ' + \
                     getImageFromName(ver, 'aeroo'), shell=True):
-        msgerr('Fail running environment.')
-        return False
+        msginfo('Fail running aeroo-image.')
     return True
 
 
-def run_environment(ver):
+def runEnvironment(ver):
     msgrun('Running environment images v' + ver)
-    if ver[1:1] == '8':
+
+    if ver[0:1] == '8':
         run_aeroo_image(ver)
 
     if subprocess.call('sudo docker run -d \
@@ -396,14 +393,13 @@ def run_environment(ver):
         msgerr('Fail running environment')
     else:
         msgdone("Environment up and running")
-
     return True
 
 
-def run_developer():
+def run_developer(ver):
     msgrun('Running environment in developer mode.')
 
-    if ver[1:1] == '8':
+    if ver[0:1] == '8':
         run_aeroo_image(ver)
 
     if subprocess.call('sudo docker run -d \
@@ -414,17 +410,15 @@ def run_developer():
                     --restart=always \
                     --name db-odoo ' + \
                                getImageFromName(ver, 'postgres'), shell=True):
-        msgerr('Fail running environment.')
-    else:
-        msgdone('Environment up and running.')
-
+        msgerr('Fail running postgres image.')
+    msgdone('Environment up and running.')
     return True
 
 
 def run_client(ver):
     for cli in args.client:
         msgrun('Running image for client ' + cli)
-        if ver[1:1] == '8':
+        if ver[0:1] == '8':
             ok = subprocess.call(
                 'sudo docker run -d \
                 --link aeroo_docs:aeroo \
@@ -472,8 +466,9 @@ def stopClient(ver):
 def stopEnvironment(ver):
     r1 = r2 = 0
     msgrun('Stopping environment ' + ver)
-    for name in data[ver]['images']:
+    for name in ['db-odoo', 'aeroo_docs']:
         msgrun('Stopping image ' + name)
+
         r1 += subprocess.call('sudo docker stop ' + name, shell=True)
         r2 += subprocess.call('sudo docker rm ' + name, shell=True)
     if r1 + r2 <> 0:
@@ -626,7 +621,7 @@ if __name__ == '__main__':
     if args.stop_env:
         stopEnvironment(args.version)
     if args.run_env:
-        run_environment(args.version)
+        runEnvironment(args.version)
     if args.run_dev:
         run_developer(args.version)
     if args.stop_cli:
