@@ -4,8 +4,7 @@
 #
 # add this line to sudo crontab -e to backup twice a day
 #  m h  dom mon dow   command
-#  0 0,12 *   *   *   host-backup odoo orto >> /var/log/bkp.log
-#  0 0    *   *   1   housekeeping >> /var/log/bkp.log
+#  0 0,12 *   *   *   db-backup client database
 ###########################################################
 #set -x
 readonly RED="\e[31m"
@@ -25,23 +24,34 @@ function msgdone {
 function msgerror {
     echo -e "${RED}ERROR: $1${STD}"
 }
+###########################################################
 
 DIR="/home/jorge/odoo-8.0.1/backup"
 ERROR=0
 CUSTOMER=$1
 DB=$2
 DATE=$(date +"%Y %m %d %H:%M")
+LASTBKP="/var/log/$CUSTOMER-last-backup.log"
+LOGFILE="/var/log/$CUSTOMER-backup.log"
 
+# deleting old files
+for file in `find $DIR/* -mtime +30 -type f`
+do
+  msginfo "deleting:  ${file}" >> $LOGFILE
+  rm $file
+done
+
+# backing up database and files
 docker run --rm -i \
   --name bkp \
   --link db-odoo:db \
   --volumes-from $CUSTOMER \
   -v $DIR:/backup  \
-  --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
+  --env DBNAME=$DB jobiols/backup backup &> $LASTBKP
 if [ $? -ne 0 ]
   then
-    msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
+    msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!" >>$LOGFILE
     exit 1
 fi
-msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} successfuly done"
+msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success" >>$LOGFILE
 
