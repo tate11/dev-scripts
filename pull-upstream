@@ -1,0 +1,60 @@
+#!/bin/bash
+#for dir in $(ls)
+#do
+#  if [ -d $dir ] 
+#  then
+#	echo "Pullig repository --> " $dir 
+#	cd $dir
+#	git pull   
+#	cd -
+#  fi
+#done
+
+cd ../odoo-argentina
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../odoo-addons
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../aeroo_reports
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../server-tools
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../web
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../management-system
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
+
+cd ../knowledge
+git fetch upstream
+git checkout 8.0
+git merge upstream/8.0
+git push origin 8.0
+cd -
