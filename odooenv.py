@@ -20,7 +20,6 @@
 #
 # ##############################################################################
 
-
 import argparse
 import subprocess
 import sys
@@ -40,6 +39,72 @@ CLEAR = "\033[0;m"
 # TODO sacar la info a un xml "http://lxml.de/tutorial.html"
 
 data = {
+    # Version 9.0 experimental
+    '9.0': {
+        'images': {
+            'odoo': {'repo': 'adhoc', 'dir': 'odoo-adhoc', 'ver': '8.0'},
+            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
+        },
+
+        'clients': [
+            {'client': 'jeo', 'port': '8069'},
+        ],
+        'repos': [
+        ],
+    },
+
+    # version estable de jeo
+    '8.0': {
+        'images': {
+            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
+            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
+            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
+            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
+        },
+
+        'clients': [
+            {'client': 'str', 'port': '8070'},
+            {'client': 'makeover', 'port': '8069'},
+        ],
+        'repos': [
+            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+        ]
+    },
+
+    # ultima version de adhoc
+    '8.0.1': {
+        'images': {
+            'odoo': {'repo': 'adhoc', 'dir': 'odoo-adhoc', 'ver': '8.0'},
+            'aeroo': {'repo': 'adhoc', 'dir': 'aeroo-docs', 'ver': 'latest'},
+            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
+            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
+        },
+
+        'clients': [
+            {'client': 'jeo', 'port': '8070'},
+            {'client': 'makeover', 'port': '8050'}
+        ],
+
+        'repos': [
+            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+            {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
+            {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
+            {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
+            {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
+            {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
+            {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
+            {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
+        ]
+    },
+
     # Version 7.0 de producción Makeover
     '7.0': {
         'images': {
@@ -82,56 +147,7 @@ data = {
         ],
     },
 
-    '8.0': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
-            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
-        },
 
-        'clients': [
-            {'client': 'str', 'port': '8070'},
-            {'client': 'makeover', 'port': '8069'},
-        ],
-        'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-        ]
-    },
-
-    # ultima version de adhoc
-    '8.0.1': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
-            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
-        },
-
-        'clients': [
-            {'client': 'jeo', 'port': '8070'},
-            {'client': 'makeover', 'port': '8050'}
-        ],
-
-        'repos': [
-            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
-            {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
-        ]
-    },
 
     'ou-8.0': {
         'images': {
