@@ -18,7 +18,7 @@ docker run --rm -i \
   --name bkp \
   --link db-odoo:db \
   --volumes-from $CUSTOMER \
-  -v ~/odoo80/backup:/backup  \
+  -v ~/odoo-8.0.1/backup:/backup  \
   --env DBNAME=$DB jobiols/backup backup &> /var/log/$CUSTOMER.backup.log
 if [ $? -ne 0 ]
   then

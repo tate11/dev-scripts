@@ -555,6 +555,22 @@ def dockerInstall(ver):
     return True
 
 
+def backup(ver):
+    msgrun('Backing up...')
+
+    if subprocess.call('sudo docker run --rm \
+        -v ' + HOME + cli + '/config:/etc/odoo \
+        -v ' + HOME + 'sources:/mnt/extra-addons \
+        -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
+        --name ' + cli + '_tmp ' + getImageFromName(ver, 'backup')
+                               + ' -- --stop-after-init -s \
+        --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'
+            , shell=True):
+        msgerr('failing backup. Aborting')
+
+    msgdone('Backup done')
+    return True
+
 # get choices from data structure
 choices = []
 for opt in data:
@@ -601,6 +617,8 @@ if __name__ == '__main__':
                         help="Database to update")
     parser.add_argument('-m', '--module', dest='module', action='append', nargs=1,
                         help="Module to update or all, you can specify multiple -m options")
+    parser.add_argument('-b', '--backup', action='store_true',
+                        help="Lauch backup")
 
     args = parser.parse_args()
 
@@ -638,6 +656,8 @@ if __name__ == '__main__':
         dockerInstall(args.version)
     if args.update_database:
         update_database(args.version)
+    if args.backup:
+        backup(args.version)
 
     """
     # version estable
