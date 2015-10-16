@@ -1,7 +1,27 @@
 #!/bin/bash
 ################################
 #Include file lib in same dir as this file
-. $(dirname $0)"/lib"
+#. $(dirname $0)"/lib"
+###########################################################
+#set -x
+readonly RED="\e[31m"
+readonly YELLOW="\e[33m"
+readonly GREEN="\e[32m"
+readonly STD="\e[0m"
+
+function msginfo {
+    echo -e "${STD}$1"
+}
+function msgrun {
+    echo -e "${YELLOW}$1...${STD}"
+}
+function msgdone {
+    echo -e "${GREEN}$1${STD}"
+}
+function msgerror {
+    echo -e "${RED}ERROR: $1${STD}"
+}
+###########################################################
 
 if [ $# -lt 3 ]
   then
@@ -26,7 +46,5 @@ docker run --rm -t \
 if [ $? -ne 0 ]
   then
     msgerror "Restore for ${CUSTOMER} with  ${DB} failed!"
-    HASERROR=1
-  else
-  msgdone "Restore for ${DB} successful done$"
 fi
+msgdone "Restore for ${CUSTOMER} with  ${DB} at ${DATE} successful done"

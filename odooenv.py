@@ -411,27 +411,7 @@ def runEnvironment(ver):
         msgdone("Environment up and running")
     return True
 
-
-def run_developer(ver):
-    msgrun('Running environment in developer mode.')
-
-    if ver[0:1] == '8':
-        run_aeroo_image(ver)
-
-    if subprocess.call('sudo docker run -d \
-                       -p 5432:5432 \
-                       -e POSTGRES_USER=odoo \
-                       -e POSTGRES_PASSWORD=odoo \
-                       -v ' + PSQL + ':/var/lib/postgresql/data \
-                    --restart=always \
-                    --name db-odoo ' + \
-                               getImageFromName(ver, 'postgres'), shell=True):
-        msgerr('Fail running postgres image.')
-    msgdone('Environment up and running.')
-    return True
-
-
-def run_client(ver):
+def runClient(ver):
     for cli in args.client:
         msgrun('Running image for client ' + cli)
         if ver[0:1] == '8':
@@ -465,6 +445,27 @@ def run_client(ver):
             msgerr("Can't run client " + cli + ", by the way... did you run -R ?")
 
     return True
+
+
+def run_developer(ver):
+    msgrun('Running environment in developer mode.')
+
+    if ver[0:1] == '8':
+        run_aeroo_image(ver)
+
+    if subprocess.call('sudo docker run -d \
+                       -p 5432:5432 \
+                       -e POSTGRES_USER=odoo \
+                       -e POSTGRES_PASSWORD=odoo \
+                       -v ' + PSQL + ':/var/lib/postgresql/data \
+                    --restart=always \
+                    --name db-odoo ' + \
+                               getImageFromName(ver, 'postgres'), shell=True):
+        msgerr('Fail running postgres image.')
+    msgdone('Environment up and running.')
+    return True
+
+
 
 
 def stopClient(ver):
@@ -661,7 +662,7 @@ if __name__ == '__main__':
     if args.stop_cli:
         stopClient(args.version)
     if args.run_cli:
-        run_client(args.version)
+        runClient(args.version)
     if args.pull_all:
         pullAll(args.version)
     if args.list:

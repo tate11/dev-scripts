@@ -26,6 +26,14 @@ function msgerror {
 }
 ###########################################################
 
+if [ $# -lt 2 ]
+  then
+    msgerror "Too few arguments supplied!"
+    msginfo "Command: db-backup [customer] [db]"
+    exit 0
+fi
+
+
 DIR="/home/jorge/odoo-8.0.1/backup"
 ERROR=0
 CUSTOMER=$1
