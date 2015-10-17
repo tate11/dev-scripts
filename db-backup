@@ -42,13 +42,6 @@ DATE=$(date +"%Y %m %d %H:%M")
 LASTBKP="/var/log/$CUSTOMER-last-backup.log"
 LOGFILE="/var/log/$CUSTOMER-backup.log"
 
-# deleting old files
-for file in `find $DIR/* -mtime +30 -type f`
-do
-  msginfo "deleting:  ${file}" >> $LOGFILE
-  rm $file
-done
-
 # backing up database and files
 docker run --rm -i \
   --name bkp \
@@ -61,5 +54,13 @@ if [ $? -ne 0 ]
     msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!" >>$LOGFILE
     exit 1
 fi
+
+# deleting old files
+for file in `find $DIR/* -mtime +30 -type f`
+do
+  msginfo "deleting:  ${file}" >> $LOGFILE
+  rm $file
+done
+
 msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success" >>$LOGFILE
 

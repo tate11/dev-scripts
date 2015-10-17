@@ -33,10 +33,11 @@ fi
 CUSTOMER=$1
 DB=$2
 DATE=$3
+DIR="/home/jorge/odoo-8.0.1/backup"
 
 docker run --rm -t \
        --volumes-from $CUSTOMER \
-       -v ~/odoo80/backup:/backup \
+       -v $DIR:/backup \
        --link db-odoo:db \
        --env DBNAME=$DB \
        --env DATE=$DATE \
