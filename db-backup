@@ -52,6 +52,7 @@ docker run --rm -i \
 if [ $? -ne 0 ]
   then
     msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
+    cat $LASTBKP
     exit 1
 fi
 
