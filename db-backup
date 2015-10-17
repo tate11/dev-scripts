@@ -40,7 +40,6 @@ DATE=$(date +"%Y %m %d %H:%M")
 LASTBKP="/var/log/$CUSTOMER-last-backup.log"
 LOGFILE="/var/log/$CUSTOMER-backup.log"
 DIR=$(readlink -f ~/odoo-8.0/$CUSTOMER/backup)
-msginfo $DIR
 
 # backing up database and files
 docker run --rm -i \
