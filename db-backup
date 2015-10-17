@@ -33,8 +33,7 @@ if [ $# -lt 2 ]
     exit 0
 fi
 
-
-DIR="/home/jorge/odoo-8.0.1/backup"
+DIR="/home/jorge/odoo-8.0/backup"
 ERROR=0
 CUSTOMER=$1
 DB=$2
