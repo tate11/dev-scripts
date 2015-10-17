@@ -44,6 +44,7 @@ LOGFILE="/var/log/$CUSTOMER-backup.log"
 
 # backing up database and files
 docker run --rm -i \
+  --name bkp \
   --link db-odoo:db \
   --volumes-from $CUSTOMER \
   -v $DIR:/backup  \
@@ -62,5 +63,5 @@ do
   rm $file
 done
 
-msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success" >>$LOGFILE
+msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success"
 
