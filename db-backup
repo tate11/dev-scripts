@@ -51,14 +51,14 @@ docker run --rm -i \
   --env DBNAME=$DB jobiols/backup backup &> $LASTBKP
 if [ $? -ne 0 ]
   then
-    msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!" >>$LOGFILE
+    msgerror "${DATE} Backup for client ${CUSTOMER} with db ${DB} failed!"
     exit 1
 fi
 
 # deleting old files
 for file in `find $DIR/* -mtime +30 -type f`
 do
-  msginfo "deleting:  ${file}" >> $LOGFILE
+  msginfo "deleting:  ${file}"
   rm $file
 done
 
