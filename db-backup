@@ -56,11 +56,11 @@ if [ $? -ne 0 ]
 fi
 
 # deleting old files
-#for file in `find $DIR/* -mtime +30 -type f`
-#do
-#  msginfo "deleting:  ${file}"
-#  rm $file
-#done
+for file in `find $DIR/* -mtime +30 -type f`
+do
+  msginfo "deleting:  ${file}"
+  rm $file
+done
 
 msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success"
 
