@@ -533,7 +533,6 @@ def listData(ver):
     for client in data2clients(ver):
         msgrun(client['port'] + ' ' + client['client'])
 
-    msgdone('Repos ' + 20 * '-')
     return True
 
 
@@ -647,6 +646,7 @@ if __name__ == '__main__':
     if args.client != None:
         for cli in args.client:
             getClientPort(args.version, cli)
+
     if args.uninstall_env:
         uninstallEnvironment(args.version)
     if args.install_env:
@@ -675,167 +675,4 @@ if __name__ == '__main__':
         update_database(args.version)
     if args.backup:
         backup(args.version)
-
-    """
-    # version estable
-    if ODOOVER == '8.0':
-        # images
-        ODOO = {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'}
-        AEROO = {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'}
-        POSTGRES = {'repo': 'postgres', 'dir': '', 'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
-        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'str', 'port': '8070'},
-                   {'client': 'makeover', 'port': '8069'}]
-
-        # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-        ]
-
-    elif ODOOVER == '7.0':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
-                'ver': '7.0'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
-        IMAGES = [ODOO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'makeover', 'port': '8069'},
-                   {'client': 'pirulo', 'port': '8070'}]
-
-        # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-        ]
-
-    # Version de experimentación
-    elif ODOOVER == '7.0.1':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
-                'ver': '7.0.1'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
-        IMAGES = [ODOO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'makeover', 'port': '8069'},
-                   {'client': 'pirulo', 'port': '8070'}]
-
-        # repos
-        REPOS = [{'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
-                 {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
-        ]
-
-    # utlima version estable de la Open Upgrade
-    elif ODOOVER == 'ou-8.0':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'docker-openupgrade',
-                'ver': '8.0'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        IMAGES = [ODOO, POSTGRES]
-
-        # clients
-        CLIENTS = [{'client': 'makeover', 'port': '8069'},
-                   {'client': 'jeo', 'port': '8070'}]
-
-        # repos
-        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
-        ]
-
-    # ultima version de adhoc
-    elif ODOOVER == '8.0.1':
-        # images
-        ODOO = {'repo': 'jobiols',
-                'dir': 'odoo-adhoc',
-                'ver': '8.0'}
-        AEROO = {'repo': 'jobiols',
-                 'dir': 'aeroo-docs',
-                 'ver': 'latest'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
-        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'jeo', 'port': '8070'},
-                   {'client': 'makeover', 'port': '8050'}]
-
-        # repos
-        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0.x'},
-                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0.x'},
-                 {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
-                 {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
-                 {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
-        ]
-
-    # version experimental
-    elif ODOOVER == '8.0.2':
-        # images
-        ODOO = {'repo': 'adhoc',
-                'dir': 'odoo-adhoc',
-                'ver': '8.0'}
-        AEROO = {'repo': 'jobiols',
-                 'dir': 'aeroo-docs',
-                 'ver': 'latest'}
-        POSTGRES = {'repo': 'postgres',
-                    'dir': '',
-                    'ver': '9.4'}
-        BACKUP = {'repo': 'jobiols',
-                  'dir': 'backup',
-                  'ver': ''}
-        IMAGES = [ODOO, AEROO, POSTGRES, BACKUP]
-
-        # clients
-        CLIENTS = [{'client': 'str', 'port': '8069'},
-                   {'client': 'makeover', 'port': '8070'}]
-
-        # repos jobiols
-        REPOS = [{'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0.x'},
-                 {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0.x'},
-                 {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-                 {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'}
-        ]
-    """
 
