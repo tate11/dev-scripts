@@ -24,25 +24,17 @@ import argparse
 import subprocess
 import sys
 
-# root = etree.Element('root')
-# etree.SubElement(root,"c1")
-# etree.SubElement(root,"c2")
-# etree.SubElement(root,"c3")
-# print(etree.tostring(root, pretty_print=True))
-
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-# TODO sacar la info a un xml "http://lxml.de/tutorial.html"
-
 data = {
     # Version 9.0 experimental
     '9.0': {
         'images': {
-            'odoo': {'repo': 'adhoc', 'dir': 'odoo-adhoc', 'ver': '8.0'},
+            'odoo': {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
             'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
         },
 
@@ -63,7 +55,7 @@ data = {
         },
 
         'clients': [
-            {'client': 'str', 'port': '8070'},
+            {'client': 'jeo', 'port': '8070'},
             {'client': 'makeover', 'port': '8069'},
         ],
         'repos': [
@@ -74,6 +66,7 @@ data = {
             {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
         ]
     },
 
@@ -315,37 +308,39 @@ def installEnvironment(ver):
     return True
 
 
-def update_database(ver):
+def updateDatabase(ver):
     db = args.database[0]
-    mods = args.module[0]
+    mods = args.module
     cli = args.client[0]
 
-    msgrun('Performing update database on ' + db + ' with module ' + ', '.join(mods))
-    if ver[0:1] == '7':
-        subprocess.call(
-            'sudo docker run --rm -it \
-            -p ' + getClientPort(ver, cli) + ':8069 \
+    msg = 'Performing update'
+    if mods[0] == 'all':
+        msg += ' of all modules'
+    else:
+        msg += ' of module(s) ' + ', '.join(mods)
+
+    msg += ' on database "' + db + '"'
+
+    if args.debug:
+        msg += ' forcing debug mode'
+    msgrun(msg)
+
+    params = 'sudo docker run --rm -it \
             -v ' + HOME + cli + '/config:/etc/odoo \
             -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
             -v ' + HOME + 'sources:/mnt/extra-addons \
-            --link db-odoo:db \
-            --name ' + cli + '-update ' + \
-            getImageFromName(ver, 'odoo') + ' -- '
-                                            ' --db_user=odoo --db_password=odoo --db_host=db ' +
-            ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
-            , shell=True)
-    else:
-        subprocess.call(
-            'sudo docker run --rm -it \
-            -p ' + getClientPort(ver, cli) + ':8069 \
-            -v ' + HOME + cli + '/config:/etc/odoo \
-            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-            -v ' + HOME + '/sources:/mnt/extra-addons \
-            --link db-odoo:db \
-            --name ' + cli + '-update ' + \
-            getImageFromName(ver, 'odoo') + ' -- '
-                                            ' --stop-after-init -d ' + db + ' -u ' + ', '.join(mods)
-            , shell=True)
+            --link db-odoo:db ' + \
+             getImageFromName(ver, 'odoo') + ' -- ' + \
+             ' --stop-after-init \
+             -d ' + db + ' -u ' + ', '.join(mods)
+
+    if ver[0:1] == '7':
+        params += ' --db_user=odoo --db_password=odoo --db_host=db '
+
+    if args.debug:
+        params += ' --debug'
+
+    subprocess.call(params, shell=True)
 
     return True
 
@@ -593,48 +588,89 @@ for opt in data:
     choices.append(opt)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.2')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.3')
     parser.add_argument('version', choices=choices)
-    parser.add_argument('-U', '--uninstall-env', action='store_true',
+
+    parser.add_argument('-U', '--uninstall-env',
+                        action='store_true',
                         help='Uninstall and erase all files from environment including \
                         database (only current ver). The command ask for permission to \
                         erase database. BE WARNED if say yes, all database files will be erased.')
-    parser.add_argument('-I', '--install-env', action='store_true',
+
+    parser.add_argument('-I', '--install-env',
+                        action='store_true',
                         help="Install all files and odoo repos needed. It will try to \
                         install postgres dir if doesn't exist")
 
-    parser.add_argument('-i', '--install-cli', action='store_true',
-                        help="Install clients, requires -c option. You can define multiple clients")
+    parser.add_argument('-i', '--install-cli',
+                        action='store_true',
+                        help="Install clients, requires -c option. You can define \
+                        multiple clients like this: -c client1 -c client2 -c client3")
 
-    parser.add_argument('-R', '--run-env', action='store_true',
+    parser.add_argument('-R', '--run-env',
+                        action='store_true',
                         help="Run database and aeroo images.")
-    parser.add_argument('-D', '--run-dev', action='store_true',
+
+    parser.add_argument('-D', '--run-dev',
+                        action='store_true',
                         help="Run database and aeroo images for developer mode (local db access).")
-    parser.add_argument('-r', '--run-cli', action='store_true',
+
+    parser.add_argument('-r', '--run-cli',
+                        action='store_true',
                         help="Run client odoo images, requieres -c options.")
-    parser.add_argument('-S', '--stop-env', action='store_true',
+
+    parser.add_argument('-S', '--stop-env',
+                        action='store_true',
                         help="Stop database and aeroo images.")
-    parser.add_argument('-s', '--stop-cli', action='store_true',
+
+    parser.add_argument('-s', '--stop-cli',
+                        action='store_true',
                         help="Stop client images, requieres -c options.")
-    parser.add_argument('-p', '--pull-all', action='store_true', help="Pull all images")
-    parser.add_argument('-l', '--list', action='store_true',
+
+    parser.add_argument('-p', '--pull-all',
+                        action='store_true',
+                        help="Pull all images")
+
+    parser.add_argument('-l', '--list',
+                        action='store_true',
                         help="List all data in this server. Clients and images.")
-    parser.add_argument('-c', '--client', dest='client', action='append',
-                        help="Client name. You can specify more than one as \
-                        -c alexor -c danone -c tenaris ... etc.")
-    parser.add_argument('-n', '--no-ip-install', action='store_true',
+
+    parser.add_argument('-c',
+                        action='append',
+                        dest='client',
+                        help="Client name. You define multiple clients like this \
+                        multiple clients like this: -c client1 -c client2 -c client3")
+
+    parser.add_argument('-n', '--no-ip-install',
+                        action='store_true',
                         help="Install no-ip on this server")
-    parser.add_argument('-k', '--docker-install', action='store_true',
+
+    parser.add_argument('-k', '--docker-install',
+                        action='store_true',
                         help="Install docker on this server")
 
-    parser.add_argument('-u', '--update-database', action='store_true',
+    parser.add_argument('-u', '--update-database',
+                        action='store_true',
                         help="Update database requires -d -c and -m options")
-    parser.add_argument('-d', '--database', dest='database', action='store', nargs=1,
+
+    parser.add_argument('-d', '--database',
+                        action='store',
+                        nargs=1,
+                        dest='database',
                         help="Database to update")
-    parser.add_argument('-m', '--module', dest='module', action='append', nargs=1,
+
+    parser.add_argument('-m', '--module',
+                        action='append',
+                        dest='module',
                         help="Module to update or all, you can specify multiple -m options")
-    parser.add_argument('-b', '--backup', action='store_true',
+
+    parser.add_argument('--backup',
+                        action='store_true',
                         help="Lauch backup")
+
+    parser.add_argument('--debug',
+                        action='store_true',
+                        help="force debug mode")
 
     args = parser.parse_args()
 
@@ -672,7 +708,7 @@ if __name__ == '__main__':
     if args.docker_install:
         dockerInstall(args.version)
     if args.update_database:
-        update_database(args.version)
+        updateDatabase(args.version)
     if args.backup:
         backup(args.version)
 
