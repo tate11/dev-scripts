@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# ##############################################################################
+# #############################################################################
 #
 # Jorge Obiols Software,
 # Copyright (C) 2015-Today JEO <jorge.obiols@gmail.com>
@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-# ##############################################################################
+# #############################################################################
 
 import argparse
 import subprocess
@@ -175,8 +175,7 @@ def getImageFromName(ver, image):
 
 
 def getEnvironmentImages(ver):
-    im = data[ver]
-    im1 = im['images']
+    im1 = data[ver]['images']
     im2 = []
     for name in im1:
         if name <> 'odoo':
@@ -185,9 +184,7 @@ def getEnvironmentImages(ver):
 
 
 def getAllImages(ver):
-    im = data[ver]
-    im1 = im['images']
-    return im1
+    return data[ver]['images']
 
 
 def getClientPort(ver, clientName):
@@ -242,33 +239,37 @@ def msginf(msg):
     print yellow_light(msg)
 
 
+def sc_(params):
+    return subprocess.call(params, shell=True)
+
+
 def uninstallEnvironment(ver):
     msgrun('Uninstalling odoo environment ' + ver)
-    subprocess.call(['sudo rm -r ' + HOME], shell=True)
+    sc_(['sudo rm -r ' + HOME])
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
-        subprocess.call(['sudo rm -r ' + PSQL], shell=True)
+        sc_(['sudo rm -r ' + PSQL])
     return True
 
 
 def installEnvironment(ver):
     msgrun('Installing odoo environment ' + ver)
 
-    # if not exist psql create it
-    if subprocess.call(['ls ' + PSQL], shell=True):
-        subprocess.call(['mkdir ' + PSQL], shell=True)
+    # if not exist postgresql create it
+    if sc_(['ls ' + PSQL]):
+        sc_(['mkdir ' + PSQL])
 
     # make sources dir
-    subprocess.call(['mkdir -p ' + HOME + 'sources'], shell=True)
+    sc_(['mkdir -p ' + HOME + 'sources'])
 
     # pull each repo in sources dir
     for repo in getReposList(ver):
         msginf('pulling repo ' + formatRepoFromDict(repo))
 
-        if subprocess.call('git clone -b ' + repo[
-            'branch'] + ' --depth 1 http://github.com/' +
-                                   formatRepoFromDict(repo) + ' ' + HOME + 'sources/' +
-                                   repo['dir'],
-                           shell=True):
+        params = 'git clone --depth 1 -b ' + \
+                 repo['branch'] + ' http://github.com/' + formatRepoFromDict(repo) + \
+                 ' ' + HOME + 'sources/' + repo['dir']
+
+        if sc_(params):
             msgerr('Fail installing environment, uninstall and try again.')
 
     msgdone('Install Done ' + ver)
@@ -307,7 +308,7 @@ def updateDatabase(ver):
     if args.debug:
         params += ' --debug'
 
-    subprocess.call(params, shell=True)
+    sc_(params)
 
     return True
 
@@ -328,9 +329,9 @@ def installClient(ver):
         msgrun('Installing Odoo image for client ' + cli)
 
         # Creating directory's for client
-        subprocess.call('mkdir -p ' + HOME + cli + '/config', shell=True)
-        subprocess.call('mkdir -p ' + HOME + cli + '/data_dir', shell=True)
-        subprocess.call('chmod 777 -R ' + HOME + cli, shell=True)
+        sc_('mkdir -p ' + HOME + cli + '/config')
+        sc_('mkdir -p ' + HOME + cli + '/data_dir')
+        sc_('chmod 777 -R ' + HOME + cli)
 
         # creating config file for client
         param = 'sudo docker run --rm \
@@ -343,7 +344,7 @@ def installClient(ver):
         if addon_path <> '':
             param += '--addons-path=' + addon_path
 
-        if subprocess.call(param, shell=True):
+        if sc_(param):
             msgerr('failing to write config file. Aborting')
 
     msgdone('Installing done')
@@ -357,7 +358,7 @@ def run_aeroo_image(ver):
         --restart=always ' \
              + getImageFromName(ver, 'aeroo')
 
-    if subprocess.call(params, shell=True):
+    if sc_(params):
         msginfo('Fail running aeroo-image.')
 
     return True
@@ -377,7 +378,7 @@ def runEnvironment(ver):
                     --name db-odoo ' + \
              getImageFromName(ver, 'postgres')
 
-    if subprocess.call(params, shell=True):
+    if sc_(params):
         msgerr('Fail running environment')
     else:
         msgdone("Environment up and running")
@@ -401,7 +402,7 @@ def runClient(ver):
         if ver[0:1] == '7':
             params += ' --db_user=odoo --db_password=odoo --db_host=db'
 
-        if not subprocess.call(params, shell=True):
+        if not sc_(params):
             msgdone(
                 'Client ' + cli + ' up and running on port ' + getClientPort(ver, cli))
         else:
@@ -425,7 +426,7 @@ def run_developer(ver):
               --name db-odoo ' + \
              getImageFromName(ver, 'postgres')
 
-    if subprocess.call(params, shell=True):
+    if sc_(params):
         msgerr('Fail running postgres image.')
     msgdone('Environment up and running.')
     return True
@@ -435,8 +436,8 @@ def stopClient(ver):
     msgrun('stopping clients ' + ', '.join(args.client))
     for cli in args.client:
         msginf('stop image for client ' + cli)
-        subprocess.call('sudo docker stop ' + cli, shell=True)
-        subprocess.call('sudo docker rm ' + cli, shell=True)
+        sc_('sudo docker stop ' + cli)
+        sc_('sudo docker rm ' + cli)
 
     msgdone('all clients stopped')
 
@@ -449,8 +450,8 @@ def stopEnvironment(ver):
     for name in ['db-odoo', 'aeroo_docs']:
         msgrun('Stopping image ' + name)
 
-        r1 += subprocess.call('sudo docker stop ' + name, shell=True)
-        r2 += subprocess.call('sudo docker rm ' + name, shell=True)
+        r1 += sc_('sudo docker stop ' + name)
+        r2 += sc_('sudo docker rm ' + name)
 
     if r1 + r2 <> 0:
         msgerr('some images can not be stopped')
@@ -465,18 +466,17 @@ def pullAll(ver):
     for image_name in data[ver]['images']:
         image = getImageFromName(ver, image_name)
         msginf('Pulling ' + image)
-        if subprocess.call('sudo docker pull ' + image, shell=True):
+        if sc_('sudo docker pull ' + image):
             msgerr('Fail pulling image ' + image + ' - Aborting.')
 
     msgdone('All images ok ' + ver)
 
     msgrun('Pulling all repos for ' + ver)
-    for repo in data[ver]['repos']:
+    for repo in getReposList(ver):
         msginf('pulling repo ' + formatRepoFromDict(repo))
-        if subprocess.call('cd ' + HOME + 'sources/' + repo[
-            'dir'] + '&&' + ' sudo git pull', shell=True):
-            msgerr(
-                'Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
+        params = 'cd ' + HOME + 'sources/' + repo['dir'] + '&&' + ' sudo git pull'
+        if sc_(params):
+            msgerr('Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
 
     msgdone('All repos ok ' + ver)
 
@@ -503,25 +503,19 @@ def listData(ver):
 
 def noIpInstall(ver):
     msgrun('Installing no-ip client')
-    subprocess.call('sudo apt-get install make', shell=True)
-    subprocess.call('sudo apt-get -y install gcc', shell=True)
-    subprocess.call(
-        'wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
-        shell=True)
-    subprocess.call('sudo tar -xf noip.tar.gz -C /usr/local/src/', shell=True)
-    subprocess.call(
-        'sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
-        shell=True)
-    subprocess.call('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/',
-                    shell=True)
-    subprocess.call('cd /usr/local/src/noip-2.1.9-1 && sudo make install', shell=True)
+    sc_('sudo apt-get install make')
+    sc_('sudo apt-get -y install gcc')
+    sc_('wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
+    sc_('sudo tar -xf noip.tar.gz -C /usr/local/src/')
+    sc_('sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
+    sc_('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/')
+    sc_('cd /usr/local/src/noip-2.1.9-1 && sudo make install')
     msginf("Please answer some questions")
-    subprocess.call('sudo rm /usr/local/src/noip-duc-linux.tar.gz', shell=True)
-    subprocess.call('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
-                    shell=True)
-    subprocess.call('sudo chmod +x /etc/init.d/debian.noip2.sh', shell=True)
-    subprocess.call('sudo update-rc.d debian.noip2.sh defaults', shell=True)
-    subprocess.call('sudo /etc/init.d/debian.noip2.sh restart', shell=True)
+    sc_('sudo rm /usr/local/src/noip-duc-linux.tar.gz')
+    sc_('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/')
+    sc_('sudo chmod +x /etc/init.d/debian.noip2.sh')
+    sc_('sudo update-rc.d debian.noip2.sh defaults')
+    sc_('sudo /etc/init.d/debian.noip2.sh restart')
     msgdone('no-ip service running')
 
     # To config defaults noip2 with capital C
@@ -531,7 +525,7 @@ def noIpInstall(ver):
 
 def dockerInstall(ver):
     msgrun('Installing docker')
-    subprocess.call('wget -qO- https://get.docker.com/ | sh', shell=True)
+    sc_('wget -qO- https://get.docker.com/ | sh')
     msgdone('Done.')
     return True
 
@@ -539,14 +533,13 @@ def dockerInstall(ver):
 def backup(ver):
     msgrun('Backing up...')
 
-    if subprocess.call('sudo docker run --rm \
+    if sc_('sudo docker run --rm \
         -v ' + HOME + cli + '/config:/etc/odoo \
         -v ' + HOME + 'sources:/mnt/extra-addons \
         -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
         --name ' + cli + '_tmp ' + getImageFromName(ver, 'backup')
                                + ' -- --stop-after-init -s \
-        --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'
-            , shell=True):
+        --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'):
         msgerr('failing backup. Aborting')
 
     msgdone('Backup done')
