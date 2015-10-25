@@ -3,10 +3,9 @@
 . $(dirname $0)"/lib"
 
 sudo docker run -it --rm \
-        -p 8069:8069 \
         -v ~/odoo-ou-8.0/makeover/config:/etc/odoo \
         -v ~/odoo-ou-8.0/makeover/data_dir:/var/lib/odoo \
         -v ~/odoo-ou-8.0/sources:/mnt/extra-addons \
 	--entrypoint=/bin/bash \
         --link db-odoo:db \
-        --name makeover jobiols/odoo-adhoc:8.0 $*
+        jobiols/odoo-adhoc:8.0 $*
