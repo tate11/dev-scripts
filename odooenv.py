@@ -340,7 +340,8 @@ def installClient(ver):
                 -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
                 --name ' + cli + '_tmp ' + getImageFromName(ver, 'odoo') \
                 + ' -- --stop-after-init -s ' \
-                  ' --db-filter=' + cli + '_.*'
+                  ' --db-filter=' + cli + '_.* '
+
         if addon_path <> '':
             param += '--addons-path=' + addon_path
 
