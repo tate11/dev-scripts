@@ -32,8 +32,8 @@ CLEAR = "\033[0;m"
 
 clients = [
     {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
-    {'port': '8069', 'ver': '8.0', 'name': 'jeo'},
-    {'port': '8070', 'ver': '8.0', 'name': 'makeover'}
+    {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
+    {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
 ]
 
 data = {
