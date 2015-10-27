@@ -24,7 +24,7 @@ import argparse
 import subprocess
 import sys
 
-#TODO sacar el log fuera de la imagen
+# TODO sacar el log fuera de la imagen.
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
