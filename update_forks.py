@@ -30,8 +30,73 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-data = {'odoo': {'ver': '8.0'}
-        }
+data = [
+    {'ver': '8.0', 'dir': '~/git-repos/odoo'},
+    {'ver': '8.0', 'dir': '~/git-repos/odoomrp-wip'},
+    {'ver': 'master', 'dir': '~/git-repos/Python-Markdown'},
+    {'ver': '8.0', 'dir': '~/git-repos/account-financial-reporting'},
+    {'ver': '8.0', 'dir': '~/git-repos/odoo-web'},
+
+]
+
+
+def sc_(params):
+    return subprocess.call(params, shell=True)
+
+
+def green(string):
+    return GREEN + string + CLEAR
+
+
+def yellow(string):
+    return YELLOW + string + CLEAR
+
+
+def red(string):
+    return RED + string + CLEAR
+
+
+def yellow_light(string):
+    return YELLOW_LIGHT + string + CLEAR
+
+
+def msgrun(msg):
+    print yellow(msg)
+
+
+def msgdone(msg):
+    print green(msg)
+
+
+def msgerr(msg):
+    print red(msg)
+    sys.exit()
+
+
+def msginf(msg):
+    print yellow_light(msg)
+
+
+def updateRepo(repo):
+    msgrun(30 * '-' + ' ' + repo['dir'])
+    sc_('git -C ' + repo['dir'] + ' status')
+    msgrun("odoo fetch upstream")
+    sc_('git -C ' + repo['dir'] + ' fetch upstream')
+    msgrun("odoo checkout")
+    sc_('git -C ' + repo['dir'] + ' checkout ' + repo['ver'])
+    msgrun("odoo merge")
+    sc_('git -C ' + repo['dir'] + ' merge upstream/' + repo['ver'])
+    msgrun("odoo push")
+    sc_('git -C ' + repo['dir'] + ' push origin ' + repo['ver'])
+    msgdone('done')
+    return
+
+
+def updateAll():
+    for repo in data:
+        updateRepo(repo)
+    return
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update forks v 0.1')
@@ -41,4 +106,6 @@ if __name__ == '__main__':
                         help="Update forks asking for each")
 
     args = parser.parse_args()
-    print args
+
+    if args.update_all:
+        updateAll()
