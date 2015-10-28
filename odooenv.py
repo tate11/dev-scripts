@@ -25,6 +25,7 @@ import subprocess
 import sys
 
 # TODO sacar el log fuera de la imagen.
+# TODO archivo xml que sobreescriba clients
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
@@ -36,6 +37,7 @@ clients = [
     {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
+    {'port': '8071', 'ver': '8.0', 'name': 'demo'},
 ]
 
 data = {
@@ -479,7 +481,8 @@ def pullAll(ver):
         msginf('pulling repo ' + formatRepoFromDict(repo))
         params = 'cd ' + HOME + 'sources/' + repo['dir'] + '&&' + ' sudo git pull'
         if sc_(params):
-            msgerr('Fail pulling repos, uninstall and try again. By the way... did you run -I ?')
+            msgerr('Fail pulling repos, uninstall and try again. \
+            By the way... did you run -I ?')
 
     msgdone('All repos ok ' + ver)
 
@@ -508,9 +511,11 @@ def noIpInstall(ver):
     msgrun('Installing no-ip client')
     sc_('sudo apt-get install make')
     sc_('sudo apt-get -y install gcc')
-    sc_('wget -O /usr/local/src/noip.tar.gz http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
+    sc_('wget -O /usr/local/src/noip.tar.gz \
+    http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
     sc_('sudo tar -xf noip.tar.gz -C /usr/local/src/')
-    sc_('sudo wget -P /usr/local/src/ http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
+    sc_('sudo wget -P /usr/local/src/ \
+    http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
     sc_('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/')
     sc_('cd /usr/local/src/noip-2.1.9-1 && sudo make install')
     msginf("Please answer some questions")
@@ -541,7 +546,7 @@ def backup(ver):
         -v ' + HOME + 'sources:/mnt/extra-addons \
         -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
         --name ' + cli + '_tmp ' + getImageFromName(ver, 'backup')
-                               + ' -- --stop-after-init -s \
+                   + ' -- --stop-after-init -s \
         --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'):
         msgerr('failing backup. Aborting')
 
