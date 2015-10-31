@@ -26,6 +26,7 @@ import sys
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
+# TODO evitar la duplicación de repos con el dict repos
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
@@ -39,6 +40,17 @@ clients = [
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
 ]
+
+repos = {
+    'origin': {
+        'odoo-addons': {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+        'odoo-argentina': {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+    },
+    'upstream': {
+        'odoo-addons': {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+        'odoo-argentina': {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
+    }
+}
 
 data = {
     # Version 9.0 experimental
@@ -94,6 +106,8 @@ data = {
             {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'rma', 'branch': '8.0'},
+
         ]
     },
 
@@ -129,7 +143,6 @@ data = {
             {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
         ],
     },
-
 
     'ou-8.0': {
         'images': {
@@ -479,6 +492,13 @@ def listData(ver):
     msgrun('Repos ' + 20 * '-')
     for rep in getReposList(ver):
         msgdone(formatRepoFromDict(rep) + '  b ' + rep['branch'])
+
+    msgrun('Repos ' + 30 * '-')
+    for remote in repos:
+        msgrun(remote)
+        for repo_name in repos[remote]:
+            print formatRepoFromDict(repos[remote][repo_name]), 'b ', \
+                repos[remote][repo_name]['branch']
 
     msgrun('Clients ' + 18 * '-')
     for client in clients:
