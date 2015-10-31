@@ -103,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('-U', '--update-all', action='store_true',
                         help="Update all forks without warning")
     parser.add_argument('-u', '--update', action='store_true',
-                        help="Update forks asking for each")
+                        help="Update specific forks")
 
     args = parser.parse_args()
 
