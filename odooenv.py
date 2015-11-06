@@ -23,6 +23,7 @@
 import argparse
 import subprocess
 import sys
+import os
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
@@ -107,7 +108,7 @@ data = {
             {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'rma', 'branch': '8.0'},
-
+            {'repo': 'jobiols', 'dir': 'manufacture', 'branch': '8.0'},
         ]
     },
 
@@ -540,26 +541,38 @@ def dockerInstall(ver):
 
 
 def backup(ver):
-    msgrun('Backing up...')
+    dbname = args.database[0]
+    client = args.client[0]
+    msgrun('Backing up database client ' + client + ' with db ' + dbname)
 
-    if sc_('sudo docker run --rm \
-        -v ' + HOME + cli + '/config:/etc/odoo \
-        -v ' + HOME + 'sources:/mnt/extra-addons \
-        -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-        --name ' + cli + '_tmp ' + getImageFromName(ver, 'backup')
-                   + ' -- --stop-after-init -s \
-        --addons-path=' + addon_path + ' --db-filter=' + cli + '_.*'):
+    params = 'sudo docker run --rm -i \
+                --link db-odoo:db \
+                --volumes-from ' + client + '  \
+                -v ' + HOME + client + '/' + 'backup/' + ':/backup  \
+                --env DBNAME=' + dbname + ' \
+                jobiols/backup backup'
+
+    if sc_(params):
         msgerr('failing backup. Aborting')
 
     msgdone('Backup done')
     return True
 
-# get choices from data structure
-choices = []
-for opt in data:
-    choices.append(opt)
+
+def backup_list(ver):
+    client = args.client[0]
+    dir = HOME + client + '/' + 'backup/'
+    msgrun('List of available backups')
+
+    for root, dirs, files in os.walk(dir):
+        for file in files:
+            print file
 
 if __name__ == '__main__':
+    choices = []
+    for opt in data:
+        choices.append(opt)
+
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.3')
     parser.add_argument('version', choices=choices)
 
@@ -642,13 +655,17 @@ if __name__ == '__main__':
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help="force debug mode")
+                        help="force debug mode on update database")
+
+    parser.add_argument('--backup-list',
+                        action='store_true',
+                        help="List available backups")
 
     args = parser.parse_args()
 
     # Constant Definitins
-    HOME = '~/odoo-' + args.version + '/'
-    PSQL = '~/postgresql' + '/'
+    HOME = os.path.expanduser('~/odoo-' + args.version + '/')
+    PSQL = os.path.expanduser('~/postgresql' + '/')
 
     # Check for valid client
     if args.client != None:
@@ -683,3 +700,5 @@ if __name__ == '__main__':
         updateDatabase(args.version)
     if args.backup:
         backup(args.version)
+    if args.backup_list:
+        backup_list(args.version)

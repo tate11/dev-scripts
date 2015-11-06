@@ -26,14 +26,15 @@ function msgerror {
 if [ $# -lt 3 ]
   then
     msgerror "Too few arguments supplied!"
-    msginfo "Command: host-restore [customer] [db] [timestamp]"
+    msginfo "Command: db-restore [customer] [db] [timestamp]"
+    msginfo "Example: db-restore jeo jeo_datos 201511022241"
     exit 0
 fi
 
 CUSTOMER=$1
 DB=$2
 DATE=$3
-DIR="/home/jorge/odoo-8.0.1/backup"
+DIR="/home/jorge/odoo-8.0/$CUSTOMER/backup"
 
 docker run --rm -t \
        --volumes-from $CUSTOMER \
@@ -47,5 +48,7 @@ docker run --rm -t \
 if [ $? -ne 0 ]
   then
     msgerror "Restore for ${CUSTOMER} with  ${DB} failed!"
+    exit 1
 fi
-msgdone "Restore for ${CUSTOMER} with  ${DB} at ${DATE} successful done"
+
+msgdone "Restore for ${CUSTOMER} with ${DB} at ${DATE} successfully done"
