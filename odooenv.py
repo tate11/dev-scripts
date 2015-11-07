@@ -587,13 +587,18 @@ def backup_list(ver):
     dir = backupdir()
     msgrun('List of available backups for client ' + args.client[0])
 
+    fns = []
     # walk the backup dir
     for root, dirs, files in os.walk(dir):
         for file in files:
             # get the .dump files and decode it to human redable format
             filename, file_extension = os.path.splitext(file)
             if file_extension == '.dump':
-                print decodeBackup(filename)
+                fns.append(filename)
+
+    fns.sort()
+    for fn in fns:
+        print decodeBackup(fn)
 
 
 if __name__ == '__main__':
