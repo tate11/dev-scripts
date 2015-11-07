@@ -251,6 +251,9 @@ class environment:
             ret += ':' + imageDict['ver']
         return ret
 
+    def backupdir(self):
+        return '/backup/' + self.ver + '/' + self.GetClientFromParams()
+
 
 def green(string):
     return GREEN + string + CLEAR
@@ -585,19 +588,15 @@ def dockerInstall(e):
     return True
 
 
-def backupdir():
-    return '/backup/' + args.version + '/' + args.client[0]
-
-
-def backup(ver):
-    dbname = args.database[0]
-    client = args.client[0]
+def backup(e):
+    dbname = e.GetDatabaseFromParams()
+    client = e.GetClientFromParams()
     msgrun('Backing up database client ' + client + ' with db ' + dbname)
 
     params = 'sudo docker run --rm -i \
                 --link db-odoo:db \
                 --volumes-from ' + client + '  \
-                -v ' + backupdir() + ':/backup  \
+                -v ' + e.backupdir() + ':/backup  \
                 --env DBNAME=' + dbname + ' \
                 jobiols/backup backup'
 
@@ -626,9 +625,9 @@ def decodeBackup(filename):
     return dbname + n * ' ' + fdt + '  [' + date + ']'
 
 
-def backup_list(ver):
-    dir = backupdir()
-    msgrun('List of available backups for client ' + args.client[0])
+def backup_list(e):
+    dir = e.backupdir()
+    msgrun('List of available backups for client ' + e.GetClientFromParams())
 
     fns = []
     # walk the backup dir
