@@ -4,7 +4,7 @@
 #
 # add this line to sudo crontab -e to backup twice a day
 #  m h  dom mon dow   command
-#  0 0,12 *   *   *   db-backup client database /var/log/$CUSTOMER-backup.log
+#  0 0,12 *   *   *   db-backup client database >> /var/log/bkp/odoo_bkp.log
 ###########################################################
 #set -x
 readonly RED="\e[31m"
@@ -41,9 +41,10 @@ LASTBKP="/var/log/$CUSTOMER-last-backup.log"
 LOGFILE="/var/log/$CUSTOMER-backup.log"
 DIR=$(readlink -f ~/odoo-8.0/$CUSTOMER/backup)
 
+echo "backup dir $DIR" >> $LOGFILE
+
 # backing up database and files
 docker run --rm -i \
-  --name bkp \
   --link db-odoo:db \
   --volumes-from $CUSTOMER \
   -v $DIR:/backup  \
