@@ -24,6 +24,7 @@ import argparse
 import subprocess
 import sys
 import os
+from datetime import datetime
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
@@ -540,6 +541,10 @@ def dockerInstall(ver):
     return True
 
 
+def backupdir():
+    return HOME + args.client[0] + '/' + 'backup/'
+
+
 def backup(ver):
     dbname = args.database[0]
     client = args.client[0]
@@ -548,7 +553,7 @@ def backup(ver):
     params = 'sudo docker run --rm -i \
                 --link db-odoo:db \
                 --volumes-from ' + client + '  \
-                -v ' + HOME + client + '/' + 'backup/' + ':/backup  \
+                -v ' + backupdir() + ':/backup  \
                 --env DBNAME=' + dbname + ' \
                 jobiols/backup backup'
 
@@ -559,14 +564,36 @@ def backup(ver):
     return True
 
 
-def backup_list(ver):
-    client = args.client[0]
-    dir = HOME + client + '/' + 'backup/'
-    msgrun('List of available backups')
+def decodeBackup(filename):
+    # bkp format: jeo_datos_201511022236
 
+    # strip db name
+    a = len(filename) - 13
+    dbname = filename[0:a]
+
+    # strip date
+    date = filename[-12:]
+    dt = datetime.strptime(date, '%Y%m%d%H%M')
+
+    # format date
+    fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M')
+    n = 15 - len(dbname)
+
+    return dbname + n * ' ' + fdt
+
+
+def backup_list(ver):
+    dir = backupdir()
+    msgrun('List of available backups for client ' + args.client[0])
+
+    # walk the backup dir
     for root, dirs, files in os.walk(dir):
         for file in files:
-            print file
+            # get the .dump files and decode it to human redable format
+            filename, file_extension = os.path.splitext(file)
+            if file_extension == '.dump':
+                print decodeBackup(filename)
+
 
 if __name__ == '__main__':
     choices = []
