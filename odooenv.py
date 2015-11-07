@@ -28,7 +28,6 @@ from datetime import datetime
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
-# TODO evitar la duplicación de repos con el dict repos
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
@@ -36,14 +35,15 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-clients = [
+clients_ = [
     {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
 ]
 
-repos = {
+# TODO evitar la duplicación de repos con el dict repos
+repos_ = {
     'origin': {
         'odoo-addons': {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
         'odoo-argentina': {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
@@ -54,12 +54,14 @@ repos = {
     }
 }
 
-data = {
+data_ = {
     # Version 9.0 experimental
     '9.0': {
         'images': {
             'odoo': {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
             'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
+            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
+            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
         },
 
         'repos': [
@@ -162,48 +164,92 @@ data = {
 }
 
 
-def getImageFromName(ver, image):
-    ret = ''
-    image = data[ver]['images'][image]
-    ret += image['repo']
-    if image['dir'] != '':
-        ret += '/'
-        ret += image['dir']
-    if image['ver'] != '':
-        ret += ':' + image['ver']
-    return ret
+class environment:
+    """Contiene la definicion del ambiente"""
 
+    def __init__(self, args):
+        self.HOME = os.path.expanduser('~/odoo-' + args.version + '/')
+        self.PSQL = os.path.expanduser('~/postgresql' + '/')
+        self._clients = clients_
+        self._repos = repos_
+        self._data = data_[args.version]
+        self.ver = args.version
+        self.args = args
 
-def getEnvironmentImages(ver):
-    im1 = data[ver]['images']
-    im2 = []
-    for name in im1:
-        if name <> 'odoo':
-            im2.append(im1[name])
-    return im2
+        # Check for valid client
+        if args.client != None:
+            for cli in args.client:
+                self.getClientPort(cli)
 
+    def getClientPort(self, clientName):
+        port = ''
+        for client in self._clients:
+            if client['ver'] == self.ver and client['name'] == clientName:
+                port = client['port']
 
-def getAllImages(ver):
-    return data[ver]['images']
+        if port == '':
+            msgerr('There is no ' + clientName + ' client in this environment.')
+        return port
 
+    def checkClient(self):
+        if self.args.client == None:
+            msgerr('need -c option')
 
-def getClientPort(ver, clientName):
-    port = ''
-    for client in clients:
-        if client['ver'] == ver and client['name'] == clientName:
-            port = client['port']
+    def checkModules(self):
+        if self.args.module == None:
+            msgerr('need -m option')
 
-    if port == '':
-        msgerr('There is no ' + clientName + ' client in this environment.')
-    return port
+    def checkDatabase(self):
+        if self.args.database == None:
+            msgerr('need -d option')
 
+    def GetClientsFromParams(self):
+        self.checkClient()
+        return args.client
 
-def getReposList(ver):
-    return data[ver]['repos']
+    def GetModulesFromParams(self):
+        self.checkModules()
+        return args.module
 
+    def GetDatabaseFromParams(self):
+        self.checkDatabase()
+        return self.args.database[0]
 
-def formatRepoFromDict(dict):
-    return dict['repo'] + '/' + dict['dir']
+    def GetClients(self):
+        ret = []
+        for cli in self._clients:
+            if cli['ver'] == self.ver:
+                ret.append(cli)
+        return ret
+
+    def GetClientFromParams(self):
+        self.checkClient()
+        if len(self.args.client) > 1:
+            msgerr('only one client expected')
+        return self.args.client[0]
+
+    def DebugMode(self):
+        return self.args.debug
+
+    def GetData(self):
+        return self._data
+
+    def getReposList(self):
+        return self._data['repos']
+
+    def formatRepoFromDict(self, dict):
+        return dict['repo'] + '/' + dict['dir']
+
+    def formatImageFromName(self, imageName):
+        ret = ''
+        imageDict = self._data['images'][imageName]
+        ret += imageDict['repo']
+        if imageDict['dir'] != '':
+            ret += '/'
+            ret += imageDict['dir']
+        if imageDict['ver'] != '':
+            ret += ':' + imageDict['ver']
+        return ret
 
 
 def green(string):
@@ -243,44 +289,44 @@ def sc_(params):
     return subprocess.call(params, shell=True)
 
 
-# TODO eliminar también el backup dir
-def uninstallEnvironment(ver):
-    msgrun('Uninstalling odoo environment ' + ver)
-    sc_(['sudo rm -r ' + HOME])
+# TODO eliminar también el backup dir pidiendo permiso antes
+def uninstallEnvironment(e):
+    msgrun('Uninstalling odoo environment ' + e.ver)
+    sc_(['sudo rm -r ' + e.HOME])
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
-        sc_(['sudo rm -r ' + PSQL])
+        sc_(['sudo rm -r ' + e.PSQL])
     return True
 
 
-def installEnvironment(ver):
-    msgrun('Installing odoo environment ' + ver)
+def installEnvironment(e):
+    msgrun('Installing odoo environment ' + e.ver)
 
     # if not exist postgresql create it
-    if sc_(['ls ' + PSQL]):
-        sc_(['mkdir ' + PSQL])
+    if sc_(['ls ' + e.PSQL]):
+        sc_(['mkdir ' + e.PSQL])
 
     # make sources dir
-    sc_(['mkdir -p ' + HOME + 'sources'])
+    sc_(['mkdir -p ' + e.HOME + 'sources'])
 
     # pull each repo in sources dir
-    for repo in getReposList(ver):
-        msginf('pulling repo ' + formatRepoFromDict(repo))
+    for repo in e.getReposList():
+        msginf('pulling repo ' + e.formatRepoFromDict(repo))
 
         params = 'git clone --depth 1 -b ' + \
-                 repo['branch'] + ' http://github.com/' + formatRepoFromDict(repo) + \
-                 ' ' + HOME + 'sources/' + repo['dir']
+                 repo['branch'] + ' http://github.com/' + e.formatRepoFromDict(repo) + \
+                 ' ' + e.HOME + 'sources/' + repo['dir']
 
         if sc_(params):
             msgerr('Fail installing environment, uninstall and try again.')
 
-    msgdone('Install Done ' + ver)
+    msgdone('Install Done ' + e.ver)
     return True
 
 
-def updateDatabase(ver):
-    db = args.database[0]
-    mods = args.module
-    cli = args.client[0]
+def updateDatabase(e):
+    mods = e.GetModulesFromParams()
+    db = e.GetDatabaseFromParams()
+    cli = e.GetClientFromParams()
 
     msg = 'Performing update'
     if mods[0] == 'all':
@@ -290,23 +336,23 @@ def updateDatabase(ver):
 
     msg += ' on database "' + db + '"'
 
-    if args.debug:
+    if e.DebugMode():
         msg += ' forcing debug mode'
     msgrun(msg)
 
     params = 'sudo docker run --rm -it \
-            -v ' + HOME + cli + '/config:/etc/odoo \
-            -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-            -v ' + HOME + 'sources:/mnt/extra-addons \
+            -v ' + e.HOME + cli + '/config:/etc/odoo \
+            -v ' + e.HOME + cli + '/data_dir:/var/lib/odoo \
+            -v ' + e.HOME + 'sources:/mnt/extra-addons \
             --link db-odoo:db ' + \
-             getImageFromName(ver, 'odoo') + ' -- ' + \
+             e.formatImageFromName('odoo') + ' -- ' + \
              ' --stop-after-init \
              -d ' + db + ' -u ' + ', '.join(mods)
 
-    if ver[0:1] == '7':
+    if e.ver[0:1] == '7':
         params += ' --db_user=odoo --db_password=odoo --db_host=db '
 
-    if args.debug:
+    if e.DebugMode():
         params += ' --debug'
 
     sc_(params)
@@ -314,32 +360,32 @@ def updateDatabase(ver):
     return True
 
 
-def installClient(ver):
+def installClient(e):
     msgrun('Install clients')
 
     # Calculate addon_path
     path = '/mnt/extra-addons/'
-    repos = getReposList(ver)
+    repos = e.getReposList()
 
     lis = []
     for dir in repos:
         lis.append(path + dir['dir'])
     addon_path = ','.join(lis)
 
-    for cli in args.client:
+    for cli in e.GetClientsFromParams():
         msgrun('Installing Odoo image for client ' + cli)
 
         # Creating directory's for client
-        sc_('mkdir -p ' + HOME + cli + '/config')
-        sc_('mkdir -p ' + HOME + cli + '/data_dir')
-        sc_('chmod 777 -R ' + HOME + cli)
+        sc_('mkdir -p ' + e.HOME + cli + '/config')
+        sc_('mkdir -p ' + e.HOME + cli + '/data_dir')
+        sc_('chmod 777 -R ' + e.HOME + cli)
 
         # creating config file for client
         param = 'sudo docker run --rm \
-                -v ' + HOME + cli + '/config:/etc/odoo \
-                -v ' + HOME + 'sources:/mnt/extra-addons \
-                -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-                --name ' + cli + '_tmp ' + getImageFromName(ver, 'odoo') \
+                -v ' + e.HOME + cli + '/config:/etc/odoo \
+                -v ' + e.HOME + 'sources:/mnt/extra-addons \
+                -v ' + e.HOME + cli + '/data_dir:/var/lib/odoo \
+                --name ' + cli + '_tmp ' + e.formatImageFromName('odoo') \
                 + ' -- --stop-after-init -s ' \
                   ' --db-filter=' + cli + '_.* '
 
@@ -353,12 +399,12 @@ def installClient(ver):
     return True
 
 
-def run_aeroo_image(ver):
+def run_aeroo_image(e):
     params = 'sudo docker run -d \
         -p 127.0.0.1:8989:8989   \
         --name="aeroo_docs"   \
         --restart=always ' \
-             + getImageFromName(ver, 'aeroo')
+             + e.formatImageFromName('aeroo')
 
     if sc_(params):
         msginfo('Fail running aeroo-image.')
@@ -366,19 +412,19 @@ def run_aeroo_image(ver):
     return True
 
 
-def runEnvironment(ver):
-    msgrun('Running environment images v' + ver)
+def runEnvironment(e):
+    msgrun('Running environment images v' + e.ver)
 
-    if ver[0:1] == '8':
-        run_aeroo_image(ver)
+    if e.ver[0:1] <> '7':
+        run_aeroo_image(e)
 
     params = 'sudo docker run -d \
                     -e POSTGRES_USER=odoo \
                     -e POSTGRES_PASSWORD=odoo \
-                    -v ' + PSQL + ':/var/lib/postgresql/data \
+                    -v ' + e.PSQL + ':/var/lib/postgresql/data \
                     --restart=always \
                     --name db-odoo ' + \
-             getImageFromName(ver, 'postgres')
+             e.formatImageFromName('postgres')
 
     if sc_(params):
         msgerr('Fail running environment')
@@ -387,46 +433,46 @@ def runEnvironment(ver):
     return True
 
 
-def runClient(ver):
-    for cli in args.client:
+def runClient(e):
+    for cli in e.GetClientsFromParams():
         msgrun('Running image for client ' + cli)
         params = 'sudo docker run -d \
                  --link aeroo_docs:aeroo  \
-                 -p ' + getClientPort(ver, cli) + ':8069  \
-                 -v ' + HOME + cli + '/config:/etc/odoo  \
-                 -v ' + HOME + cli + '/data_dir:/var/lib/odoo \
-                 -v ' + HOME + '/sources:/mnt/extra-addons  \
+                 -p ' + e.getClientPort(cli) + ':8069  \
+                 -v ' + e.HOME + cli + '/config:/etc/odoo  \
+                 -v ' + e.HOME + cli + '/data_dir:/var/lib/odoo \
+                 -v ' + e.HOME + '/sources:/mnt/extra-addons  \
                  --link db-odoo:db  \
                  --restart=always  \
                  --name ' + cli + ' ' + \
-                 getImageFromName(ver, 'odoo') + ' -- --db-filter=' + cli + '_.*',
+                 e.formatImageFromName('odoo') + ' -- --db-filter=' + cli + '_.*',
 
-        if ver[0:1] == '7':
+        if e.ver[0:1] == '7':
             params += ' --db_user=odoo --db_password=odoo --db_host=db'
 
         if not sc_(params):
             msgdone(
-                'Client ' + cli + ' up and running on port ' + getClientPort(ver, cli))
+                'Client ' + cli + ' up and running on port ' + e.getClientPort(cli))
         else:
             msgerr("Can't run client " + cli + ", by the way... did you run -R ?")
 
     return True
 
 
-def run_developer(ver):
+def runDeveloper(e):
     msgrun('Running environment in developer mode.')
 
-    if ver[0:1] == '8':
-        run_aeroo_image(ver)
+    if e.ver[0:1] <> '7':
+        run_aeroo_image(e)
 
     params = 'sudo docker run -d \
               -p 5432:5432 \
               -e POSTGRES_USER=odoo \
               -e POSTGRES_PASSWORD=odoo \
-              -v ' + PSQL + ':/var/lib/postgresql/data \
+              -v ' + e.PSQL + ':/var/lib/postgresql/data \
               --restart=always \
               --name db-odoo ' + \
-             getImageFromName(ver, 'postgres')
+             e.formatImageFromName('postgres')
 
     if sc_(params):
         msgerr('Fail running postgres image.')
@@ -434,9 +480,9 @@ def run_developer(ver):
     return True
 
 
-def stopClient(ver):
-    msgrun('stopping clients ' + ', '.join(args.client))
-    for cli in args.client:
+def stopClient(e):
+    msgrun('stopping clients ' + ', '.join(e.GetClientsFromParams()))
+    for cli in e.GetClientsFromParams():
         msginf('stop image for client ' + cli)
         sc_('sudo docker stop ' + cli)
         sc_('sudo docker rm ' + cli)
@@ -446,9 +492,9 @@ def stopClient(ver):
     return True
 
 
-def stopEnvironment(ver):
+def stopEnvironment(e):
     r1 = r2 = 0
-    msgrun('Stopping environment ' + ver)
+    msgrun('Stopping environment ' + e.ver)
     for name in ['db-odoo', 'aeroo_docs']:
         msgrun('Stopping image ' + name)
 
@@ -462,56 +508,53 @@ def stopEnvironment(ver):
     return True
 
 
-def pullAll(ver):
-    msgrun('Pulling all images for ' + ver)
+def pullAll(e):
+    msgrun('Pulling all images for ' + e.ver)
 
-    for image_name in data[ver]['images']:
-        image = getImageFromName(ver, image_name)
+    for image_name in e.GetData()['images']:
+        image = e.formatImageFromName(image_name)
         msginf('Pulling ' + image)
         if sc_('sudo docker pull ' + image):
             msgerr('Fail pulling image ' + image + ' - Aborting.')
 
-    msgdone('All images ok ' + ver)
+    msgdone('All images ok ' + e.ver)
 
-    msgrun('Pulling all repos for ' + ver)
-    for repo in getReposList(ver):
-        msginf('pulling repo ' + formatRepoFromDict(repo))
-        params = 'cd ' + HOME + 'sources/' + repo['dir'] + '&&' + ' sudo git pull'
+    msgrun('Pulling all repos for ' + e.ver)
+    for repo in e.getReposList():
+        msginf('pulling repo ' + e.formatRepoFromDict(repo))
+        params = 'cd ' + e.HOME + 'sources/' + repo['dir'] + '&&' + ' sudo git pull'
         if sc_(params):
             msgerr('Fail pulling repos, uninstall and try again. \
             By the way... did you run -I ?')
 
-    msgdone('All repos ok ' + ver)
+    msgdone('All repos ok ' + e.ver)
 
     return True
 
 
-def listData(ver):
-    msgrun('Data for this environment - Odoo ' + ver)
+def listData(e):
+    msgrun('Data for this environment - Odoo ' + e.ver)
     msgrun('Images ' + 19 * '-')
-    for image in data[ver]['images']:
-        msgdone(getImageFromName(ver, image))
+
+    for image in e.GetData()['images']:
+        msgdone(e.formatImageFromName(image))
 
     msgrun('Repos ' + 20 * '-')
-    for rep in getReposList(ver):
-        msgdone(formatRepoFromDict(rep) + '  b ' + rep['branch'])
+    for rep in e.getReposList():
+        msgdone(e.formatRepoFromDict(rep) + '  b ' + rep['branch'])
 
     msgrun('Repos ' + 30 * '-')
-    for remote in repos:
-        msgrun(remote)
-        for repo_name in repos[remote]:
-            print formatRepoFromDict(repos[remote][repo_name]), 'b ', \
-                repos[remote][repo_name]['branch']
+    for remote in e.getReposList():
+        msgrun('b ' + remote['branch'] + ' ' + e.formatRepoFromDict(remote))
 
     msgrun('Clients ' + 18 * '-')
-    for client in clients:
-        if client['ver'] == ver:
-            msgrun(client['port'] + ' ' + client['name'])
+    for client in e.GetClients():
+        msgrun(client['port'] + ' ' + client['name'])
 
     return True
 
 
-def noIpInstall(ver):
+def noIpInstall(e):
     msgrun('Installing no-ip client')
     sc_('sudo apt-get install make')
     sc_('sudo apt-get -y install gcc')
@@ -535,7 +578,7 @@ def noIpInstall(ver):
     return True
 
 
-def dockerInstall(ver):
+def dockerInstall(e):
     msgrun('Installing docker')
     sc_('wget -qO- https://get.docker.com/ | sh')
     msgdone('Done.')
@@ -580,7 +623,7 @@ def decodeBackup(filename):
     fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M')
     n = 15 - len(dbname)
 
-    return dbname + n * ' ' + fdt
+    return dbname + n * ' ' + fdt + '  [' + date + ']'
 
 
 def backup_list(ver):
@@ -603,7 +646,7 @@ def backup_list(ver):
 
 if __name__ == '__main__':
     choices = []
-    for opt in data:
+    for opt in data_:
         choices.append(opt)
 
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.3')
@@ -684,7 +727,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--backup',
                         action='store_true',
-                        help="Lauch backup")
+                        help="Lauch backup requieres -d y -c")
 
     parser.add_argument('--debug',
                         action='store_true',
@@ -696,42 +739,35 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    # Constant Definitins
-    HOME = os.path.expanduser('~/odoo-' + args.version + '/')
-    PSQL = os.path.expanduser('~/postgresql' + '/')
-
-    # Check for valid client
-    if args.client != None:
-        for cli in args.client:
-            getClientPort(args.version, cli)
+    env = environment(args)
 
     if args.uninstall_env:
-        uninstallEnvironment(args.version)
+        uninstallEnvironment(env)
     if args.install_env:
-        installEnvironment(args.version)
+        installEnvironment(env)
     if args.install_cli:
-        installClient(args.version)
+        installClient(env)
     if args.stop_env:
-        stopEnvironment(args.version)
+        stopEnvironment(env)
     if args.run_env:
-        runEnvironment(args.version)
+        runEnvironment(env)
     if args.run_dev:
-        run_developer(args.version)
+        runDeveloper(env)
     if args.stop_cli:
-        stopClient(args.version)
+        stopClient(env)
     if args.run_cli:
-        runClient(args.version)
+        runClient(env)
     if args.pull_all:
-        pullAll(args.version)
+        pullAll(env)
     if args.list:
-        listData(args.version)
+        listData(env)
     if args.no_ip_install:
-        noIpInstall(args.version)
+        noIpInstall(env)
     if args.docker_install:
-        dockerInstall(args.version)
+        dockerInstall(env)
     if args.update_database:
-        updateDatabase(args.version)
+        updateDatabase(env)
     if args.backup:
-        backup(args.version)
+        backup(env)
     if args.backup_list:
-        backup_list(args.version)
+        backup_list(env)
