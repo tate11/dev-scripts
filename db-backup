@@ -33,15 +33,11 @@ if [ $# -lt 2 ]
     exit 0
 fi
 
-ERROR=0
 CUSTOMER=$1
 DB=$2
 DATE=$(date +"%Y %m %d %H:%M")
 LASTBKP="/var/log/$CUSTOMER-last-backup.log"
-LOGFILE="/var/log/$CUSTOMER-backup.log"
-DIR=$(readlink -m ~/odoo-8.0/$CUSTOMER/backup)
-#DIR="/home/ubuntu/odoo-8.0/$CUSTOMER/backup"
-echo "backup dir $DIR" >> $LOGFILE
+DIR="/backup/8.0/$CUSTOMER/"
 
 # backing up database and files
 docker run --rm -i \
@@ -64,4 +60,3 @@ do
 done
 
 msgdone "${DATE} Backup for client ${CUSTOMER} with db ${DB} success"
-

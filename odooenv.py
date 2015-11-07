@@ -243,6 +243,7 @@ def sc_(params):
     return subprocess.call(params, shell=True)
 
 
+# TODO eliminar también el backup dir
 def uninstallEnvironment(ver):
     msgrun('Uninstalling odoo environment ' + ver)
     sc_(['sudo rm -r ' + HOME])
@@ -542,7 +543,7 @@ def dockerInstall(ver):
 
 
 def backupdir():
-    return HOME + args.client[0] + '/' + 'backup/'
+    return '/backup/' + args.version + '/' + args.client[0]
 
 
 def backup(ver):
