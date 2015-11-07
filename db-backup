@@ -40,7 +40,7 @@ DATE=$(date +"%Y %m %d %H:%M")
 LASTBKP="/var/log/$CUSTOMER-last-backup.log"
 LOGFILE="/var/log/$CUSTOMER-backup.log"
 DIR=$(readlink -f ~/odoo-8.0/$CUSTOMER/backup)
-
+DIR="/home/ubuntu/odoo-8.0/$CUSTOMER/backup"
 echo "backup dir $DIR" >> $LOGFILE
 
 # backing up database and files
