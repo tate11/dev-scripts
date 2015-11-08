@@ -1,8 +1,7 @@
 #!/bin/bash
 #
-echo $HOME
 
-docker run -it \
-    -v $HOME/git-repos/dev-scripts/.s3cfg:/.s3cfg \
+sd run -it \
+    -v $HOME/.s3cfg:/root/ \
     -v $HOME:/home/$USER \
-    threadx/s3cmd
+    threadx/s3cmd $* 
