@@ -607,8 +607,16 @@ def backup(e):
     return True
 
 
-def decodeBackup(filename):
+def decodeBackup(root, filename):
     # bkp format: jeo_datos_201511022236
+
+    # size of bkp
+    path = os.path.join(root, filename + '.dump')
+    size = os.stat(path).st_size
+    # plus size of tar
+    path = os.path.join(root, filename + '.tar')
+    size += os.stat(path).st_size
+    size = size / 1000
 
     # strip db name
     a = len(filename) - 13
@@ -622,7 +630,7 @@ def decodeBackup(filename):
     fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M')
     n = 15 - len(dbname)
 
-    return dbname + n * ' ' + fdt + '  [' + date + ']'
+    return dbname + n * ' ' + fdt + '  [' + date + '] ' + str(size) + 'k'
 
 
 def backup_list(e):
@@ -640,7 +648,7 @@ def backup_list(e):
 
     fns.sort()
     for fn in fns:
-        print decodeBackup(fn)
+        print decodeBackup(root, fn)
 
 
 if __name__ == '__main__':
