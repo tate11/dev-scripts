@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+echo $HOME
+
+docker run -it \
+    -v $HOME/git-repos/dev-scripts/.s3cfg:/.s3cfg \
+    -v $HOME:/home/$USER \
+    threadx/s3cmd
