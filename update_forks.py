@@ -36,7 +36,13 @@ data = [
     {'ver': 'master', 'dir': '~/git-repos/Python-Markdown'},
     {'ver': '8.0', 'dir': '~/git-repos/account-financial-reporting'},
     {'ver': '8.0', 'dir': '~/git-repos/odoo-web'},
-
+    {'ver': '8.0', 'dir': '~/git-repos/odoo-argentina'},
+    {'ver': '8.0', 'dir': '~/git-repos/odoo-addons'},
+    {'ver': '8.0', 'dir': '~/git-repos/aeroo_reports'},
+    {'ver': '8.0', 'dir': '~/git-repos/server-tools'},
+    {'ver': '8.0', 'dir': '~/git-repos/web'},
+    {'ver': '8.0', 'dir': '~/git-repos/management-system'},
+    {'ver': '8.0', 'dir': '~/git-repos/knowledge'},
 ]
 
 
@@ -80,13 +86,13 @@ def msginf(msg):
 def updateRepo(repo):
     msgrun(30 * '-' + ' ' + repo['dir'])
     sc_('git -C ' + repo['dir'] + ' status')
-    msgrun("odoo fetch upstream")
+    msgrun("fetch upstream")
     sc_('git -C ' + repo['dir'] + ' fetch upstream')
-    msgrun("odoo checkout")
+    msgrun("checkout")
     sc_('git -C ' + repo['dir'] + ' checkout ' + repo['ver'])
-    msgrun("odoo merge")
+    msgrun("merge")
     sc_('git -C ' + repo['dir'] + ' merge upstream/' + repo['ver'])
-    msgrun("odoo push")
+    msgrun("push")
     sc_('git -C ' + repo['dir'] + ' push origin ' + repo['ver'])
     msgdone('done')
     return
@@ -100,12 +106,22 @@ def updateAll():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update forks v 0.1')
-    parser.add_argument('-U', '--update-all', action='store_true',
+    parser.add_argument('-U',
+                        '--update-all',
+                        action='store_true',
                         help="Update all forks without warning")
-    parser.add_argument('-u', '--update', action='store_true',
-                        help="Update specific forks")
+    parser.add_argument('-u',
+                        '--update',
+                        action='append',
+                        dest='repo',
+                        help="Update specific forks (not implemented yet)")
+    parser.add_argument('-c',
+                        '--check',
+                        action='store_true',
+                        help="Check upstream repos (not implemented yet)")
 
     args = parser.parse_args()
+    print args
 
     if args.update_all:
         updateAll()

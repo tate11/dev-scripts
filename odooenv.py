@@ -28,6 +28,7 @@ from datetime import datetime
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
+# TODO Revisar el tema de los subcomandos
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
