@@ -43,6 +43,7 @@ data = [
     {'ver': '8.0', 'dir': '~/git-repos/web'},
     {'ver': '8.0', 'dir': '~/git-repos/management-system'},
     {'ver': '8.0', 'dir': '~/git-repos/knowledge'},
+    {'ver': '8.0', 'dir': '~/git-repos/rma'},
 ]
 
 
