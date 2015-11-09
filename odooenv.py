@@ -193,15 +193,15 @@ class environment:
 
     def checkClient(self):
         if self.args.client == None:
-            msgerr('need -c option')
+            msgerr('Need -c option')
 
     def checkModules(self):
         if self.args.module == None:
-            msgerr('need -m option')
+            msgerr('Need -m option')
 
     def checkDatabase(self):
         if self.args.database == None:
-            msgerr('need -d option')
+            msgerr('Need -d option')
 
     def GetClientsFromParams(self):
         self.checkClient()
@@ -225,7 +225,7 @@ class environment:
     def GetClientFromParams(self):
         self.checkClient()
         if len(self.args.client) > 1:
-            msgerr('only one client expected')
+            msgerr('Only one client expected')
         return self.args.client[0]
 
     def DebugMode(self):
@@ -662,8 +662,8 @@ if __name__ == '__main__':
     parser.add_argument('-U', '--uninstall-env',
                         action='store_true',
                         help='Uninstall and erase all files from environment including \
-                        database (only current ver). The command ask for permission to \
-                        erase database. BE WARNED if say yes, all database files will be erased.')
+                        database. The command ask for permission to erase database. \
+                        BE WARNED if say yes, all database files will be erased.')
 
     parser.add_argument('-I', '--install-env',
                         action='store_true',
