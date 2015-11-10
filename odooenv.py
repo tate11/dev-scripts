@@ -543,10 +543,6 @@ def listData(e):
     for image in e.GetData()['images']:
         msgdone(e.formatImageFromName(image))
 
-    msgrun('Repos ' + 20 * '-')
-    for rep in e.getReposList():
-        msgdone(e.formatRepoFromDict(rep) + '  b ' + rep['branch'])
-
     msgrun('Repos ' + 30 * '-')
     for remote in e.getReposList():
         msgrun('b ' + remote['branch'] + ' ' + e.formatRepoFromDict(remote))
