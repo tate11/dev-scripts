@@ -108,8 +108,8 @@ def updateAll():
 if __name__ == '__main__':
     choices = ['8.0']
     parser = argparse.ArgumentParser(description='Update forks v 0.2')
-    parser.add_argument('version', choices=choices)
-
+    parser.add_argument('version',
+                        choices=choices)
     parser.add_argument('-U',
                         '--update-all',
                         action='store_true',

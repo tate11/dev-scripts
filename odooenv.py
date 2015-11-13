@@ -36,11 +36,13 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+# Reservados 8989,
 clients_ = [
     {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
+    {'port': '8072', 'ver': '8.0', 'name': 'nixel'},
 ]
 
 # TODO evitar la duplicación de repos con el dict repos
@@ -107,12 +109,12 @@ data_ = {
             {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'rma', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'manufacture', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'rma', 'branch': '8.0'},
+            #            {'repo': 'jobiols', 'dir': 'manufacture', 'branch': '8.0'},
         ]
     },
 
@@ -654,7 +656,8 @@ if __name__ == '__main__':
         choices.append(opt)
 
     parser = argparse.ArgumentParser(description='Odoo environment setup v 1.3')
-    parser.add_argument('version', choices=choices)
+    parser.add_argument('version',
+                        choices=choices)
 
     parser.add_argument('-U', '--uninstall-env',
                         action='store_true',
