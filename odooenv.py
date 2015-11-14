@@ -36,6 +36,17 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+# Mejora en estructura, esto todavía no se usa.
+clients__ = {
+    'jeo': {'port': 8069, 'ver': '8.0', 'repos': [
+        {'name': 'jobiols/odoo', 'branch': '8.0'},
+        {'name': 'jobiols/odoo-addons', 'branch': '8.0'},
+        {'name': 'jobiols/odoo-argentina', 'branch': '8.0'},
+        {'name': 'jobiols/aeroo_reports', 'branch': '8.0'},
+        {'name': 'jobiols/server-tools', 'branch': '8.0'},
+    ]},
+}
+
 # Reservados 8989,
 clients_ = [
     {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
@@ -44,18 +55,6 @@ clients_ = [
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
     {'port': '8072', 'ver': '8.0', 'name': 'nixel'},
 ]
-
-# TODO evitar la duplicación de repos con el dict repos
-repos_ = {
-    'origin': {
-        'odoo-addons': {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-        'odoo-argentina': {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-    },
-    'upstream': {
-        'odoo-addons': {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-        'odoo-argentina': {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-    }
-}
 
 data_ = {
     # Version 9.0 experimental
@@ -174,7 +173,6 @@ class environment:
         self.HOME = os.path.expanduser('~/odoo-' + args.version + '/')
         self.PSQL = os.path.expanduser('~/postgresql' + '/')
         self._clients = clients_
-        self._repos = repos_
         self._data = data_[args.version]
         self.ver = args.version
         self.args = args
