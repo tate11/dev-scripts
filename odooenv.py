@@ -53,7 +53,7 @@ clients_ = [
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
-    {'port': '8072', 'ver': '8.0', 'name': 'nixel'},
+    {'port': '8090', 'ver': '8.0', 'name': 'nixel'},
 ]
 
 data_ = {
