@@ -49,7 +49,7 @@ clients__ = {
 
 # Reservados 8989,
 clients_ = [
-    {'port': '8068', 'ver': '9.0', 'name': 'jeo'},
+    {'port': '8068', 'ver': '8.0.1', 'name': 'tst'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
@@ -77,20 +77,18 @@ data_ = {
             'odoo': {'repo': 'adhoc', 'dir': 'odoo-adhoc', 'ver': '8.0'},
             'aeroo': {'repo': 'adhoc', 'dir': 'aeroo-docs', 'ver': 'latest'},
             'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
         },
 
+        # TODO change dir to gitusr
+
         'repos': [
-            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'aeroo', 'dir': 'aeroo_reports', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'web', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'management-system', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'knowledge', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'margin-analysis', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
-            {'repo': 'oca', 'dir': 'account-financial-reporting', 'branch': '8.0'}
+            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'meli_oerp', 'branch': 'master'},
+            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'payment_mercadopago',
+             'branch': 'master'},
         ]
     },
 
@@ -166,6 +164,30 @@ data_ = {
 }
 
 
+class repository:
+    def __init__(self, dict, path):
+        self._dict = dict
+        self._path = path
+
+    def getRepo(self):
+        return self._dict['repo'] + '/' + self._dict['dir']
+
+    def getDir(self):
+        try:
+            ret = self._path + '/' + self._dict['instdir'] + '/' + self._dict['dir']
+        except:
+            ret = self._path + '/' + self._dict['dir']
+        return ret
+
+    def getFormatedRepo(self):
+        try:
+            ret = self._dict['repo'] + '/' + self._dict['instdir'] + \
+                  ' (' + self._dict['dir'] + ')'
+        except:
+            ret = self._dict['repo'] + '/' + self._dict['dir']
+        return ret
+
+
 class environment:
     """Contiene la definicion del ambiente"""
 
@@ -176,11 +198,19 @@ class environment:
         self._data = data_[args.version]
         self.ver = args.version
         self.args = args
+        self._clients_ = clients__
 
         # Check for valid client
         if args.client != None:
             for cli in args.client:
                 self.getClientPort(cli)
+
+    def getClientPort_(self, clientName):
+        try:
+            port = self._clients_[clientName]['port']
+        except:
+            msgerr('There is no ' + clientName + ' client in this environment.')
+        return port
 
     def getClientPort(self, clientName):
         port = ''
@@ -235,11 +265,35 @@ class environment:
     def GetData(self):
         return self._data
 
-    def getReposList(self):
-        return self._data['repos']
+    def getMultiReposList(self):
+        list = []
+        for repo in self._data['repos']:
+            try:
+                dir = repo['instdir']
+            except:
+                list.append(repo)
+        return list
 
-    def formatRepoFromDict(self, dict):
-        return dict['repo'] + '/' + dict['dir']
+    def getSingleReposList(self):
+        list = []
+        for repo in self._data['repos']:
+            try:
+                dir = repo['instdir']
+                list.append(repo)
+            except:
+                a = 0
+        return list
+
+    def getInstDirList(self):
+        list = []
+        for repo in self._data['repos']:
+            try:
+                dir = repo['instdir']
+                if dir not in list:
+                    list.append(dir)
+            except:
+                a = 0
+        return list
 
     def formatImageFromName(self, imageName):
         ret = ''
@@ -312,14 +366,22 @@ def installEnvironment(e):
     # make sources dir
     sc_(['mkdir -p ' + e.HOME + 'sources'])
 
-    # pull each repo in sources dir
-    for repo in e.getReposList():
-        msginf('pulling repo ' + e.formatRepoFromDict(repo))
+    # clone each single repo
+    for repo in e.getSingleReposList():
+        r = repository(repo, e.HOME + 'sources')
+        msginf('cloning repo ' + r.getFormatedRepo())
+        params = 'git clone --depth 1 -b ' + \
+                 repo['branch'] + ' http://github.com/' + r.getRepo() + ' ' + r.getDir()
+        if sc_(params):
+            msgerr('Fail installing environment, uninstall and try again.')
+
+    # clone each multi repo
+    for repo in e.getMultiReposList():
+        r = repository(repo, e.HOME + 'sources')
+        msginf('cloning repo ' + r.getFormatedRepo())
 
         params = 'git clone --depth 1 -b ' + \
-                 repo['branch'] + ' http://github.com/' + e.formatRepoFromDict(repo) + \
-                 ' ' + e.HOME + 'sources/' + repo['dir']
-
+                 repo['branch'] + ' http://github.com/' + r.getRepo() + ' ' + r.getDir()
         if sc_(params):
             msgerr('Fail installing environment, uninstall and try again.')
 
@@ -367,13 +429,22 @@ def updateDatabase(e):
 def installClient(e):
     msgrun('Install clients')
 
-    # Calculate addon_path
+    # path to addons inside image
     path = '/mnt/extra-addons/'
-    repos = e.getReposList()
+
+    # get repos where there are multiple modules
+    multi_repos = e.getMultiReposList()
+
+    # get dirs that will contain single repos
+    instdirs = e.getInstDirList()
 
     lis = []
-    for dir in repos:
+    for dir in multi_repos:
         lis.append(path + dir['dir'])
+
+    for dir in instdirs:
+        lis.append(path + dir)
+
     addon_path = ','.join(lis)
 
     for cli in e.GetClientsFromParams():
@@ -523,10 +594,22 @@ def pullAll(e):
 
     msgdone('All images ok ' + e.ver)
 
-    msgrun('Pulling all repos for ' + e.ver)
-    for repo in e.getReposList():
-        msginf('pulling repo ' + e.formatRepoFromDict(repo))
-        params = 'cd ' + e.HOME + 'sources/' + repo['dir'] + '&&' + ' sudo git pull'
+    msgrun('Pulling all multi repos for ' + e.ver)
+    for repo in e.getMultiReposList():
+        r = repository(repo, e.HOME + 'sources')
+        msginf('pulling repo ' + r.getFormatedRepo())
+        params = 'git -C ' + r.getDir() + ' pull'
+        if sc_(params):
+            msgerr('Fail pulling repos, uninstall and try again. \
+            By the way... did you run -I ?')
+
+    msgrun('Pulling all single repos for ' + e.ver)
+    for repo in e.getSingleReposList():
+        r = repository(repo, e.HOME + 'sources')
+        msginf('pulling repo ' + r.getFormatedRepo())
+
+        params = 'git -C ' + r.getDir() + ' pull'
+
         if sc_(params):
             msgerr('Fail pulling repos, uninstall and try again. \
             By the way... did you run -I ?')
@@ -543,9 +626,15 @@ def listData(e):
     for image in e.GetData()['images']:
         msgdone(e.formatImageFromName(image))
 
-    msgrun('Repos ' + 30 * '-')
-    for remote in e.getReposList():
-        msgrun('b ' + remote['branch'] + ' ' + e.formatRepoFromDict(remote))
+    msgrun('MultiRepos ' + 30 * '-')
+    for remote in e.getMultiReposList():
+        r = repository(remote, '')
+        msgrun('b ' + remote['branch'] + ' ' + r.getFormatedRepo())
+
+    msgrun('SingleRepos ' + 30 * '-')
+    for repo in e.getSingleReposList():
+        r = repository(repo, '')
+        msgrun('b ' + repo['branch'] + ' ' + r.getFormatedRepo())
 
     msgrun('Clients ' + 18 * '-')
     for client in e.GetClients():
