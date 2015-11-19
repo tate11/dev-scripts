@@ -50,6 +50,7 @@ clients__ = {
 # Reservados 8989,
 clients_ = [
     {'port': '8068', 'ver': '8.0.1', 'name': 'tst'},
+    {'port': '8068', 'ver': '8.0.1', 'name': 'makeover'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
     {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
     {'port': '8071', 'ver': '8.0', 'name': 'demo'},
@@ -74,7 +75,7 @@ data_ = {
     # ultima version de adhoc
     '8.0.1': {
         'images': {
-            'odoo': {'repo': 'adhoc', 'dir': 'odoo-adhoc', 'ver': '8.0'},
+            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
             'aeroo': {'repo': 'adhoc', 'dir': 'aeroo-docs', 'ver': 'latest'},
             'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
         },
@@ -82,10 +83,11 @@ data_ = {
         # TODO change dir to gitusr
 
         'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
+            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
+            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
+            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
             {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'meli_oerp', 'branch': 'master'},
             {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'payment_mercadopago',
              'branch': 'master'},
