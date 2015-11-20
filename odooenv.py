@@ -19,7 +19,18 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # #############################################################################
-
+# Directory structure
+#   ~/postgresql
+#   ~/odoo-[version]
+#       /sources
+#           /[repodir1]
+#               /[repo1]
+#       /[clientname1]
+#           /config
+#               openerp-server.conf
+#           /data_dir
+#
+##############################################################################
 import argparse
 import subprocess
 import sys
@@ -37,15 +48,50 @@ YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
 # Mejora en estructura, esto todavía no se usa.
-clients__ = {
-    'jeo': {'port': 8069, 'ver': '8.0', 'repos': [
-        {'name': 'jobiols/odoo', 'branch': '8.0'},
-        {'name': 'jobiols/odoo-addons', 'branch': '8.0'},
-        {'name': 'jobiols/odoo-argentina', 'branch': '8.0'},
-        {'name': 'jobiols/aeroo_reports', 'branch': '8.0'},
-        {'name': 'jobiols/server-tools', 'branch': '8.0'},
-    ]},
-}
+
+NClients = \
+    [
+        {'name': 'jeo',
+         'port': 8069,
+         'repos': [
+             {'gitusr': 'jobiols', 'repo': 'odoo', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'meli_oerp',
+              'branch': 'master'},
+             {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'payment_mercadopago',
+              'branch': 'master'},
+         ],
+         'images': [
+             {'repo': 'odoo', 'ver': '9.0'},
+             {'repo': 'postgres', 'ver': '9.4'},
+             {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
+         ]
+         },
+
+        {'name': 'makeover',
+         'port': 8069,
+         'repos': [
+             {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'management-system',
+              'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
+             {'gitusr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
+         ],
+         'images': [
+             {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
+             {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
+             {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
+         ]
+         },
+    ]
+
 
 # Reservados 8989,
 clients_ = [
@@ -57,8 +103,7 @@ clients_ = [
     {'port': '8090', 'ver': '8.0', 'name': 'nixel'},
 ]
 
-data_ = {
-    # Version 9.0 experimental
+data_ = {  # Version 9.0 experimental
     '9.0': {
         'images': {
             'odoo': {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
@@ -81,14 +126,14 @@ data_ = {
         },
 
         # TODO change dir to gitusr
-
         'repos': [
             {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
             {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
             {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
-            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'meli_oerp', 'branch': 'master'},
+            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'meli_oerp',
+             'branch': 'master'},
             {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'payment_mercadopago',
              'branch': 'master'},
         ]
@@ -166,8 +211,9 @@ data_ = {
 }
 
 
-class repository:
-    def __init__(self, dict, path):
+# data {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
+class Repository:
+    def __init__(self, dict, path=None):
         self._dict = dict
         self._path = path
 
@@ -190,6 +236,76 @@ class repository:
         return ret
 
 
+# data   {'repo': 'jobiols'  , 'dir': 'odoo-addons', 'branch': '7.0'},
+# Ndata  {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+class NRepository:
+    def __init__(self, dict, path=None):
+        self._dict = dict
+        self._path = path
+
+    def getRepo(self):
+        return self._dict['gitusr'] + '/' + self._dict['repo']
+
+    def getDir(self):
+        try:
+            ret = self._path + '/' + self._dict['instdir'] + '/' + self._dict['dir']
+        except:
+            ret = self._path + '/' + self._dict['dir']
+        return ret
+
+    def getFormatedRepo(self):
+        try:
+            ret = self._dict['gitusr'] + '/' + self._dict['instdir'] + \
+                  ' (' + self._dict['repo'] + ')'
+        except:
+            ret = self._dict['gitusr'] + '/' + self._dict['repo']
+        return ret
+
+    def getGitClone(self):
+        return 'git clone --depth 1 -b ' + \
+               self._dict['branch'] + \
+               ' http://github.com/' + \
+               self.getRepo() + ' ' \
+               + self.getDir()
+
+
+# {'repo': 'odoo', 'ver': '9.0'},
+class NImage:
+    def __init__(self, dict):
+        self._dict = dict
+
+    def getImage(self):
+        return self._dict['repo']
+
+
+class NClient:
+    """
+    holds all the information about a client
+    """
+
+    def __init__(self, dict):
+        self._dict = dict
+
+        self._repos = []
+        for repo in self._dict['repos']:
+            self._repos.append(NRepository(repo))
+
+        self._images = []
+        for image in self._dict['images']:
+            self._images.append(NImage(image))
+
+        self._port = dict['port']
+
+    def name(self):
+        return self._dict['name']
+
+    def repos(self):
+        return self._repos
+
+    def images(self):
+        return self._images
+
+
 class environment:
     """Contiene la definicion del ambiente"""
 
@@ -200,7 +316,7 @@ class environment:
         self._data = data_[args.version]
         self.ver = args.version
         self.args = args
-        self._clients_ = clients__
+
 
         # Check for valid client
         if args.client != None:
@@ -312,6 +428,21 @@ class environment:
         return '/backup/' + self.ver + '/' + self.GetClientFromParams()
 
 
+class NEnvironment:
+    """Contiene la definicion del ambiente"""
+
+    def __init__(self, dict):
+        self.HOME = os.path.expanduser('~/odoo-' + args.version + '/')
+        self.PSQL = os.path.expanduser('~/postgresql' + '/')
+
+        self._NClients = []
+        for cli in dict:
+            self._NClients.append(NClient(cli))
+
+    def clients(self):
+        return self._NClients
+
+
 def green(string):
     return GREEN + string + CLEAR
 
@@ -370,7 +501,7 @@ def installEnvironment(e):
 
     # clone each single repo
     for repo in e.getSingleReposList():
-        r = repository(repo, e.HOME + 'sources')
+        r = Repository(repo, e.HOME + 'sources')
         msginf('cloning repo ' + r.getFormatedRepo())
         params = 'git clone --depth 1 -b ' + \
                  repo['branch'] + ' http://github.com/' + r.getRepo() + ' ' + r.getDir()
@@ -379,7 +510,7 @@ def installEnvironment(e):
 
     # clone each multi repo
     for repo in e.getMultiReposList():
-        r = repository(repo, e.HOME + 'sources')
+        r = Repository(repo, e.HOME + 'sources')
         msginf('cloning repo ' + r.getFormatedRepo())
 
         params = 'git clone --depth 1 -b ' + \
@@ -598,7 +729,7 @@ def pullAll(e):
 
     msgrun('Pulling all multi repos for ' + e.ver)
     for repo in e.getMultiReposList():
-        r = repository(repo, e.HOME + 'sources')
+        r = Repository(repo, e.HOME + 'sources')
         msginf('pulling repo ' + r.getFormatedRepo())
         params = 'git -C ' + r.getDir() + ' pull'
         if sc_(params):
@@ -607,7 +738,7 @@ def pullAll(e):
 
     msgrun('Pulling all single repos for ' + e.ver)
     for repo in e.getSingleReposList():
-        r = repository(repo, e.HOME + 'sources')
+        r = Repository(repo, e.HOME + 'sources')
         msginf('pulling repo ' + r.getFormatedRepo())
 
         params = 'git -C ' + r.getDir() + ' pull'
@@ -624,18 +755,31 @@ def pullAll(e):
 def listData(e):
     msgrun('Data for this environment - Odoo ' + e.ver)
     msgrun('Images ' + 19 * '-')
+    env = NEnvironment(NClients)
+    images = []
+    for cli in env.clients():
+        print cli._NClient
+
+        msgerr('-')
+        images.append(cli.name)
+
+    for image in images:
+        msgrun(image.format)
+
+    msgerun('---------------------------------------------------------------------------')
+    msgrun('Images ' + 19 * '-')
 
     for image in e.GetData()['images']:
         msgdone(e.formatImageFromName(image))
 
     msgrun('MultiRepos ' + 30 * '-')
     for remote in e.getMultiReposList():
-        r = repository(remote, '')
+        r = Repository(remote, '')
         msgrun('b ' + remote['branch'] + ' ' + r.getFormatedRepo())
 
     msgrun('SingleRepos ' + 30 * '-')
     for repo in e.getSingleReposList():
-        r = repository(repo, '')
+        r = Repository(repo, '')
         msgrun('b ' + repo['branch'] + ' ' + r.getFormatedRepo())
 
     msgrun('Clients ' + 18 * '-')
@@ -867,3 +1011,30 @@ if __name__ == '__main__':
         backup(env)
     if args.backup_list:
         backup_list(env)
+
+    pp = {'name': 'jeo',
+          'port': 8069,
+          'repos': [
+              {'gitusr': 'jobiols', 'repo': 'odoo', 'branch': '8.0'},
+              {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+              {'gitusr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+              {'gitusr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+              {'gitusr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+              {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'meli_oerp',
+               'branch': 'master'},
+              {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'payment_mercadopago',
+               'branch': 'master'},
+          ],
+          'images': [
+              {'repo': 'odoo', 'ver': '9.0'},
+              {'repo': 'postgres', 'ver': '9.4'},
+              {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
+          ]
+          }
+
+    cli = NClient(pp)
+    print cli.name()
+    for rep in cli.repos():
+        print 'rep', rep.getGitClone()
+    for im in cli.images():
+        print 'getImage', im.getImage()
