@@ -81,7 +81,6 @@ data_ = {
         },
 
         # TODO change dir to gitusr
-
         'repos': [
             {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
             {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
