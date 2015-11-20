@@ -24,7 +24,7 @@ class Environment:
     def __init__(self, dict):
         self._clients = []
         for cli in dict:
-            self._clients.append(cli)
+            self._clients.append(Client(cli))
 
     def getClient(self,clientName):
         for cli in self._clients:
@@ -96,11 +96,14 @@ class Image:
 
         return ret
 
-
+"""
 cli = Client(clients__[0])
 for re in cli.getRepos():
     print 'repo', re.getFormattedRepo(), re.getInstDir()
 
 for im in cli.getImages():
     print 'imag', im.getFormattedImage()
+"""
 
+env = Environment(clients__)
+env.getClient('jeo')
