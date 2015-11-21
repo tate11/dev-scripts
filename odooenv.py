@@ -32,7 +32,6 @@
 #
 ##############################################################################
 import argparse
-import sys
 import os
 from datetime import datetime
 
@@ -42,12 +41,6 @@ from classes import Environment, clients__, Images__
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
 # TODO Revisar el tema de los subcomandos
-
-RED = "\033[1;31m"
-GREEN = "\033[1;32m"
-YELLOW = "\033[1;33m"
-YELLOW_LIGHT = "\033[33m"
-CLEAR = "\033[0;m"
 
 # Mejora en estructura, esto todavía no se usa.
 
@@ -362,10 +355,6 @@ class environment:
         self.checkModules()
         return args.module
 
-    def GetDatabaseFromParams(self):
-        self.checkDatabase()
-        return self.args.database[0]
-
     def GetClients(self):
         ret = []
         for cli in self._clients:
@@ -445,39 +434,6 @@ class NEnvironment:
         return self._NClients
 
 
-def green(string):
-    return GREEN + string + CLEAR
-
-
-def yellow(string):
-    return YELLOW + string + CLEAR
-
-
-def red(string):
-    return RED + string + CLEAR
-
-
-def yellow_light(string):
-    return YELLOW_LIGHT + string + CLEAR
-
-
-def msgrun(msg):
-    print yellow(msg)
-
-
-def msgdone(msg):
-    print green(msg)
-
-
-def msgerr(msg):
-    print red(msg)
-    sys.exit()
-
-
-def msginf(msg):
-    print yellow_light(msg)
-
-
 def sc_(params):
     print params
 
@@ -487,19 +443,15 @@ def sc_(params):
 
 # TODO eliminar también el backup dir pidiendo permiso antes
 def uninstallEnvironment(e):
-    e.checkClient()
-
+    clients = e.getClientFromParams()
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
         sc_(['sudo rm -r ' + e.getPsqlDir()])
 
-    for clientName in args.client:
-        try:
-            cli = e.getClient(clientName)
-        except:
-            e.msgerr('There is no ' + clientName + ' client on this environment.')
-        e.msgrun('Uninstalling odoo client ' + clientName)
-
-        sc_(['sudo rm -r ' + cli.getHomeDir() + '/' + clientName])
+    for clientName in clients:
+        cli = e.getClient(clientName)
+        e.msgrun('Uninstalling client ' + clientName)
+        if sc_(['sudo rm -r ' + cli.getHomeDir() + clientName]):
+            e.msgerr('fail uninstalling client' + clientName)
     return True
 
 
@@ -537,9 +489,9 @@ def installEnvironment(e):
 
 
 def updateDatabase(e):
-    mods = e.GetModulesFromParams()
-    db = e.GetDatabaseFromParams()
-    cli = e.GetClientFromParams()
+    mods = e.getModulesFromParams()
+    db = e.getDatabaseFromParams()
+    cli = e.getClient(e.getClientFromParams('one'))
 
     msg = 'Performing update'
     if mods[0] == 'all':
@@ -549,23 +501,20 @@ def updateDatabase(e):
 
     msg += ' on database "' + db + '"'
 
-    if e.DebugMode():
+    if e.debugMode():
         msg += ' forcing debug mode'
-    msgrun(msg)
+    e.msgrun(msg)
 
     params = 'sudo docker run --rm -it \
-            -v ' + e.HOME + cli + '/config:/etc/odoo \
-            -v ' + e.HOME + cli + '/data_dir:/var/lib/odoo \
-            -v ' + e.HOME + 'sources:/mnt/extra-addons \
+            -v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo \
+            -v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo \
+            -v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons \
             --link db-odoo:db ' + \
-             e.formatImageFromName('odoo') + ' -- ' + \
+             e.getImage('odoo').getName() + ' -- ' + \
              ' --stop-after-init \
              -d ' + db + ' -u ' + ', '.join(mods)
 
-    if e.ver[0:1] == '7':
-        params += ' --db_user=odoo --db_password=odoo --db_host=db '
-
-    if e.DebugMode():
+    if e.debugMode():
         params += ' --debug'
 
     sc_(params)
@@ -596,20 +545,27 @@ def installSources(e, client):
 
 
 def installClient(e):
-    e.checkClient()
-    e.msgrun('Install clients ' + e.getClientArgs())
+    # get clients to install from params
+    clients = e.getClientFromParams()
+    if len(clients) > 1:
+        e.msgrun('Install clients ' + ', '.join(clients))
+    else:
+        e.msgrun('Install client ' + ', '.join(clients))
 
     # path to addons inside image
     path = '/mnt/extra-addons/'
 
-    for client in e.getClients():
+    for clientName in clients:
+        client = e.getClient(clientName)
         # Creating directory's for client
         sc_('mkdir -p ' + client.getHomeDir() + client.getName() + '/config')
         sc_('mkdir -p ' + client.getHomeDir() + client.getName() + '/data_dir')
         sc_('chmod 777 -R ' + client.getHomeDir() + client.getName())
 
+        # clone or update repos as needed
         installSources(e, client)
-        msgerr('fini')
+
+        # calculate addons path
         addons_path = client.getAddonsPath()
 
         # creating config file for client
@@ -617,7 +573,7 @@ def installClient(e):
                 -v ' + client.getHomeDir() + client.getName() + '/config:/etc/odoo \
                 -v ' + client.getHomeDir() + 'sources:/mnt/extra-addons \
                 -v ' + client.getHomeDir() + client.getName() + '/data_dir:/var/lib/odoo \
-                --name ' + client.getName() + '_tmp ' + client.getImage('odoo') \
+                --name ' + client.getName() + '_tmp ' + e.getImage('odoo').getImage() \
                 + ' -- --stop-after-init -s ' \
                   ' --db-filter=' + client.getName() + '_.* '
 
@@ -629,49 +585,6 @@ def installClient(e):
 
     e.msgdone('Installing done')
     return True
-
-    """
-    # get repos where there are multiple modules
-    multi_repos = e.getMultiReposList()
-
-    # get dirs that will contain single repos
-    instdirs = e.getInstDirList()
-
-    lis = []
-    for dir in multi_repos:
-        lis.append(path + dir['dir'])
-
-    for dir in instdirs:
-        lis.append(path + dir)
-
-    addon_path = ','.join(lis)
-
-    for cli in e.GetClientsFromParams():
-        msgrun('Installing Odoo image for client ' + cli)
-
-        # Creating directory's for client
-        sc_('mkdir -p ' + e.HOME + cli + '/config')
-        sc_('mkdir -p ' + e.HOME + cli + '/data_dir')
-        sc_('chmod 777 -R ' + e.HOME + cli)
-
-        # creating config file for client
-        param = 'sudo docker run --rm \
-                -v ' + e.HOME + cli + '/config:/etc/odoo \
-                -v ' + e.HOME + 'sources:/mnt/extra-addons \
-                -v ' + e.HOME + cli + '/data_dir:/var/lib/odoo \
-                --name ' + cli + '_tmp ' + e.formatImageFromName('odoo') \
-                + ' -- --stop-after-init -s ' \
-                  ' --db-filter=' + cli + '_.* '
-
-        if addon_path <> '':
-            param += '--addons-path=' + addon_path
-
-        if sc_(param):
-            msgerr('failing to write config file. Aborting')
-
-    msgdone('Installing done')
-    return True
-    """
 
 
 def run_aeroo_image(e):
@@ -714,10 +627,10 @@ def runEnvironment(e):
 
 
 def runClient(e):
-    e.checkClient()
-    for clientName in e.getArgs().client:
+    clients = e.getClientFromParams()
+    for clientName in clients:
         cli = e.getClient(clientName)
-        msgrun('Running image for client ' + cli.getName())
+        e.msgrun('Running image for client ' + clientName)
         params = 'sudo docker run -d \
                  --link aeroo_docs:aeroo  \
                  -p ' + cli.getPort() + ':8069  \
@@ -727,21 +640,19 @@ def runClient(e):
                  --link db-odoo:db  \
                  --restart=always  \
                  --name ' + cli.getName() + ' ' + \
-                 e.getImage(
-                     'odoo').getImage() + ' -- --db-filter=' + cli.getName() + '_.*',
+                 e.getImage('odoo').getImage() + \
+                 ' -- --db-filter=' + cli.getName() + '_.*',
 
-        if not sc_(params):
-            msgdone(
-                'Client ' + cli.getName() + ' up and running on port ' + cli.getPort())
-        else:
-            msgerr(
-                "Can't run client " + cli.getName() + ", by the way... did you run -R ?")
+        if sc_(params):
+            e.msgerr("Can't run client " + cli.getName() +
+                     ", by the way... did you run -R ?")
+        e.msgdone('Client ' + clientName + ' up and running on port ' + cli.getPort())
 
     return True
 
 
 def runDeveloper(e):
-    e.msgrun('Running environment in developer mode.')
+    e.msgrun('Running database in developer mode.')
 
     params = 'sudo docker run -d \
                     -p 5432:5432 \
@@ -760,35 +671,37 @@ def runDeveloper(e):
 
 
 def stopClient(e):
-    msgrun('stopping clients ' + e.getClientArgs())
-    for cli in e.GetClients():
-        msginf('stopping image for client ' + cli.getName)
-        sc_('sudo docker stop ' + cli.getName)
-        sc_('sudo docker rm ' + cli.getName)
+    clients = e.getClientFromParams()
+    e.msgrun('stopping clients ' + ', '.join(clients))
 
-    msgdone('all clients stopped')
+    for clientName in clients:
+        e.msginf('stopping image for client ' + clientName)
+        if sc_('sudo docker stop ' + clientName):
+            e.msgerr('cannot stop client ' + clientName)
+
+        if sc_('sudo docker rm ' + clientName):
+            e.msgerr('cannot remove client ' + clientName)
+
+    e.msgdone('all clients stopped')
 
     return True
 
 
 def stopEnvironment(e):
-    r1 = r2 = 0
-    msgrun('Stopping environment')
+    e.msgrun('Stopping environment')
     for name in ['db-odoo', 'aeroo_docs']:
         e.msgrun('Stopping image ' + name)
-
-        r1 += sc_('sudo docker stop ' + name)
-        r2 += sc_('sudo docker rm ' + name)
-
-    if r1 + r2 <> 0:
-        e.msgerr('some images can not be stopped')
+        if sc_('sudo docker stop ' + name):
+            e.msgerr('can not stop image ' + name)
+        if sc_('sudo docker rm ' + name):
+            e.msgerr('can not remove image ' + name)
 
     e.msgdone('Environment stopped')
     return True
 
 
 def pullAll(e):
-    e.msgrun('Pulling all images')
+    e.msgrun('--- Pulling all images')
 
     images = []
     for img in e.getImages():
@@ -797,50 +710,49 @@ def pullAll(e):
         for img in cli.getImages():
             images.append(img)
 
-    params = img.getPullImage()
-    if sc_(params):
-        msgerr('Fail pulling image ' + image + ' - Aborting.')
+    for img in list(set(images)):
+        params = img.getPullImage()
+        if sc_(params):
+            msgerr('Fail pulling image ' + image + ' - Aborting.')
 
-    msgdone('All images ok ' + e.ver)
+    e.msgdone('All images ok ')
+    e.msgrun('--- Pulling all repos')
 
     repos = []
     for cli in e.getClients():
         for repo in cli.getRepos():
             repos.append(repo)
 
-    for repo in repos:
+    for repo in list(set(repos)):
         params = repo.getPullRepo()
+        if sc_(params):
+            e.msgerr('Fail pulling repos')
 
-    if sc_(params):
-        e.msgerr('Fail pulling repos')
-
-    msgdone('All repos ok ' + e.ver)
+    e.msgdone('All repos ok ')
 
     return True
 
 
 def listData(e):
-    msgrun('Data for this environment - Odoo ' + e.ver)
+    e.msgrun('Data for this environment - Odoo ')
+    for cli in e.getClients():
+        e.msginf('client -- ' + cli.getName(0) + ' -- on port ' + cli.getPort())
 
-    env = Environment(clients__)
-    for cli in env.getClients():
-        msginf('client -- ' + cli.getName(0) + ' -- on port ' + cli.getPort())
-
-        msgrun(3 * '-' + ' Images ' + 72 * '-')
+        e.msgrun(3 * '-' + ' Images ' + 72 * '-')
         for image in cli.getImages():
-            msgrun('   ' + image.getFormattedImage())
-        msgrun(' ')
-        msgrun(
+            e.msgrun('   ' + image.getFormattedImage())
+        e.msgrun(' ')
+        e.msgrun(
             3 * '-' + 'branch' + 4 * '-' + 'repository' + 25 * '-' + 'instalation dir' + 20 * '-')
         for repo in cli.getRepos():
-            msgrun('   ' + repo.getFormattedRepo() + ' ' + repo.getInstDir())
-        msgrun(' ')
+            e.msgrun('   ' + repo.getFormattedRepo() + ' ' + repo.getInstDir())
+        e.msgrun(' ')
 
     return True
 
 
 def noIpInstall(e):
-    msgrun('Installing no-ip client')
+    e.msgrun('Installing no-ip client')
     sc_('sudo apt-get install make')
     sc_('sudo apt-get -y install gcc')
     sc_('wget -O /usr/local/src/noip.tar.gz \
@@ -850,13 +762,13 @@ def noIpInstall(e):
     http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
     sc_('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/')
     sc_('cd /usr/local/src/noip-2.1.9-1 && sudo make install')
-    msginf("Please answer some questions")
+    e.msginf("Please answer some questions")
     sc_('sudo rm /usr/local/src/noip-duc-linux.tar.gz')
     sc_('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/')
     sc_('sudo chmod +x /etc/init.d/debian.noip2.sh')
     sc_('sudo update-rc.d debian.noip2.sh defaults')
     sc_('sudo /etc/init.d/debian.noip2.sh restart')
-    msgdone('no-ip service running')
+    e.msgdone('no-ip service running')
 
     # To config defaults noip2 with capital C
     # sudo /usr/local/bin/noip2 -C
@@ -864,28 +776,28 @@ def noIpInstall(e):
 
 
 def dockerInstall(e):
-    msgrun('Installing docker')
+    e.msgrun('Installing docker')
     sc_('wget -qO- https://get.docker.com/ | sh')
-    msgdone('Done.')
+    e.msgdone('Done.')
     return True
 
 
 def backup(e):
-    dbname = e.GetDatabaseFromParams()
-    client = e.GetClientFromParams()
-    msgrun('Backing up database client ' + client + ' with db ' + dbname)
+    dbname = e.getDatabaseFromParams()
+    clientName = e.getClientFromParams('one')
+    e.msgrun('Backing up database client ' + clientName + ' with db ' + dbname)
 
     params = 'sudo docker run --rm -i \
                 --link db-odoo:db \
-                --volumes-from ' + client + '  \
-                -v ' + e.backupdir() + ':/backup  \
+                --volumes-from ' + clientName + '  \
+                -v ' + e.getClient(clientName).getBackupDir() + ':/backup  \
                 --env DBNAME=' + dbname + ' \
                 jobiols/backup backup'
 
     if sc_(params):
-        msgerr('failing backup. Aborting')
+        e.msgerr('failing backup. Aborting')
 
-    msgdone('Backup done')
+    e.msgdone('Backup done')
     return True
 
 
@@ -916,32 +828,29 @@ def decodeBackup(root, filename):
 
 
 def backup_list(e):
-    dir = e.backupdir()
-    msgrun('List of available backups for client ' + e.GetClientFromParams())
+    clients = e.getClientFromParams()
+    for clientName in clients:
+        cli = e.getClient(clientName)
+        dir = cli.getBackupDir()
+        print dir
+        e.msgrun('List of available backups for client ' + clientName)
 
-    fns = []
-    # walk the backup dir
-    for root, dirs, files in os.walk(dir):
-        for file in files:
-            # get the .dump files and decode it to human redable format
-            filename, file_extension = os.path.splitext(file)
-            if file_extension == '.dump':
-                fns.append(filename)
+        fns = []
+        # walk the backup dir
+        for root, dirs, files in os.walk(dir):
+            for file in files:
+                # get the .dump files and decode it to human redable format
+                filename, file_extension = os.path.splitext(file)
+                if file_extension == '.dump':
+                    fns.append(filename)
 
-    fns.sort()
-    for fn in fns:
-        print decodeBackup(root, fn)
+        fns.sort()
+        for fn in fns:
+            print decodeBackup(root, fn)
 
 
 if __name__ == '__main__':
-    choices = []
-    for opt in data_:
-        choices.append(opt)
-
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 1.3')
-    parser.add_argument('version',
-                        choices=choices)
-
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 2.0')
     parser.add_argument('-U', '--uninstall-env',
                         action='store_true',
                         help='Uninstall and erase all files from environment including \
@@ -1047,21 +956,15 @@ if __name__ == '__main__':
         runClient(enviro)
     if args.pull_all:
         pullAll(enviro)
-
-    msgerr('fini')
-    env = environment(args)
-
-    if args.install_env:
-        installEnvironment(enviro)
     if args.list:
-        listData(env)
+        listData(enviro)
     if args.no_ip_install:
-        noIpInstall(env)
+        noIpInstall(enviro)
     if args.docker_install:
-        dockerInstall(env)
+        dockerInstall(enviro)
     if args.update_database:
-        updateDatabase(env)
+        updateDatabase(enviro)
     if args.backup:
-        backup(env)
+        backup(enviro)
     if args.backup_list:
-        backup_list(env)
+        backup_list(enviro)

@@ -77,7 +77,6 @@ clients__ = [
          {'usr': 'jobiols', 'img': 'backup'},
      ]
      },
-
 ]
 
 RED = "\033[1;31m"
@@ -101,6 +100,36 @@ class Environment:
         self._psql = os.path.expanduser('~/postgresql/')
         self._args = args
 
+    def debugMode(self):
+        return self._args.debug
+
+    def getModulesFromParams(self):
+        if self._args.module is None:
+            self.msgerr('need -m option')
+        return self._args.module
+
+    def getDatabaseFromParams(self):
+        if self._args.database is None:
+            self.msgerr('need -d option')
+        if len(self._args.database) > 1:
+            self.msgerr('only one database expected')
+        return self._args.database[0]
+
+    def getClientFromParams(self, cant='multi'):
+        if self._args.client is None:
+            self.msgerr('need -c option')
+
+        for cli in self._args.client:
+            if self.getClient(cli) is None:
+                self.msgerr('there is no ' + cli + ' client in this environment')
+
+        if cant == 'multi':
+            return self._args.client
+        else:
+            if len(self._args.client) > 1:
+                self.msgerr('only one client expected')
+            return self._args.client[0]
+
     def getArgs(self):
         return self._args
 
@@ -110,7 +139,6 @@ class Environment:
     def getImage(self, imageName):
         ret = False
         for img in self.getImages():
-            print img.getName(), imageName
             if img.getName() == imageName:
                 ret = img
         if ret:
@@ -119,12 +147,10 @@ class Environment:
             raise Exception('no image')
 
     def getClient(self, clientName):
-        cli = False
+        cli = None
         for client in self._clients:
             if client.getName() == clientName:
                 cli = client
-        if not cli:
-            raise Exception('clientNotFound')
         return cli
 
     def getClients(self):
@@ -138,17 +164,6 @@ class Environment:
 
     def getPsqlDir(self):
         return self._psql
-
-    def checkClient(self):
-        if self._args.client == None:
-            self.msgerr('Need -c option')
-
-        for cli in self._args.client:
-            try:
-                self.getClient(cli)
-            except:
-                self.msgerr('there is no ' + cli + ' client in this environment')
-        return True
 
     def green(self, string):
         return GREEN + string + CLEAR
@@ -190,6 +205,9 @@ class Client:
         self._images = []
         for img in dict['images']:
             self._images.append(Image(self, img))
+
+    def getBackupDir(self):
+        return self.getHomeDir() + self._name + '/backup/'
 
     def getRepos(self):
         return self._repos
@@ -266,9 +284,26 @@ class Image:
 
     def getImage(self):
         try:
-            return self._dict['usr'] + '/' + self._dict['img'] + ':' + self._dict['ver']
+            usr = self._dict['usr']
         except:
-            return self._dict['usr'] + ':' + self._dict['ver']
+            usr = False
+
+        try:
+            image = self._dict['img']
+        except:
+            image = False
+        try:
+            ver = self._dict['ver']
+        except:
+            ver = False
+
+        ret = usr
+        if image:
+            ret += '/' + image
+        if ver:
+            ret += ':' + ver
+
+        return ret
 
     def getName(self):
         try:
