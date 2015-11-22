@@ -30,7 +30,11 @@
 #               openerp-server.conf
 #           /data_dir
 #
+# TODO sacar el log fuera de la imagen.
+# TODO archivo xml que sobreescriba clients.
+# TODO Revisar el tema de los subcomandos
 ##############################################################################
+
 import argparse
 import os
 from datetime import datetime
@@ -40,11 +44,6 @@ from classes import Environment, clients__
 
 
 
-
-# TODO sacar el log fuera de la imagen.
-# TODO archivo xml que sobreescriba clients.
-# TODO Revisar el tema de los subcomandos
-# Mejora en estructura, esto todavía no se usa.
 
 # Reservados 8989,
 clients_ = [
@@ -78,7 +77,6 @@ data_ = {  # Version 9.0 experimental
             'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
         },
 
-        # TODO change dir to gitusr
         'repos': [
             {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
             {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
@@ -170,25 +168,25 @@ def sc_(params):
     return subprocess.call(params, shell=True)
 
 
-def uninstallClient(e):
-    clients = e.getClientFromParams()
+def uninstall_client(e):
+    clients = e.get_clients_from_params()
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
         if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
             e.msginf('deleting all databases!')
             sc_(['sudo rm -r ' + e.getPsqlDir()])
 
     for clientName in clients:
-        cli = e.getClient(clientName)
+        cli = e.get_client(clientName)
         e.msgrun('deleting client files for client ' + clientName)
         if sc_(['sudo rm -r ' + cli.getHomeDir() + clientName]):
             e.msgerr('fail uninstalling client ' + clientName)
     return True
 
 
-def updateDatabase(e):
-    mods = e.getModulesFromParams()
-    db = e.getDatabaseFromParams()
-    cli = e.getClient(e.getClientFromParams('one'))
+def update_database(e):
+    mods = e.get_modules_from_params()
+    db = e.get_database_from_params()
+    cli = e.get_client(e.get_clients_from_params('one'))
 
     msg = 'Performing update'
     if mods[0] == 'all':
@@ -198,7 +196,7 @@ def updateDatabase(e):
 
     msg += ' on database "' + db + '"'
 
-    if e.debugMode():
+    if e.debug_mode():
         msg += ' forcing debug mode'
     e.msgrun(msg)
 
@@ -207,11 +205,11 @@ def updateDatabase(e):
     params += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
     params += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
     params += '--link postgres:db '
-    params += cli.getImage('odoo').getImage() + ' -- '
+    params += cli.get_image('odoo').get_image() + ' -- '
     params += ' --stop-after-init '
     params += '-d ' + db + ' -u ' + ', '.join(mods) + ' '
 
-    if e.debugMode():
+    if e.debug_mode():
         params += '--debug'
 
     sc_(params)
@@ -219,23 +217,39 @@ def updateDatabase(e):
     return True
 
 
-def installSources(e, client):
-    # if not exist postgresql create it
-    if not os.path.isdir(e.getPsqlDir()):
-        sc_('mkdir ' + e.getPsqlDir())
+def update_images_from_list(e, images):
+    # avoid image duplicates
+    tst_list = []
+    unique_images = []
+    for img in images:
+        if img.getFormattedImage() not in tst_list:
+            tst_list.append(img.getFormattedImage())
+            unique_images.append(img)
 
-    # make sources dir
-    # if not exist sources dir create it
-    if not os.path.isdir(client.getHomeDir() + 'sources'):
-        sc_('mkdir -p ' + client.getHomeDir() + 'sources')
+    for img in unique_images:
+        params = img.getPullImage()
+        e.msginf('pulling image ' + img.getFormattedImage())
+        if sc_(params):
+            e.msgerr('Fail pulling image ' + img.getName() + ' - Aborting.')
+    return True
 
-    for repo in client.getRepos():
+
+def update_repos_from_list(e, repos):
+    # avoid repo duplicates
+    tst_list = []
+    unique_repos = []
+    for repo in repos:
+        if repo.get_formatted_repo() not in tst_list:
+            tst_list.append(repo.get_formatted_repo())
+            unique_repos.append(repo)
+
+    for repo in unique_repos:
         # Check if repo exists
         if os.path.isdir(repo.getInstDir()):
-            e.msginf('pull ' + repo.getInstDir())
+            e.msginf('pull  ' + repo.get_formatted_repo())
             params = repo.getPullRepo()
         else:
-            e.msginf('clone ' + repo.getCloneRepo())
+            e.msginf('clone ' + repo.get_formatted_repo())
             params = repo.getCloneRepo()
 
         if sc_(params):
@@ -244,29 +258,38 @@ def installSources(e, client):
     return True
 
 
-def installClient(e):
+def install_client(e):
     # get clients to install from params
-    clients = e.getClientFromParams()
+    clients = e.get_clients_from_params()
     if len(clients) > 1:
         plural = 's'
     else:
         plural = ''
     e.msgrun('Install client' + plural + ' ' + ', '.join(clients))
 
-
     for clientName in clients:
-        cli = e.getClient(clientName)
+        cli = e.get_client(clientName)
         # Creating directory's for client
         sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/config')
         sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/data_dir')
-        sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
+        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/log')
         sc_('chmod 777 -R ' + cli.getHomeDir() + cli.getName())
+        sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
+
+        # if not exist postgresql create it
+        if not os.path.isdir(e.getPsqlDir()):
+            sc_('mkdir ' + e.getPsqlDir())
+
+        # make sources dir
+        # if not exist sources dir create it
+        if not os.path.isdir(cli.getHomeDir() + 'sources'):
+            sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
 
         # clone or update repos as needed
-        installSources(e, cli)
+        update_repos_from_list(e, cli.getRepos())
 
         # calculate addons path
-        addons_path = cli.getAddonsPath()
+        addons_path = cli.get_addons_path()
 
         # creating config file for client
         param = 'sudo docker run --rm '
@@ -275,11 +298,11 @@ def installClient(e):
         param += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
         param += '-v ' + cli.getHomeDir() + cli.getName() + '/log:/var/log/odoo '
         param += '--name ' + cli.getName() + '_tmp ' + \
-                 cli.getImage('odoo').getImage() + ' '
+                 cli.get_image('odoo').get_image() + ' '
         param += '-- --stop-after-init -s '
         param += '--db-filter=' + cli.getName() + '_.* '
 
-        if addons_path <> '':
+        if addons_path != '':
             param += '--addons-path=' + addons_path + ' '
 
         param += '--logfile=/var/log/odoo/odoo.log '
@@ -293,31 +316,32 @@ def installClient(e):
     return True
 
 
-def runEnvironment(e):
+def run_environment(e):
     e.msgrun('Running environment images')
-    clientNames = e.getClientFromParams()
-    for clientName in clientNames:
-        cli = e.getClient(clientName)
+    clientNames = e.get_clients_from_params()
+
+    # TODO ver si lo modificamos para multiples clientes
+    cli = e.get_client(clientNames[0])
 
     err = 0
-    image = cli.getImage('postgres')
+    image = cli.get_image('postgres')
     params = 'sudo docker run -d '
-    if e.debugMode():
+    if e.debug_mode():
         params += '-p 5432:5432 '
     params += '-e POSTGRES_USER=odoo '
     params += '-e POSTGRES_PASSWORD=odoo '
     params += '-v ' + e.getPsqlDir() + ':/var/lib/postgresql/data '
     params += '--restart=always '
     params += '--name ' + image.getName() + ' '
-    params += image.getImage()
+    params += image.get_image()
     err += sc_(params)
 
-    image = cli.getImage('aeroo')
+    image = cli.get_image('aeroo')
     params = 'sudo docker run -d '
     params += '-p 127.0.0.1:8989:8989 '
     params += '--name=' + image.getName() + ' '
     params += '--restart=always '
-    params += image.getImage()
+    params += image.get_image()
     err += sc_(params)
 
     if err:
@@ -327,10 +351,10 @@ def runEnvironment(e):
     return True
 
 
-def runClient(e):
-    clients = e.getClientFromParams()
+def run_client(e):
+    clients = e.get_clients_from_params()
     for clientName in clients:
-        cli = e.getClient(clientName)
+        cli = e.get_client(clientName)
         e.msgrun('Running image for client ' + clientName)
         params = 'sudo docker run -d '
         params += '--link aeroo:aeroo '
@@ -342,7 +366,7 @@ def runClient(e):
         params += '--link postgres:db '
         params += '--restart=always '
         params += '--name ' + cli.getName() + ' '
-        params += cli.getImage('odoo').getImage()
+        params += cli.get_image('odoo').get_image()
         params += ' -- --db-filter=' + cli.getName() + '_.* '
         params += '--logfile=/var/log/odoo/odoo.log '
         params += '--logrotate'
@@ -355,8 +379,8 @@ def runClient(e):
     return True
 
 
-def stopClient(e):
-    clients = e.getClientFromParams()
+def stop_client(e):
+    clients = e.get_clients_from_params()
     e.msgrun('stopping clients ' + ', '.join(clients))
 
     for clientName in clients:
@@ -388,62 +412,60 @@ def stopEnvironment(e):
     return True
 
 
-def pullAll(e):
+def pull_all(e):
     e.msgrun('--- Pulling all images')
 
     images = []
     for cli in e.getClients():
-        for img in cli.getImages():
-            images.append(img)
-
-    for img in list(set(images)):
-        params = img.getPullImage()
-        if sc_(params):
-            e.msgerr('Fail pulling image ' + image + ' - Aborting.')
+        images.extend(cli.getImages())
+    update_images_from_list(e, images)
 
     e.msgdone('All images ok ')
     e.msgrun('--- Pulling all repos')
 
     repos = []
     for cli in e.getClients():
-        for repo in cli.getRepos():
-            repos.append(repo)
-
-    for repo in list(set(repos)):
-        params = repo.getPullRepo()
-        if sc_(params):
-            e.msgerr('Fail pulling repos')
+        repos.extend(cli.getRepos())
+    update_repos_from_list(e, repos)
 
     e.msgdone('All repos ok ')
 
     return True
 
 
-def listData(e):
+def list_data(e):
+    # if no -c option get all clients else get -c clients
     if args.client is None:
         clients = e.getClients()
     else:
         clients = []
-        for clientName in e.getClientFromParams():
-            clients.append(e.getClient(clientName))
+        for clientName in e.get_clients_from_params():
+            clients.append(e.get_client(clientName))
 
     for cli in clients:
         e.msginf('client -- ' + cli.getName(0) + ' -- on port ' + cli.getPort())
 
-        e.msgrun(3 * '-' + ' Images ' + 72 * '-')
+        e.msgrun(3 * '-' +
+                 ' Images ' +
+                 72 * '-')
         for image in cli.getImages():
-            e.msgrun('   ' + image.getFormattedImage())
+            e.msgrun('   ' +
+                     image.getFormattedImage())
         e.msgrun(' ')
-        e.msgrun(
-            3 * '-' + 'branch' + 4 * '-' + 'repository' + 25 * '-' + 'instalation dir' + 20 * '-')
+        e.msgrun(3 * '-' + 'branch' +
+                 4 * '-' + 'repository' +
+                 25 * '-' + 'instalation dir' +
+                 20 * '-')
         for repo in cli.getRepos():
-            e.msgrun('   ' + repo.getFormattedRepo() + ' ' + repo.getInstDir())
+            e.msgrun('   ' +
+                     repo.get_formatted_repo() +
+                     ' ' + repo.getInstDir())
         e.msgrun(' ')
 
     return True
 
 
-def noIpInstall(e):
+def no_ip_install(e):
     e.msgrun('Installing no-ip client')
     sc_('sudo apt-get install make')
     sc_('sudo apt-get -y install gcc')
@@ -467,7 +489,7 @@ def noIpInstall(e):
     return True
 
 
-def dockerInstall(e):
+def docker_install(e):
     e.msgrun('Installing docker')
     sc_('wget -qO- https://get.docker.com/ | sh')
     e.msgdone('Done.')
@@ -475,19 +497,19 @@ def dockerInstall(e):
 
 
 def backup(e):
-    dbname = e.getDatabaseFromParams()
-    clientName = e.getClientFromParams('one')
+    dbname = e.get_database_from_params()
+    clientName = e.get_clients_from_params('one')
     e.msgrun('Backing up database ' + dbname + ' of client ' + clientName)
 
-    client = e.getClient(clientName)
-    img = client.getImage('backup')
+    client = e.get_client(clientName)
+    img = client.get_image('backup')
 
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
     params += '--volumes-from ' + clientName + ' '
     params += '-v ' + client.getBackupDir() + ':/backup '
     params += '--env DBNAME=' + dbname + ' '
-    params += img.getImage() + ' backup'
+    params += img.get_image() + ' backup'
 
     if sc_(params):
         e.msgerr('failing backup. Aborting')
@@ -497,14 +519,14 @@ def backup(e):
 
 
 def restore(e):
-    dbname = e.getDatabaseFromParams()
-    clientName = e.getClientFromParams('one')
-    timestamp = e.getTimestampFromParams()
+    dbname = e.get_database_from_params()
+    clientName = e.get_clients_from_params('one')
+    timestamp = e.get_timestamp_from_params()
 
     e.msgrun('Restoriing database ' + dbname + ' of client ' + clientName)
 
-    client = e.getClient(clientName)
-    img = client.getImage('backup')
+    client = e.get_client(clientName)
+    img = client.get_image('backup')
 
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
@@ -512,7 +534,7 @@ def restore(e):
     params += '-v ' + client.getBackupDir() + ':/backup '
     params += '--env NEW_DBNAME=' + dbname + ' '
     params += '--env DATE=' + timestamp + ' '
-    params += img.getImage() + ' restore'
+    params += img.get_image() + ' restore'
 
     if sc_(params):
         e.msgerr('failing backup. Aborting')
@@ -521,7 +543,7 @@ def restore(e):
     return True
 
 
-def decodeBackup(root, filename):
+def decode_backup(root, filename):
     # bkp format: jeo_datos_201511022236
 
     # size of bkp
@@ -556,31 +578,32 @@ def decodeBackup(root, filename):
 
 
 def backup_list(e):
+    # if no -c option get all clients else get -c clients
     if args.client is None:
         clients = []
         for cli in e.getClients():
             clients.append(cli.getName())
     else:
-        clients = e.getClientFromParams()
+        clients = e.get_clients_from_params()
 
     for clientName in clients:
-        cli = e.getClient(clientName)
+        cli = e.get_client(clientName)
         dir = cli.getBackupDir()
-        print dir
-        e.msgrun('List of available backups for client ' + clientName)
 
-        fns = []
+        filenames = []
         # walk the backup dir
         for root, dirs, files in os.walk(dir):
             for file in files:
                 # get the .dump files and decode it to human redable format
                 filename, file_extension = os.path.splitext(file)
                 if file_extension == '.dump':
-                    fns.append(filename)
+                    filenames.append(filename)
 
-        fns.sort()
-        for fn in fns:
-            print decodeBackup(root, fn)
+        if len(filenames):
+            filenames.sort()
+            e.msgrun('List of available backups for client ' + clientName)
+            for fn in filenames:
+                e.msginf(decode_backup(root, fn))
 
 
 def cleanup(e):
@@ -703,27 +726,27 @@ if __name__ == '__main__':
     enviro = Environment(args, clients__)
 
     if args.install_cli:
-        installClient(enviro)
+        install_client(enviro)
     if args.uninstall_cli:
-        uninstallClient(enviro)
+        uninstall_client(enviro)
     if args.stop_env:
         stopEnvironment(enviro)
     if args.run_env:
-        runEnvironment(enviro)
+        run_environment(enviro)
     if args.stop_cli:
-        stopClient(enviro)
+        stop_client(enviro)
     if args.run_cli:
-        runClient(enviro)
+        run_client(enviro)
     if args.pull_all:
-        pullAll(enviro)
+        pull_all(enviro)
     if args.list:
-        listData(enviro)
+        list_data(enviro)
     if args.no_ip_install:
-        noIpInstall(enviro)
+        no_ip_install(enviro)
     if args.docker_install:
-        dockerInstall(enviro)
+        docker_install(enviro)
     if args.update_database:
-        updateDatabase(enviro)
+        update_database(enviro)
     if args.backup:
         backup(enviro)
     if args.restore:

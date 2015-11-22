@@ -34,6 +34,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
      ],
      'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
@@ -49,6 +50,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
      ],
      'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
@@ -64,7 +66,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
      ],
      'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo_docs'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
@@ -83,6 +85,7 @@ clients__ = [
 
      ],
      'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
@@ -96,44 +99,45 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+
 class Environment:
-    def __init__(self, args, dict):
+    def __init__(self, args, dic):
         self._clients = []
-        for cli in dict:
+        for cli in dic:
             self._clients.append(Client(self, cli))
 
         self._home_template = os.path.expanduser('~/odoo-')
         self._psql = os.path.expanduser('~/postgresql/')
         self._args = args
 
-    def debugMode(self):
+    def debug_mode(self):
         return self._args.debug
 
-    def getModulesFromParams(self):
+    def get_modules_from_params(self):
         if self._args.module is None:
             self.msgerr('need -m option')
         return self._args.module
 
-    def getDatabaseFromParams(self):
+    def get_database_from_params(self):
         if self._args.database is None:
             self.msgerr('need -d option')
         if len(self._args.database) > 1:
             self.msgerr('only one database expected')
         return self._args.database[0]
 
-    def getTimestampFromParams(self):
+    def get_timestamp_from_params(self):
         if self._args.timestamp is None:
             self.msgerr('need -t option')
         if len(self._args.database) > 1:
             self.msgerr('only one timestamp expected')
         return self._args.timestamp[0]
 
-    def getClientFromParams(self, cant='multi'):
+    def get_clients_from_params(self, cant='multi'):
         if self._args.client is None:
             self.msgerr('need -c option')
 
         for cli in self._args.client:
-            if self.getClient(cli) is None:
+            if self.get_client(cli) is None:
                 self.msgerr('there is no ' + cli + ' client in this environment')
 
         if cant == 'multi':
@@ -143,10 +147,10 @@ class Environment:
                 self.msgerr('only one client expected')
             return self._args.client[0]
 
-    def getArgs(self):
+    def get_args(self):
         return self._args
 
-    def getClient(self, clientName):
+    def get_client(self, clientName):
         cli = None
         for client in self._clients:
             if client.getName() == clientName:
@@ -192,18 +196,18 @@ class Environment:
 
 
 class Client:
-    def __init__(self, env, dict):
+    def __init__(self, env, dic):
         self._env = env
-        self._name = dict['name']
-        self._port = dict['port']
-        self._ver = dict['odoover']
+        self._name = dic['name']
+        self._port = dic['port']
+        self._ver = dic['odoover']
 
         self._repos = []
-        for rep in dict['repos']:
+        for rep in dic['repos']:
             self._repos.append(Repo(self, rep))
 
         self._images = []
-        for img in dict['images']:
+        for img in dic['images']:
             self._images.append(Image(self, img))
 
     def getVer(self):
@@ -236,7 +240,7 @@ class Client:
     def getHomeDir(self):
         return self._env.getTemplateDir() + self._ver + '/'
 
-    def getAddonsPath(self):
+    def get_addons_path(self):
         # path to addons inside image
         path = '/mnt/extra-addons/'
         paths = []
@@ -245,19 +249,16 @@ class Client:
         return ','.join(paths)
 
 
-# {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'meli_oerp', 'branch': 'master'},
-
 class Repo:
     def __init__(self, cli, dict):
         self._dict = dict
         self._cli = cli
 
-    def getRepo(self):
+    def _getRepo(self):
         return self._dict['usr'] + '/' + self._dict['repo']
 
-    def getFormattedRepo(self):
-        ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self.getRepo().ljust(30)
+    def get_formatted_repo(self):
+        ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self._getRepo().ljust(30)
         return ret
 
     def getPathDir(self):
@@ -281,7 +282,7 @@ class Repo:
         return 'git clone --depth 1 -b ' + \
                self._dict['branch'] + \
                ' http://github.com/' + \
-               self.getRepo() + ' ' + \
+               self._getRepo() + ' ' + \
                self.getInstDir()
 
 
@@ -311,25 +312,26 @@ class Image:
 
         return ret
 
-    def getImage(self):
+    def get_image(self):
         try:
             usr = self._dict['usr']
         except:
-            usr = False
+            usr = ''
 
         try:
             image = self._dict['img']
         except:
-            image = False
+            image = ''
+
         try:
             ver = self._dict['ver']
         except:
-            ver = False
+            ver = ''
 
         ret = usr
-        if image:
+        if image != '':
             ret += '/' + image
-        if ver:
+        if ver != '':
             ret += ':' + ver
 
         return ret
@@ -338,4 +340,4 @@ class Image:
         return self._dict['name']
 
     def getPullImage(self):
-        return 'sudo docker pull ' + self.getImage()
+        return 'sudo docker pull ' + self.get_image()
