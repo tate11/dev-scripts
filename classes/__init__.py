@@ -1,3 +1,2 @@
 __author__ = 'jorge'
-from env import Client, Environment, Image, Repo, clients__, Images__
-
+from env import Client, Environment, Image, Repo, clients__

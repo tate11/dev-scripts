@@ -34,59 +34,17 @@
 import argparse
 import os
 from datetime import datetime
+import subprocess
 
-from classes import Environment, clients__, Images__
+from classes import Environment, clients__
+
+
 
 
 # TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
 # TODO Revisar el tema de los subcomandos
-
 # Mejora en estructura, esto todavía no se usa.
-
-NClients = \
-    [
-        {'name': 'jeo',
-         'port': 8069,
-         'repos': [
-             {'gitusr': 'jobiols', 'repo': 'odoo', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'meli_oerp',
-              'branch': 'master'},
-             {'gitusr': 'jobiols', 'repodir': 'ml', 'repo': 'payment_mercadopago',
-              'branch': 'master'},
-         ],
-         'images': [
-             {'repo': 'odoo', 'ver': '9.0'},
-             {'repo': 'postgres', 'ver': '9.4'},
-             {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-         ]
-         },
-
-        {'name': 'makeover',
-         'port': 8069,
-         'repos': [
-             {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'management-system',
-              'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
-             {'gitusr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
-         ],
-         'images': [
-             {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
-             {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-             {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-         ]
-         },
-    ]
-
 
 # Reservados 8989,
 clients_ = [
@@ -206,285 +164,24 @@ data_ = {  # Version 9.0 experimental
 }
 
 
-# data {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-class Repository:
-    def __init__(self, dict, path=None):
-        self._dict = dict
-        self._path = path
-
-    def getRepo(self):
-        return self._dict['repo'] + '/' + self._dict['dir']
-
-    def getDir(self):
-        try:
-            ret = self._path + '/' + self._dict['instdir'] + '/' + self._dict['dir']
-        except:
-            ret = self._path + '/' + self._dict['dir']
-        return ret
-
-    def getFormatedRepo(self):
-        try:
-            ret = self._dict['repo'] + '/' + self._dict['instdir'] + \
-                  ' (' + self._dict['dir'] + ')'
-        except:
-            ret = self._dict['repo'] + '/' + self._dict['dir']
-        return ret
-
-
-# data   {'repo': 'jobiols'  , 'dir': 'odoo-addons', 'branch': '7.0'},
-# Ndata  {'gitusr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-class NRepository:
-    def __init__(self, dict, path=None):
-        self._dict = dict
-        self._path = path
-
-    def getRepo(self):
-        return self._dict['gitusr'] + '/' + self._dict['repo']
-
-    def getDir(self):
-        try:
-            ret = self._path + '/' + self._dict['instdir'] + '/' + self._dict['dir']
-        except:
-            ret = self._path + '/' + self._dict['dir']
-        return ret
-
-    def getFormatedRepo(self):
-        try:
-            ret = self._dict['gitusr'] + '/' + self._dict['instdir'] + \
-                  ' (' + self._dict['repo'] + ')'
-        except:
-            ret = self._dict['gitusr'] + '/' + self._dict['repo']
-        return ret
-
-    def getGitClone(self):
-        return 'git clone --depth 1 -b ' + \
-               self._dict['branch'] + \
-               ' http://github.com/' + \
-               self.getRepo() + ' ' \
-               + self.getDir()
-
-
-# {'repo': 'odoo', 'ver': '9.0'},
-class NImage:
-    def __init__(self, dict):
-        self._dict = dict
-
-    def getImage(self):
-        return self._dict['repo']
-
-
-class NClient:
-    """
-    holds all the information about a client
-    """
-
-    def __init__(self, dict):
-        self._dict = dict
-
-        self._repos = []
-        for repo in self._dict['repos']:
-            self._repos.append(NRepository(repo))
-
-        self._images = []
-        for image in self._dict['images']:
-            self._images.append(NImage(image))
-
-        self._port = dict['port']
-
-    def name(self):
-        return self._dict['name']
-
-    def repos(self):
-        return self._repos
-
-    def images(self):
-        return self._images
-
-
-class environment:
-    """Contiene la definicion del ambiente"""
-
-    def __init__(self, args):
-        self.HOME = os.path.expanduser('~/odoo-' + args.version + '/')
-        self.PSQL = os.path.expanduser('~/postgresql' + '/')
-        self._clients = clients_
-        self._data = data_[args.version]
-        self.ver = args.version
-        self.args = args
-
-
-        # Check for valid client
-        if args.client != None:
-            for cli in args.client:
-                self.getClientPort(cli)
-
-    def getClientPort_(self, clientName):
-        try:
-            port = self._clients_[clientName]['port']
-        except:
-            msgerr('There is no ' + clientName + ' client in this environment.')
-        return port
-
-    def getClientPort(self, clientName):
-        port = ''
-        for client in self._clients:
-            if client['ver'] == self.ver and client['name'] == clientName:
-                port = client['port']
-
-        if port == '':
-            msgerr('There is no ' + clientName + ' client in this environment.')
-        return port
-
-    def checkClient(self):
-        if self.args.client == None:
-            msgerr('Need -c option')
-
-    def checkModules(self):
-        if self.args.module == None:
-            msgerr('Need -m option')
-
-    def checkDatabase(self):
-        if self.args.database == None:
-            msgerr('Need -d option')
-
-    def GetClientsFromParams(self):
-        self.checkClient()
-        return args.client
-
-    def GetModulesFromParams(self):
-        self.checkModules()
-        return args.module
-
-    def GetClients(self):
-        ret = []
-        for cli in self._clients:
-            if cli['ver'] == self.ver:
-                ret.append(cli)
-        return ret
-
-    def GetClientFromParams(self):
-        self.checkClient()
-        if len(self.args.client) > 1:
-            msgerr('Only one client expected')
-        return self.args.client[0]
-
-    def DebugMode(self):
-        return self.args.debug
-
-    def GetData(self):
-        return self._data
-
-    def getMultiReposList(self):
-        list = []
-        for repo in self._data['repos']:
-            try:
-                dir = repo['instdir']
-            except:
-                list.append(repo)
-        return list
-
-    def getSingleReposList(self):
-        list = []
-        for repo in self._data['repos']:
-            try:
-                dir = repo['instdir']
-                list.append(repo)
-            except:
-                a = 0
-        return list
-
-    def getInstDirList(self):
-        list = []
-        for repo in self._data['repos']:
-            try:
-                dir = repo['instdir']
-                if dir not in list:
-                    list.append(dir)
-            except:
-                a = 0
-        return list
-
-    def formatImageFromName(self, imageName):
-        ret = ''
-        imageDict = self._data['images'][imageName]
-        ret += imageDict['repo']
-        if imageDict['dir'] != '':
-            ret += '/'
-            ret += imageDict['dir']
-        if imageDict['ver'] != '':
-            ret += ':' + imageDict['ver']
-        return ret
-
-    def backupdir(self):
-        return '/backup/' + self.ver + '/' + self.GetClientFromParams()
-
-
-class NEnvironment:
-    """Contiene la definicion del ambiente"""
-
-    def __init__(self, dict):
-        self.HOME = os.path.expanduser('~/odoo-' + args.version + '/')
-        self.PSQL = os.path.expanduser('~/postgresql' + '/')
-
-        self._NClients = []
-        for cli in dict:
-            self._NClients.append(NClient(cli))
-
-    def clients(self):
-        return self._NClients
-
-
 def sc_(params):
-    print params
+    if args.verbose:
+        print params
+    return subprocess.call(params, shell=True)
 
 
-#    return subprocess.call(params, shell=True)
-
-
-# TODO eliminar también el backup dir pidiendo permiso antes
-def uninstallEnvironment(e):
+def uninstallClient(e):
     clients = e.getClientFromParams()
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
-        sc_(['sudo rm -r ' + e.getPsqlDir()])
+        if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
+            e.msginf('deleting all databases!')
+            sc_(['sudo rm -r ' + e.getPsqlDir()])
 
     for clientName in clients:
         cli = e.getClient(clientName)
-        e.msgrun('Uninstalling client ' + clientName)
+        e.msgrun('deleting client files for client ' + clientName)
         if sc_(['sudo rm -r ' + cli.getHomeDir() + clientName]):
-            e.msgerr('fail uninstalling client' + clientName)
-    return True
-
-
-def installEnvironment(e):
-    e.msgrun('Installing odoo environment ')
-
-    # if not exist postgresql create it
-    if sc_(['ls ' + e.PSQL]):
-        sc_(['mkdir ' + e.PSQL])
-
-    # make sources dir
-    sc_(['mkdir -p ' + e.HOME + 'sources'])
-
-    # clone each single repo
-    for repo in e.getSingleReposList():
-        r = Repository(repo, e.HOME + 'sources')
-        msginf('cloning repo ' + r.getFormatedRepo())
-        params = 'git clone --depth 1 -b ' + \
-                 repo['branch'] + ' http://github.com/' + r.getRepo() + ' ' + r.getDir()
-        if sc_(params):
-            msgerr('Fail installing environment, uninstall and try again.')
-
-    # clone each multi repo
-    for repo in e.getMultiReposList():
-        r = Repository(repo, e.HOME + 'sources')
-        msginf('cloning repo ' + r.getFormatedRepo())
-
-        params = 'git clone --depth 1 -b ' + \
-                 repo['branch'] + ' http://github.com/' + r.getRepo() + ' ' + r.getDir()
-        if sc_(params):
-            msgerr('Fail installing environment, uninstall and try again.')
-
-    msgdone('Install Done ' + e.ver)
+            e.msgerr('fail uninstalling client ' + clientName)
     return True
 
 
@@ -505,17 +202,17 @@ def updateDatabase(e):
         msg += ' forcing debug mode'
     e.msgrun(msg)
 
-    params = 'sudo docker run --rm -it \
-            -v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo \
-            -v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo \
-            -v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons \
-            --link db-odoo:db ' + \
-             e.getImage('odoo').getName() + ' -- ' + \
-             ' --stop-after-init \
-             -d ' + db + ' -u ' + ', '.join(mods)
+    params = 'sudo docker run --rm -it '
+    params += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
+    params += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
+    params += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
+    params += '--link postgres:db '
+    params += cli.getImage('odoo').getImage() + ' -- '
+    params += ' --stop-after-init '
+    params += '-d ' + db + ' -u ' + ', '.join(mods) + ' '
 
     if e.debugMode():
-        params += ' --debug'
+        params += '--debug'
 
     sc_(params)
 
@@ -524,21 +221,24 @@ def updateDatabase(e):
 
 def installSources(e, client):
     # if not exist postgresql create it
-    if sc_(['ls ' + e.getPsqlDir()]):
-        sc_(['mkdir ' + e.getPsqlDir()])
-
+    if not os.path.isdir(e.getPsqlDir()):
+        sc_('mkdir ' + e.getPsqlDir())
 
     # make sources dir
-    sc_(['mkdir -p ' + client.getHomeDir() + 'sources'])
+    # if not exist sources dir create it
+    if not os.path.isdir(client.getHomeDir() + 'sources'):
+        sc_('mkdir -p ' + client.getHomeDir() + 'sources')
 
     for repo in client.getRepos():
         # Check if repo exists
-        if sc_(['ls ' + repo.getInstDir()]):
+        if os.path.isdir(repo.getInstDir()):
+            e.msginf('pull ' + repo.getInstDir())
             params = repo.getPullRepo()
         else:
+            e.msginf('clone ' + repo.getCloneRepo())
             params = repo.getCloneRepo()
 
-        if sc_([params]):
+        if sc_(params):
             e.msgerr('Fail installing environment, uninstall and try again.')
 
     return True
@@ -548,38 +248,44 @@ def installClient(e):
     # get clients to install from params
     clients = e.getClientFromParams()
     if len(clients) > 1:
-        e.msgrun('Install clients ' + ', '.join(clients))
+        plural = 's'
     else:
-        e.msgrun('Install client ' + ', '.join(clients))
+        plural = ''
+    e.msgrun('Install client' + plural + ' ' + ', '.join(clients))
 
-    # path to addons inside image
-    path = '/mnt/extra-addons/'
 
     for clientName in clients:
-        client = e.getClient(clientName)
+        cli = e.getClient(clientName)
         # Creating directory's for client
-        sc_('mkdir -p ' + client.getHomeDir() + client.getName() + '/config')
-        sc_('mkdir -p ' + client.getHomeDir() + client.getName() + '/data_dir')
-        sc_('chmod 777 -R ' + client.getHomeDir() + client.getName())
+        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/config')
+        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/data_dir')
+        sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
+        sc_('chmod 777 -R ' + cli.getHomeDir() + cli.getName())
 
         # clone or update repos as needed
-        installSources(e, client)
+        installSources(e, cli)
 
         # calculate addons path
-        addons_path = client.getAddonsPath()
+        addons_path = cli.getAddonsPath()
 
         # creating config file for client
-        param = 'sudo docker run --rm \
-                -v ' + client.getHomeDir() + client.getName() + '/config:/etc/odoo \
-                -v ' + client.getHomeDir() + 'sources:/mnt/extra-addons \
-                -v ' + client.getHomeDir() + client.getName() + '/data_dir:/var/lib/odoo \
-                --name ' + client.getName() + '_tmp ' + e.getImage('odoo').getImage() \
-                + ' -- --stop-after-init -s ' \
-                  ' --db-filter=' + client.getName() + '_.* '
+        param = 'sudo docker run --rm '
+        param += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
+        param += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
+        param += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
+        param += '-v ' + cli.getHomeDir() + cli.getName() + '/log:/var/log/odoo '
+        param += '--name ' + cli.getName() + '_tmp ' + \
+                 cli.getImage('odoo').getImage() + ' '
+        param += '-- --stop-after-init -s '
+        param += '--db-filter=' + cli.getName() + '_.* '
 
         if addons_path <> '':
-            param += '--addons-path=' + addons_path
+            param += '--addons-path=' + addons_path + ' '
 
+        param += '--logfile=/var/log/odoo/odoo.log '
+        param += '--logrotate '
+
+        e.msginf('creating config file')
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
@@ -587,42 +293,37 @@ def installClient(e):
     return True
 
 
-def run_aeroo_image(e):
-    params = 'sudo docker run -d \
-        -p 127.0.0.1:8989:8989   \
-        --name="aeroo_docs"   \
-        --restart=always ' \
-             + e.formatImageFromName('aeroo')
-
-    if sc_(params):
-        msginfo('Fail running aeroo-image.')
-
-    return True
-
-
 def runEnvironment(e):
     e.msgrun('Running environment images')
+    clientNames = e.getClientFromParams()
+    for clientName in clientNames:
+        cli = e.getClient(clientName)
 
-    params = 'sudo docker run -d \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + e.getPsqlDir() + ':/var/lib/postgresql/data \
-                    --restart=always \
-                    --name db-odoo ' + \
-             e.getImage('postgres').getName()
+    err = 0
+    image = cli.getImage('postgres')
+    params = 'sudo docker run -d '
+    if e.debugMode():
+        params += '-p 5432:5432 '
+    params += '-e POSTGRES_USER=odoo '
+    params += '-e POSTGRES_PASSWORD=odoo '
+    params += '-v ' + e.getPsqlDir() + ':/var/lib/postgresql/data '
+    params += '--restart=always '
+    params += '--name ' + image.getName() + ' '
+    params += image.getImage()
+    err += sc_(params)
 
-    if sc_(params):
-        e.msgerr('Fail running postgres image')
+    image = cli.getImage('aeroo')
+    params = 'sudo docker run -d '
+    params += '-p 127.0.0.1:8989:8989 '
+    params += '--name=' + image.getName() + ' '
+    params += '--restart=always '
+    params += image.getImage()
+    err += sc_(params)
 
-    params = 'sudo docker run -d \
-        -p 127.0.0.1:8989:8989   \
-        --name="aeroo_docs"   \
-        --restart=always ' \
-             + e.getImage('aeroo-docs').getName()
+    if err:
+        e.msgerr('Fail running some images.')
 
-    if sc_(params):
-        msginfo('Fail running aeroo-image.')
-
+    e.msgdone('images running')
     return True
 
 
@@ -631,41 +332,25 @@ def runClient(e):
     for clientName in clients:
         cli = e.getClient(clientName)
         e.msgrun('Running image for client ' + clientName)
-        params = 'sudo docker run -d \
-                 --link aeroo_docs:aeroo  \
-                 -p ' + cli.getPort() + ':8069  \
-                 -v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo  \
-                 -v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo \
-                 -v ' + cli.getHomeDir() + '/sources:/mnt/extra-addons  \
-                 --link db-odoo:db  \
-                 --restart=always  \
-                 --name ' + cli.getName() + ' ' + \
-                 e.getImage('odoo').getImage() + \
-                 ' -- --db-filter=' + cli.getName() + '_.*',
+        params = 'sudo docker run -d '
+        params += '--link aeroo:aeroo '
+        params += '-p ' + cli.getPort() + ':8069 '
+        params += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
+        params += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
+        params += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
+        params += '-v ' + cli.getHomeDir() + cli.getName() + '/log:/var/log/odoo '
+        params += '--link postgres:db '
+        params += '--restart=always '
+        params += '--name ' + cli.getName() + ' '
+        params += cli.getImage('odoo').getImage()
+        params += ' -- --db-filter=' + cli.getName() + '_.* '
+        params += '--logfile=/var/log/odoo/odoo.log '
+        params += '--logrotate'
 
         if sc_(params):
             e.msgerr("Can't run client " + cli.getName() +
                      ", by the way... did you run -R ?")
         e.msgdone('Client ' + clientName + ' up and running on port ' + cli.getPort())
-
-    return True
-
-
-def runDeveloper(e):
-    e.msgrun('Running database in developer mode.')
-
-    params = 'sudo docker run -d \
-                    -p 5432:5432 \
-                    -e POSTGRES_USER=odoo \
-                    -e POSTGRES_PASSWORD=odoo \
-                    -v ' + e.getPsqlDir() + ':/var/lib/postgresql/data \
-                    --restart=always \
-                    --name db-odoo ' + \
-             e.getImage('postgres').getName()
-
-    if sc_(params):
-        e.msgerr('Fail running postgres image')
-    e.msgdone('dev environment up and running')
 
     return True
 
@@ -688,15 +373,18 @@ def stopClient(e):
 
 
 def stopEnvironment(e):
-    e.msgrun('Stopping environment')
-    for name in ['db-odoo', 'aeroo_docs']:
+    images_to_stop = ['postgres', 'aeroo']
+    e.msgrun('Stopping images ' + ', '.join(images_to_stop))
+    err = 0
+    for name in images_to_stop:
         e.msgrun('Stopping image ' + name)
-        if sc_('sudo docker stop ' + name):
-            e.msgerr('can not stop image ' + name)
-        if sc_('sudo docker rm ' + name):
-            e.msgerr('can not remove image ' + name)
+        err += sc_('sudo docker stop ' + name)
+        err += sc_('sudo docker rm ' + name)
 
-    e.msgdone('Environment stopped')
+    if err:
+        e.msgerr("errors stopping images")
+
+    e.msgdone('Images stopped')
     return True
 
 
@@ -704,8 +392,6 @@ def pullAll(e):
     e.msgrun('--- Pulling all images')
 
     images = []
-    for img in e.getImages():
-        images.append(img)
     for cli in e.getClients():
         for img in cli.getImages():
             images.append(img)
@@ -713,7 +399,7 @@ def pullAll(e):
     for img in list(set(images)):
         params = img.getPullImage()
         if sc_(params):
-            msgerr('Fail pulling image ' + image + ' - Aborting.')
+            e.msgerr('Fail pulling image ' + image + ' - Aborting.')
 
     e.msgdone('All images ok ')
     e.msgrun('--- Pulling all repos')
@@ -734,8 +420,14 @@ def pullAll(e):
 
 
 def listData(e):
-    e.msgrun('Data for this environment - Odoo ')
-    for cli in e.getClients():
+    if args.client is None:
+        clients = e.getClients()
+    else:
+        clients = []
+        for clientName in e.getClientFromParams():
+            clients.append(e.getClient(clientName))
+
+    for cli in clients:
         e.msginf('client -- ' + cli.getName(0) + ' -- on port ' + cli.getPort())
 
         e.msgrun(3 * '-' + ' Images ' + 72 * '-')
@@ -785,14 +477,42 @@ def dockerInstall(e):
 def backup(e):
     dbname = e.getDatabaseFromParams()
     clientName = e.getClientFromParams('one')
-    e.msgrun('Backing up database client ' + clientName + ' with db ' + dbname)
+    e.msgrun('Backing up database ' + dbname + ' of client ' + clientName)
 
-    params = 'sudo docker run --rm -i \
-                --link db-odoo:db \
-                --volumes-from ' + clientName + '  \
-                -v ' + e.getClient(clientName).getBackupDir() + ':/backup  \
-                --env DBNAME=' + dbname + ' \
-                jobiols/backup backup'
+    client = e.getClient(clientName)
+    img = client.getImage('backup')
+
+    params = 'sudo docker run --rm -i '
+    params += '--link postgres:db '
+    params += '--volumes-from ' + clientName + ' '
+    params += '-v ' + client.getBackupDir() + ':/backup '
+    params += '--env DBNAME=' + dbname + ' '
+    params += img.getImage() + ' backup'
+
+    if sc_(params):
+        e.msgerr('failing backup. Aborting')
+
+    e.msgdone('Backup done')
+    return True
+
+
+def restore(e):
+    dbname = e.getDatabaseFromParams()
+    clientName = e.getClientFromParams('one')
+    timestamp = e.getTimestampFromParams()
+
+    e.msgrun('Restoriing database ' + dbname + ' of client ' + clientName)
+
+    client = e.getClient(clientName)
+    img = client.getImage('backup')
+
+    params = 'sudo docker run --rm -i '
+    params += '--link postgres:db '
+    params += '--volumes-from ' + clientName + ' '
+    params += '-v ' + client.getBackupDir() + ':/backup '
+    params += '--env NEW_DBNAME=' + dbname + ' '
+    params += '--env DATE=' + timestamp + ' '
+    params += img.getImage() + ' restore'
 
     if sc_(params):
         e.msgerr('failing backup. Aborting')
@@ -806,10 +526,18 @@ def decodeBackup(root, filename):
 
     # size of bkp
     path = os.path.join(root, filename + '.dump')
-    size = os.stat(path).st_size
+    try:
+        size = os.stat(path).st_size
+    except:
+        size = 0
+
     # plus size of tar
     path = os.path.join(root, filename + '.tar')
-    size += os.stat(path).st_size
+    try:
+        size += os.stat(path).st_size
+    except:
+        size += 0
+
     size = size / 1000
 
     # strip db name
@@ -828,7 +556,13 @@ def decodeBackup(root, filename):
 
 
 def backup_list(e):
-    clients = e.getClientFromParams()
+    if args.client is None:
+        clients = []
+        for cli in e.getClients():
+            clients.append(cli.getName())
+    else:
+        clients = e.getClientFromParams()
+
     for clientName in clients:
         cli = e.getClient(clientName)
         dir = cli.getBackupDir()
@@ -849,40 +583,43 @@ def backup_list(e):
             print decodeBackup(root, fn)
 
 
+def cleanup(e):
+    if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
+        e.msginf('deleting all databases!')
+        sc_(['sudo rm -r ' + e.getPsqlDir()])
+
+    if raw_input('Delete clients and sources SURE?? (y/n) ') == 'y':
+        e.msginf('deleting all client and sources!')
+        sc_(['sudo rm -r ' + e._home_template + '*'])
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 2.0')
-    parser.add_argument('-U', '--uninstall-env',
-                        action='store_true',
-                        help='Uninstall and erase all files from environment including \
-                        database. The command ask for permission to erase database. \
-                        BE WARNED if say yes, all database files will be erased. \
-                        Required -c option')
-
-    parser.add_argument('-I', '--install-env',
-                        action='store_true',
-                        help="Install all files and odoo repos needed. It will try to \
-                        install postgres dir if doesn't exist")
-
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define \
                         multiple clients like this: -c client1 -c client2 -c client3")
 
+    parser.add_argument('-U', '--uninstall-cli',
+                        action='store_true',
+                        help='Uninstall client and erase all files from environment \
+                        including \
+                        database. The command ask for permission to erase database. \
+                        BE WARNED if say yes, all database files will be erased. \
+                        BE WARNED AGAIN, database is common to all clients!!!!  \
+                        Required -c option')
+
     parser.add_argument('-R', '--run-env',
                         action='store_true',
                         help="Run database and aeroo images.")
 
-    parser.add_argument('-D', '--run-dev',
+    parser.add_argument('-S', '--stop-env',
                         action='store_true',
-                        help="Run database and aeroo images for developer mode (local db access).")
+                        help="Stop database and aeroo images.")
 
     parser.add_argument('-r', '--run-cli',
                         action='store_true',
                         help="Run client odoo images, requieres -c options.")
-
-    parser.add_argument('-S', '--stop-env',
-                        action='store_true',
-                        help="Stop database and aeroo images.")
 
     parser.add_argument('-s', '--stop-cli',
                         action='store_true',
@@ -890,66 +627,89 @@ if __name__ == '__main__':
 
     parser.add_argument('-p', '--pull-all',
                         action='store_true',
-                        help="Pull all images")
+                        help="Pull all images and repos.")
 
     parser.add_argument('-l', '--list',
                         action='store_true',
                         help="List all data in this server. Clients and images.")
 
+    parser.add_argument('-v', '--verbose',
+                        action='store_true',
+                        help="Go verbose mode.")
+
+    parser.add_argument('-n', '--no-ip-install',
+                        action='store_true',
+                        help="Install no-ip on this server.")
+
+    parser.add_argument('-k', '--docker-install',
+                        action='store_true',
+                        help="Install docker on this server.")
+
+    parser.add_argument('-u', '--update-database',
+                        action='store_true',
+                        help="Update database requires -d -c and -m options.")
+
+    parser.add_argument('-d',
+                        action='store',
+                        nargs=1,
+                        dest='database',
+                        help="Database to update.")
+
+    parser.add_argument('-t',
+                        action='store',
+                        nargs=1,
+                        dest='timestamp',
+                        help="Timestamp to restore database, see --backup-list \
+                        for available timestamps.")
+
+    parser.add_argument('-m',
+                        action='append',
+                        dest='module',
+                        help="Module to update or all, you can specify multiple -m \
+                        options.")
+
     parser.add_argument('-c',
                         action='append',
                         dest='client',
                         help="Client name. You define multiple clients like this \
-                        multiple clients like this: -c client1 -c client2 -c client3")
-
-    parser.add_argument('-n', '--no-ip-install',
-                        action='store_true',
-                        help="Install no-ip on this server")
-
-    parser.add_argument('-k', '--docker-install',
-                        action='store_true',
-                        help="Install docker on this server")
-
-    parser.add_argument('-u', '--update-database',
-                        action='store_true',
-                        help="Update database requires -d -c and -m options")
-
-    parser.add_argument('-d', '--database',
-                        action='store',
-                        nargs=1,
-                        dest='database',
-                        help="Database to update")
-
-    parser.add_argument('-m', '--module',
-                        action='append',
-                        dest='module',
-                        help="Module to update or all, you can specify multiple -m options")
+                        multiple clients like this: -c client1 -c client2 -c \
+                        client3 and so one.")
 
     parser.add_argument('--backup',
                         action='store_true',
-                        help="Lauch backup requieres -d y -c")
+                        help="Lauch backup requieres -d and -c options.")
+
+    parser.add_argument('--restore',
+                        action='store_true',
+                        help="Lauch restore requieres -d, -c and -t options.")
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help="force debug mode on update database")
+                        help='This option has two efects: \
+                             when doing an update database, (option -u) it forces \
+                             debug mode. When running environment it opens port 5432 \
+                             to access postgres server databases.')
 
     parser.add_argument('--backup-list',
                         action='store_true',
-                        help="List available backups")
+                        help="List available backups with timestamps to restore.")
+
+    parser.add_argument('--cleanup',
+                        action='store_true',
+                        help='Delete all files clients, sources, and databases \
+                         in this server. It ask about each thing.')
 
     args = parser.parse_args()
+    enviro = Environment(args, clients__)
 
-    enviro = Environment(args, Images__, clients__)
-    if args.uninstall_env:
-        uninstallEnvironment(enviro)
     if args.install_cli:
         installClient(enviro)
+    if args.uninstall_cli:
+        uninstallClient(enviro)
     if args.stop_env:
         stopEnvironment(enviro)
     if args.run_env:
         runEnvironment(enviro)
-    if args.run_dev:
-        runDeveloper(enviro)
     if args.stop_cli:
         stopClient(enviro)
     if args.run_cli:
@@ -966,5 +726,9 @@ if __name__ == '__main__':
         updateDatabase(enviro)
     if args.backup:
         backup(enviro)
+    if args.restore:
+        restore(enviro)
     if args.backup_list:
         backup_list(enviro)
+    if args.cleanup:
+        cleanup(enviro)

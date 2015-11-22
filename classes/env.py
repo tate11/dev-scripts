@@ -22,45 +22,56 @@
 import os
 import sys
 
-Images__ = [
-    {'usr': 'odoo', 'ver': '9.0'},
-    {'usr': 'postgres', 'ver': '9.4'},
-    {'usr': 'jobiols', 'img': 'aeroo-docs', 'ver': 'latest'},
-]
-
 clients__ = [
-    {'name': 'jeo', 'port': '8069', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
-         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'meli_oerp', 'branch': 'master'},
-         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'payment_mercadopago',
-          'branch': 'master'},
-     ],
-     'images': [
-         {'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
-         {'usr': 'postgres', 'ver': '9.4'},
-         {'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-
+    #######################################################################
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
      ],
      'images': [
-         {'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
-         {'usr': 'postgres', 'ver': '9.4'},
-         {'usr': 'jobiols', 'img': 'backup'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
 
-    {'name': 'tst', 'port': '8067', 'odoover': '8.0',
+    #######################################################################
+    {'name': 'jeo', 'port': '8069', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+
+    #######################################################################
+    {'name': 'nixel', 'port': '8090', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo_docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
+    {'name': 'tst', 'port': '8090', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
@@ -72,9 +83,9 @@ clients__ = [
 
      ],
      'images': [
-         {'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
-         {'usr': 'postgres', 'ver': '9.4'},
-         {'usr': 'jobiols', 'img': 'backup'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
 ]
@@ -85,16 +96,11 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-
 class Environment:
-    def __init__(self, args, images, dict):
+    def __init__(self, args, dict):
         self._clients = []
         for cli in dict:
             self._clients.append(Client(self, cli))
-
-        self._images = []
-        for img in images:
-            self._images.append(Image(None, img))
 
         self._home_template = os.path.expanduser('~/odoo-')
         self._psql = os.path.expanduser('~/postgresql/')
@@ -115,6 +121,13 @@ class Environment:
             self.msgerr('only one database expected')
         return self._args.database[0]
 
+    def getTimestampFromParams(self):
+        if self._args.timestamp is None:
+            self.msgerr('need -t option')
+        if len(self._args.database) > 1:
+            self.msgerr('only one timestamp expected')
+        return self._args.timestamp[0]
+
     def getClientFromParams(self, cant='multi'):
         if self._args.client is None:
             self.msgerr('need -c option')
@@ -132,19 +145,6 @@ class Environment:
 
     def getArgs(self):
         return self._args
-
-    def getImages(self):
-        return self._images
-
-    def getImage(self, imageName):
-        ret = False
-        for img in self.getImages():
-            if img.getName() == imageName:
-                ret = img
-        if ret:
-            return ret
-        else:
-            raise Exception('no image')
 
     def getClient(self, clientName):
         cli = None
@@ -206,6 +206,9 @@ class Client:
         for img in dict['images']:
             self._images.append(Image(self, img))
 
+    def getVer(self):
+        return self._ver
+
     def getBackupDir(self):
         return self.getHomeDir() + self._name + '/backup/'
 
@@ -214,6 +217,15 @@ class Client:
 
     def getImages(self):
         return self._images
+
+    def getImage(self, ImageName):
+        ret = None
+        for img in self._images:
+            if img.getName() == ImageName:
+                ret = img
+        if ret is None:
+            raise Exception('no image ' + ImageName + ' found')
+        return ret
 
     def getName(self, pad=0):
         return self._name.ljust(pad)
@@ -225,7 +237,12 @@ class Client:
         return self._env.getTemplateDir() + self._ver + '/'
 
     def getAddonsPath(self):
-        return 'path'
+        # path to addons inside image
+        path = '/mnt/extra-addons/'
+        paths = []
+        for repo in self.getRepos():
+            paths.append(path + repo.getPathDir())
+        return ','.join(paths)
 
 
 # {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
@@ -243,12 +260,19 @@ class Repo:
         ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self.getRepo().ljust(30)
         return ret
 
+    def getPathDir(self):
+        try:
+            ret = self._dict['instdir'] + '/' + self._dict['repo']
+        except:
+            ret = self._dict['repo']
+        return ret
+
     def getInstDir(self):
         try:
             ret = self._dict['instdir'] + '/' + self._dict['repo']
         except:
             ret = self._dict['repo']
-        return self._cli.getHomeDir() + ret
+        return self._cli.getHomeDir() + 'sources/' + ret
 
     def getPullRepo(self):
         return 'git -C ' + self.getInstDir() + ' pull'
@@ -266,7 +290,12 @@ class Image:
         self._cli = cli
         self._dict = dict
 
-    #  {'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
+    def getVer(self):
+        try:
+            ver = self._dict['ver']
+        except:
+            ver = 'latest'
+        return ver
 
     def getFormattedImage(self):
         ret = self._dict['usr']
@@ -306,10 +335,7 @@ class Image:
         return ret
 
     def getName(self):
-        try:
-            return self._dict['img']
-        except:
-            return self._dict['usr']
+        return self._dict['name']
 
     def getPullImage(self):
         return 'sudo docker pull ' + self.getImage()
