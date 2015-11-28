@@ -178,7 +178,7 @@ def uninstall_client(e):
     for clientName in clients:
         cli = e.get_client(clientName)
         e.msgrun('deleting client files for client ' + clientName)
-        if sc_(['sudo rm -r ' + cli.getHomeDir() + clientName]):
+        if sc_(['sudo rm -r ' + cli.get_home_dir() + clientName]):
             e.msgerr('fail uninstalling client ' + clientName)
     return True
 
@@ -201,9 +201,9 @@ def update_database(e):
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
-    params += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
-    params += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
+    params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
+    params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
+    params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
     params += '--link postgres:db '
     params += cli.get_image('odoo').get_image() + ' -- '
     params += ' --stop-after-init '
@@ -230,7 +230,7 @@ def update_images_from_list(e, images):
         params = img.getPullImage()
         e.msginf('pulling image ' + img.getFormattedImage())
         if sc_(params):
-            e.msgerr('Fail pulling image ' + img.getName() + ' - Aborting.')
+            e.msgerr('Fail pulling image ' + img.get_name() + ' - Aborting.')
     return True
 
 
@@ -270,11 +270,11 @@ def install_client(e):
     for clientName in clients:
         cli = e.get_client(clientName)
         # Creating directory's for client
-        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/config')
-        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/data_dir')
-        sc_('mkdir -p ' + cli.getHomeDir() + cli.getName() + '/log')
-        sc_('chmod 777 -R ' + cli.getHomeDir() + cli.getName())
-        sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
+        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
+        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
+        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
+        sc_('chmod 777 -R ' + cli.get_home_dir() + cli.get_name())
+        sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
 
         # if not exist postgresql create it
         if not os.path.isdir(e.getPsqlDir()):
@@ -282,25 +282,25 @@ def install_client(e):
 
         # make sources dir
         # if not exist sources dir create it
-        if not os.path.isdir(cli.getHomeDir() + 'sources'):
-            sc_('mkdir -p ' + cli.getHomeDir() + 'sources')
+        if not os.path.isdir(cli.get_home_dir() + 'sources'):
+            sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
 
         # clone or update repos as needed
-        update_repos_from_list(e, cli.getRepos())
+        update_repos_from_list(e, cli.get_repos())
 
         # calculate addons path
         addons_path = cli.get_addons_path()
 
         # creating config file for client
         param = 'sudo docker run --rm '
-        param += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
-        param += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
-        param += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
-        param += '-v ' + cli.getHomeDir() + cli.getName() + '/log:/var/log/odoo '
-        param += '--name ' + cli.getName() + '_tmp ' + \
-                 cli.get_image('odoo').get_image() + ' '
+        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
+        param += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
+        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
+        param += '--name ' + cli.get_name() + '_tmp '
+        param += cli.get_image('odoo').get_image() + ' '
         param += '-- --stop-after-init -s '
-        param += '--db-filter=' + cli.getName() + '_.* '
+#        param += '--db-filter=' + cli.get_name() + '_.* '
 
         if addons_path != '':
             param += '--addons-path=' + addons_path + ' '
@@ -332,14 +332,14 @@ def run_environment(e):
     params += '-e POSTGRES_PASSWORD=odoo '
     params += '-v ' + e.getPsqlDir() + ':/var/lib/postgresql/data '
     params += '--restart=always '
-    params += '--name ' + image.getName() + ' '
+    params += '--name ' + image.get_name() + ' '
     params += image.get_image()
     err += sc_(params)
 
     image = cli.get_image('aeroo')
     params = 'sudo docker run -d '
     params += '-p 127.0.0.1:8989:8989 '
-    params += '--name=' + image.getName() + ' '
+    params += '--name=' + image.get_name() + ' '
     params += '--restart=always '
     params += image.get_image()
     err += sc_(params)
@@ -358,23 +358,23 @@ def run_client(e):
         e.msgrun('Running image for client ' + clientName)
         params = 'sudo docker run -d '
         params += '--link aeroo:aeroo '
-        params += '-p ' + cli.getPort() + ':8069 '
-        params += '-v ' + cli.getHomeDir() + cli.getName() + '/config:/etc/odoo '
-        params += '-v ' + cli.getHomeDir() + cli.getName() + '/data_dir:/var/lib/odoo '
-        params += '-v ' + cli.getHomeDir() + 'sources:/mnt/extra-addons '
-        params += '-v ' + cli.getHomeDir() + cli.getName() + '/log:/var/log/odoo '
+        params += '-p ' + cli.get_port() + ':8069 '
+        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
+        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
+        params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
         params += '--link postgres:db '
         params += '--restart=always '
-        params += '--name ' + cli.getName() + ' '
+        params += '--name ' + cli.get_name() + ' '
         params += cli.get_image('odoo').get_image()
-        params += ' -- --db-filter=' + cli.getName() + '_.* '
+        params += ' -- --db-filter=' + cli.get_name() + '_.* '
         params += '--logfile=/var/log/odoo/odoo.log '
         params += '--logrotate'
 
         if sc_(params):
-            e.msgerr("Can't run client " + cli.getName() +
+            e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
-        e.msgdone('Client ' + clientName + ' up and running on port ' + cli.getPort())
+        e.msgdone('Client ' + clientName + ' up and running on port ' + cli.get_port())
 
     return True
 
@@ -417,7 +417,7 @@ def pull_all(e):
 
     images = []
     for cli in e.getClients():
-        images.extend(cli.getImages())
+        images.extend(cli.get_images())
     update_images_from_list(e, images)
 
     e.msgdone('All images ok ')
@@ -425,7 +425,7 @@ def pull_all(e):
 
     repos = []
     for cli in e.getClients():
-        repos.extend(cli.getRepos())
+        repos.extend(cli.get_repos())
     update_repos_from_list(e, repos)
 
     e.msgdone('All repos ok ')
@@ -443,12 +443,12 @@ def list_data(e):
             clients.append(e.get_client(clientName))
 
     for cli in clients:
-        e.msginf('client -- ' + cli.getName(0) + ' -- on port ' + cli.getPort())
+        e.msginf('client -- ' + cli.get_name(0) + ' -- on port ' + cli.get_port())
 
         e.msgrun(3 * '-' +
                  ' Images ' +
                  72 * '-')
-        for image in cli.getImages():
+        for image in cli.get_images():
             e.msgrun('   ' +
                      image.getFormattedImage())
         e.msgrun(' ')
@@ -456,7 +456,7 @@ def list_data(e):
                  4 * '-' + 'repository' +
                  25 * '-' + 'instalation dir' +
                  20 * '-')
-        for repo in cli.getRepos():
+        for repo in cli.get_repos():
             e.msgrun('   ' +
                      repo.get_formatted_repo() +
                      ' ' + repo.getInstDir())
@@ -507,7 +507,7 @@ def backup(e):
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
     params += '--volumes-from ' + clientName + ' '
-    params += '-v ' + client.getBackupDir() + ':/backup '
+    params += '-v ' + client.get_backup_dir() + ':/backup '
     params += '--env DBNAME=' + dbname + ' '
     params += img.get_image() + ' backup'
 
@@ -531,8 +531,9 @@ def restore(e):
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
     params += '--volumes-from ' + clientName + ' '
-    params += '-v ' + client.getBackupDir() + ':/backup '
-    params += '--env NEW_DBNAME=' + dbname + ' '
+    params += '-v ' + client.get_backup_dir() + ':/backup '
+    params += '--env NEW_DBNAME=' + dbname + '-new '
+    params += '--env DBNAME=' + dbname + ' '
     params += '--env DATE=' + timestamp + ' '
     params += img.get_image() + ' restore'
 
@@ -582,13 +583,13 @@ def backup_list(e):
     if args.client is None:
         clients = []
         for cli in e.getClients():
-            clients.append(cli.getName())
+            clients.append(cli.get_name())
     else:
         clients = e.get_clients_from_params()
 
     for clientName in clients:
         cli = e.get_client(clientName)
-        dir = cli.getBackupDir()
+        dir = cli.get_backup_dir()
 
         filenames = []
         # walk the backup dir
@@ -694,9 +695,8 @@ if __name__ == '__main__':
     parser.add_argument('-c',
                         action='append',
                         dest='client',
-                        help="Client name. You define multiple clients like this \
-                        multiple clients like this: -c client1 -c client2 -c \
-                        client3 and so one.")
+                        help="Client name. You define can define multiple clients \
+                        like this: -c client1 -c client2 -c client3 and so one.")
 
     parser.add_argument('--backup',
                         action='store_true',

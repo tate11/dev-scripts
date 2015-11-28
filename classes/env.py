@@ -48,6 +48,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -153,7 +154,7 @@ class Environment:
     def get_client(self, clientName):
         cli = None
         for client in self._clients:
-            if client.getName() == clientName:
+            if client.get_name() == clientName:
                 cli = client
         return cli
 
@@ -210,41 +211,41 @@ class Client:
         for img in dic['images']:
             self._images.append(Image(self, img))
 
-    def getVer(self):
+    def get_ver(self):
         return self._ver
 
-    def getBackupDir(self):
-        return self.getHomeDir() + self._name + '/backup/'
+    def get_backup_dir(self):
+        return self.get_home_dir() + self._name + '/backup/'
 
-    def getRepos(self):
+    def get_repos(self):
         return self._repos
 
-    def getImages(self):
+    def get_images(self):
         return self._images
 
-    def getImage(self, ImageName):
+    def get_image(self, ImageName):
         ret = None
         for img in self._images:
-            if img.getName() == ImageName:
+            if img.get_name() == ImageName:
                 ret = img
         if ret is None:
             raise Exception('no image ' + ImageName + ' found')
         return ret
 
-    def getName(self, pad=0):
+    def get_name(self, pad=0):
         return self._name.ljust(pad)
 
-    def getPort(self):
+    def get_port(self):
         return self._port
 
-    def getHomeDir(self):
+    def get_home_dir(self):
         return self._env.getTemplateDir() + self._ver + '/'
 
     def get_addons_path(self):
         # path to addons inside image
         path = '/mnt/extra-addons/'
         paths = []
-        for repo in self.getRepos():
+        for repo in self.get_repos():
             paths.append(path + repo.getPathDir())
         return ','.join(paths)
 
@@ -273,7 +274,7 @@ class Repo:
             ret = self._dict['instdir'] + '/' + self._dict['repo']
         except:
             ret = self._dict['repo']
-        return self._cli.getHomeDir() + 'sources/' + ret
+        return self._cli.get_home_dir() + 'sources/' + ret
 
     def getPullRepo(self):
         return 'git -C ' + self.getInstDir() + ' pull'
@@ -336,7 +337,7 @@ class Image:
 
         return ret
 
-    def getName(self):
+    def get_name(self):
         return self._dict['name']
 
     def getPullImage(self):
