@@ -366,8 +366,8 @@ def run_client(e):
         params += '--link postgres:db '
         params += '--restart=always '
         params += '--name ' + cli.get_name() + ' '
-        params += cli.get_image('odoo').get_image()
-        params += ' -- --db-filter=' + cli.get_name() + '_.* '
+        params += cli.get_image('odoo').get_image() + ' '
+        #        params += '-- --db-filter=' + cli.get_name() + '_.* '
         params += '--logfile=/var/log/odoo/odoo.log '
         params += '--logrotate'
 
