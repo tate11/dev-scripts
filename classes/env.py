@@ -114,6 +114,9 @@ class Environment:
     def debug_mode(self):
         return self._args.debug
 
+    def no_dbfilter(self):
+        return self._args.no_dbfilter
+
     def get_modules_from_params(self):
         if self._args.module is None:
             self.msgerr('need -m option')

@@ -183,7 +183,7 @@ def uninstall_client(e):
     return True
 
 
-def update_database(e):
+def update_db(e):
     mods = e.get_modules_from_params()
     db = e.get_database_from_params()
     cli = e.get_client(e.get_clients_from_params('one'))
@@ -300,7 +300,7 @@ def install_client(e):
         param += '--name ' + cli.get_name() + '_tmp '
         param += cli.get_image('odoo').get_image() + ' '
         param += '-- --stop-after-init -s '
-#        param += '--db-filter=' + cli.get_name() + '_.* '
+        param += '--db-filter=' + cli.get_name() + '_.* '
 
         if addons_path != '':
             param += '--addons-path=' + addons_path + ' '
@@ -367,7 +367,8 @@ def run_client(e):
         params += '--restart=always '
         params += '--name ' + cli.get_name() + ' '
         params += cli.get_image('odoo').get_image() + ' '
-        #        params += '-- --db-filter=' + cli.get_name() + '_.* '
+        if not e.no_dbfilter():
+            params += '-- --db-filter=' + cli.get_name() + '_.* '
         params += '--logfile=/var/log/odoo/odoo.log '
         params += '--logrotate'
 
@@ -669,7 +670,7 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Install docker on this server.")
 
-    parser.add_argument('-u', '--update-database',
+    parser.add_argument('-u', '--update-db',
                         action='store_true',
                         help="Update database requires -d -c and -m options.")
 
@@ -722,6 +723,11 @@ if __name__ == '__main__':
                         help='Delete all files clients, sources, and databases \
                          in this server. It ask about each thing.')
 
+    parser.add_argument('--no-dbfilter',
+                        action='store_true',
+                        help='Eliminates dbfilter: The client can see any database. \
+                        Without this, only sees databases starting with clientname_')
+
     args = parser.parse_args()
     enviro = Environment(args, clients__)
 
@@ -745,8 +751,8 @@ if __name__ == '__main__':
         no_ip_install(enviro)
     if args.docker_install:
         docker_install(enviro)
-    if args.update_database:
-        update_database(enviro)
+    if args.update_db:
+        update_db(enviro)
     if args.backup:
         backup(enviro)
     if args.restore:
