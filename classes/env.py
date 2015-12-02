@@ -74,22 +74,30 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'tst', 'port': '8090', 'odoover': '8.0',
+    {'name': 'tstmx', 'port': '8091', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
-         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'meli_oerp', 'branch': 'master'},
-         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'payment_mercadopago',
-          'branch': 'master'},
-
+         {'usr': 'Vauxoo', 'repo': 'addons-vauxoo', 'branch': '8.0'},
+         {'usr': 'Vauxoo', 'repo': 'odoo-mexico', 'branch': '7.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
+    {'name': 'sooftart', 'port': '8069', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
 ]

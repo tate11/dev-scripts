@@ -46,7 +46,7 @@ from classes import Environment, clients__
 
 
 # Reservados 8989,
-clients_ = [
+borrame_clients_clients_ = [
     {'port': '8068', 'ver': '8.0.1', 'name': 'tst'},
     {'port': '8068', 'ver': '8.0.1', 'name': 'makeover'},
     {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
@@ -55,7 +55,7 @@ clients_ = [
     {'port': '8090', 'ver': '8.0', 'name': 'nixel'},
 ]
 
-data_ = {  # Version 9.0 experimental
+borrame_data_ = {  # Version 9.0 experimental
     '9.0': {
         'images': {
             'odoo': {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
