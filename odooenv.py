@@ -30,7 +30,6 @@
 #               openerp-server.conf
 #           /data_dir
 #
-# TODO sacar el log fuera de la imagen.
 # TODO archivo xml que sobreescriba clients.
 # TODO Revisar el tema de los subcomandos
 ##############################################################################
@@ -41,125 +40,6 @@ from datetime import datetime
 import subprocess
 
 from classes import Environment, clients__
-
-
-
-
-# Reservados 8989,
-borrame_clients_clients_ = [
-    {'port': '8068', 'ver': '8.0.1', 'name': 'tst'},
-    {'port': '8068', 'ver': '8.0.1', 'name': 'makeover'},
-    {'port': '8069', 'ver': '8.0', 'name': 'makeover'},
-    {'port': '8070', 'ver': '8.0', 'name': 'jeo'},
-    {'port': '8071', 'ver': '8.0', 'name': 'demo'},
-    {'port': '8090', 'ver': '8.0', 'name': 'nixel'},
-]
-
-borrame_data_ = {  # Version 9.0 experimental
-    '9.0': {
-        'images': {
-            'odoo': {'repo': 'odoo', 'dir': '', 'ver': '9.0'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
-        },
-
-        'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '9.0'},
-        ],
-    },
-
-    # ultima version de adhoc
-    '8.0.1': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
-            'aeroo': {'repo': 'adhoc', 'dir': 'aeroo-docs', 'ver': 'latest'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-        },
-
-        'repos': [
-            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
-            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'meli_oerp',
-             'branch': 'master'},
-            {'repo': 'jobiols', 'instdir': 'ml', 'dir': 'payment_mercadopago',
-             'branch': 'master'},
-        ]
-    },
-
-    # version estable de jeo
-    '8.0': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '8.0'},
-            'aeroo': {'repo': 'jobiols', 'dir': 'aeroo-docs', 'ver': 'latest'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
-        },
-
-        'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'aeroo_reports', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'web', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'management-system', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'knowledge', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'rma', 'branch': '8.0'},
-            #            {'repo': 'jobiols', 'dir': 'manufacture', 'branch': '8.0'},
-        ]
-    },
-
-    # Version 7.0.1 experimental
-    '7.0.1': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '7.0.1'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''}
-        },
-
-        'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'odoo-mailchimp-tools', 'branch': 'master'}
-        ],
-    },
-
-    # Version 7.0 de producción Makeover
-    '7.0': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'odoo-adhoc', 'ver': '7.0'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-            'backup': {'repo': 'jobiols', 'dir': 'backup', 'ver': ''},
-        },
-
-        'repos': [
-            {'repo': 'jobiols', 'dir': 'odoo-addons', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'localizacion', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'server-tools', 'branch': '7.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '7.0'}
-        ],
-    },
-
-    'ou-8.0': {
-        'images': {
-            'odoo': {'repo': 'jobiols', 'dir': 'docker-openupgrade', 'ver': '8.0'},
-            'postgres': {'repo': 'postgres', 'dir': '', 'ver': '9.4'},
-        },
-
-        'repos': [
-            {'repo': 'ingadhoc', 'dir': 'odoo-addons', 'branch': '8.0'},
-            {'repo': 'ingadhoc', 'dir': 'odoo-argentina', 'branch': '8.0'},
-            {'repo': 'oca', 'dir': 'server-tools', 'branch': '8.0'},
-            {'repo': 'jobiols', 'dir': 'str', 'branch': '8.0'}
-        ]
-    },
-}
 
 
 def sc_(params):
@@ -418,7 +298,8 @@ def pull_all(e):
 
     images = []
     for cli in e.getClients():
-        images.extend(cli.get_images())
+        if cli.get_name() in e.get_clients_from_params():
+            images.extend(cli.get_images())
     update_images_from_list(e, images)
 
     e.msgdone('All images ok ')
@@ -426,7 +307,8 @@ def pull_all(e):
 
     repos = []
     for cli in e.getClients():
-        repos.extend(cli.get_repos())
+        if cli.get_name() in e.get_clients_from_params():
+            repos.extend(cli.get_repos())
     update_repos_from_list(e, repos)
 
     e.msgdone('All repos ok ')
