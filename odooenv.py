@@ -87,6 +87,7 @@ def update_db(e):
     params += '--link postgres:db '
     params += cli.get_image('odoo').get_image() + ' -- '
     params += ' --stop-after-init '
+    params += ' --logfile=false '
     params += '-d ' + db + ' -u ' + ', '.join(mods) + ' '
 
     if e.debug_mode():

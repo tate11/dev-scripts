@@ -94,6 +94,14 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+
+         {'usr': 'jobiols', 'repo': 'connector-magento', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
