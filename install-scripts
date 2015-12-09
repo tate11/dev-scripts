@@ -26,6 +26,7 @@ git status
 msgrun "Pulling scripts odoo v8 adhoc"
 git pull
 msgrun "Installing scripts"
-cp sd /usr/bin
-cp db-backup /usr/bin
+sudo cp sd /usr/bin
+sudo cp odooenv.py /usr/bin
+sudo cp -r classes/ /usr/bin
 msgdone "Scripts installed"
