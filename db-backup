@@ -41,7 +41,7 @@ DIR="/backup/8.0/$CUSTOMER/"
 
 # backing up database and files
 docker run --rm -i \
-  --link db-odoo:db \
+  --link postgres:db \
   --volumes-from $CUSTOMER \
   -v $DIR:/backup  \
   --env DBNAME=$DB jobiols/backup backup &> $LASTBKP
@@ -53,7 +53,7 @@ if [ $? -ne 0 ]
 fi
 
 # deleting old files
-for file in `find $DIR/* -mtime +30 -type f`
+for file in `find $DIR/* -mtime +3 -type f`
 do
   msginfo "deleting:  ${file}"
   rm $file
