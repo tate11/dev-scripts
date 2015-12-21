@@ -95,6 +95,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
 
+         #    magento
          {'usr': 'jobiols', 'repo': 'connector-magento', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
