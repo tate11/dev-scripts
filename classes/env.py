@@ -24,7 +24,7 @@ import sys
 
 clients__ = [
     #######################################################################
-    {'name': 'danza', 'port': '8068', 'odoover': '8.0',
+    {'name': 'danza', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
