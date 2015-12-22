@@ -236,8 +236,15 @@ def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
         cli = e.get_client(clientName)
-        e.msgrun('Running image for client ' + clientName)
-        params = 'sudo docker run -d '
+        txt = 'Running image for client ' + clientName
+        if e.debug_mode():
+            txt += ' with debug debug mode on port ' + cli.get_port()
+
+        e.msgrun(txt)
+        if e.debug_mode():
+            params = 'sudo docker run --rm -it '
+        else:
+            params = 'sudo docker run -d '
         params += '--link aeroo:aeroo '
         params += '-p ' + cli.get_port() + ':8069 '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
@@ -245,14 +252,17 @@ def run_client(e):
         params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
         params += '--link postgres:db '
-        params += '--restart=always '
+        if not e.debug_mode():
+            params += '--restart=always '
         params += '--name ' + cli.get_name() + ' '
         params += cli.get_image('odoo').get_image() + ' '
         if not e.no_dbfilter():
             params += '-- --db-filter=' + cli.get_name() + '_.* '
-        params += '--logfile=/var/log/odoo/odoo.log '
-        params += '--logrotate'
-
+        if not e.debug_mode():
+            params += '--logfile=/var/log/odoo/odoo.log '
+            params += '--logrotate'
+        else:
+            params += '--logfile=False '
         if sc_(params):
             e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
