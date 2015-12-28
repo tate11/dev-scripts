@@ -32,6 +32,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -135,6 +136,8 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'bank-payment', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
