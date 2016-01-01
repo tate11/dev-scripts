@@ -23,12 +23,11 @@
 #   ~/postgresql
 #   ~/odoo-[version]
 #       /sources
-#           /[repodir1]
-#               /[repo1]
 #       /[clientname1]
 #           /config
 #               openerp-server.conf
 #           /data_dir
+#           /log
 #
 # TODO archivo xml que sobreescriba clients.
 # TODO Revisar el tema de los subcomandos
@@ -91,7 +90,10 @@ def update_db(e):
     params += '-d ' + db + ' -u ' + ', '.join(mods) + ' '
 
     if e.debug_mode():
-        params += '--debug'
+        params += '--debug '
+
+    if e.test_mode:
+        params += '--log-level=test --test-enable'
 
     sc_(params)
 
@@ -231,6 +233,21 @@ def run_environment(e):
     e.msgdone('images running')
     return True
 
+
+def server_help(e):
+    clients = e.get_clients_from_params()
+    for client in clients:
+        cli = e.get_client(client)
+
+        params = 'sudo docker run --rm -it '
+        params += cli.get_image('odoo').get_image() + ' '
+        params += '-- '
+        params += '--help '
+
+        if sc_(params):
+            e.msgerr("Can't run help")
+
+    return True
 
 def run_client(e):
     clients = e.get_clients_from_params()
@@ -621,6 +638,14 @@ if __name__ == '__main__':
                         help='Eliminates dbfilter: The client can see any database. \
                         Without this, only sees databases starting with clientname_')
 
+    parser.add_argument('--test',
+                        action='store_true',
+                        help='Run tests, requieres -d and -m options')
+
+    parser.add_argument('-H', '--server-help',
+                        action='store_true',
+                        help="List server help requieres -c option")
+
     args = parser.parse_args()
     enviro = Environment(args, clients__)
 
@@ -654,3 +679,5 @@ if __name__ == '__main__':
         backup_list(enviro)
     if args.cleanup:
         cleanup(enviro)
+    if args.server_help:
+        server_help(enviro)

@@ -170,6 +170,9 @@ class Environment:
     def debug_mode(self):
         return self._args.debug
 
+    def test_mode(self):
+        return self._args.test
+
     def no_dbfilter(self):
         return self._args.no_dbfilter
 
