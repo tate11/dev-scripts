@@ -220,16 +220,13 @@ class Environment:
                 cli = client
         return cli
 
-    def getClients(self):
+    def get_clients_form_dict(self):
         return self._clients
 
-    def getClientArgs(self):
-        return ', '.join(self._args.client)
-
-    def getTemplateDir(self):
+    def get_template_dir(self):
         return self._home_template
 
-    def getPsqlDir(self):
+    def get_psql_dir(self):
         return self._psql
 
     def green(self, string):
@@ -301,7 +298,7 @@ class Client:
         return self._port
 
     def get_home_dir(self):
-        return self._env.getTemplateDir() + self._ver + '/'
+        return self._env.get_template_dir() + self._ver + '/'
 
     def get_addons_path(self):
         # path to addons inside image

@@ -52,7 +52,7 @@ def uninstall_client(e):
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
         if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
             e.msginf('deleting all databases!')
-            sc_(['sudo rm -r ' + e.getPsqlDir()])
+            sc_(['sudo rm -r ' + e.get_psql_dir()])
 
     for clientName in clients:
         cli = e.get_client(clientName)
@@ -160,8 +160,8 @@ def install_client(e):
         sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
 
         # if not exist postgresql create it
-        if not os.path.isdir(e.getPsqlDir()):
-            sc_('mkdir ' + e.getPsqlDir())
+        if not os.path.isdir(e.get_psql_dir()):
+            sc_('mkdir ' + e.get_psql_dir())
 
         # make sources dir
         # if not exist sources dir create it
@@ -213,7 +213,7 @@ def run_environment(e):
         params += '-p 5432:5432 '
     params += '-e POSTGRES_USER=odoo '
     params += '-e POSTGRES_PASSWORD=odoo '
-    params += '-v ' + e.getPsqlDir() + ':/var/lib/postgresql/data '
+    params += '-v ' + e.get_psql_dir() + ':/var/lib/postgresql/data '
     params += '--restart=always '
     params += '--name ' + image.get_name() + ' '
     params += image.get_image()
@@ -235,17 +235,16 @@ def run_environment(e):
 
 
 def server_help(e):
-    clients = e.get_clients_from_params()
-    for client in clients:
-        cli = e.get_client(client)
+    client = e.get_clients_from_params('one')
+    cli = e.get_client(client)
 
-        params = 'sudo docker run --rm -it '
-        params += cli.get_image('odoo').get_image() + ' '
-        params += '-- '
-        params += '--help '
+    params = 'sudo docker run --rm -it '
+    params += cli.get_image('odoo').get_image() + ' '
+    params += '-- '
+    params += '--help '
 
-        if sc_(params):
-            e.msgerr("Can't run help")
+    if sc_(params):
+        e.msgerr("Can't run help")
 
     return True
 
@@ -325,7 +324,7 @@ def pull_all(e):
     e.msgrun('--- Pulling all images')
 
     images = []
-    for cli in e.getClients():
+    for cli in e.get_clients_form_dict():
         if cli.get_name() in e.get_clients_from_params():
             images.extend(cli.get_images())
     update_images_from_list(e, images)
@@ -334,7 +333,7 @@ def pull_all(e):
     e.msgrun('--- Pulling all repos')
 
     repos = []
-    for cli in e.getClients():
+    for cli in e.get_clients_form_dict():
         if cli.get_name() in e.get_clients_from_params():
             repos.extend(cli.get_repos())
     update_repos_from_list(e, repos)
@@ -347,7 +346,7 @@ def pull_all(e):
 def list_data(e):
     # if no -c option get all clients else get -c clients
     if args.client is None:
-        clients = e.getClients()
+        clients = e.get_clients_form_dict()
     else:
         clients = []
         for clientName in e.get_clients_from_params():
@@ -493,7 +492,7 @@ def backup_list(e):
     # if no -c option get all clients else get -c clients
     if args.client is None:
         clients = []
-        for cli in e.getClients():
+        for cli in e.get_clients_form_dict():
             clients.append(cli.get_name())
     else:
         clients = e.get_clients_from_params()
@@ -521,7 +520,7 @@ def backup_list(e):
 def cleanup(e):
     if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
         e.msginf('deleting all databases!')
-        sc_(['sudo rm -r ' + e.getPsqlDir()])
+        sc_(['sudo rm -r ' + e.get_psql_dir()])
 
     if raw_input('Delete clients and sources SURE?? (y/n) ') == 'y':
         e.msginf('deleting all client and sources!')
