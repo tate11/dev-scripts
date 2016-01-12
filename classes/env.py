@@ -29,7 +29,8 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0.1'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
@@ -44,11 +45,11 @@ clients__ = [
     #######################################################################
     {'name': 'jeo', 'port': '8069', 'odoover': '8.0',
      'repos': [
-         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -64,6 +65,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'tablero_nixel', 'instdir': 'nixel', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -132,7 +134,6 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
@@ -323,7 +324,8 @@ class Repo:
 
     def getPathDir(self):
         try:
-            ret = self._dict['instdir'] + '/' + self._dict['repo']
+            #            ret = self._dict['instdir'] + '/' + self._dict['repo']
+            ret = self._dict['instdir']
         except:
             ret = self._dict['repo']
         return ret
