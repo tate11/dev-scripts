@@ -98,20 +98,14 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'danza', 'port': '8069', 'odoover': '8.0',
+    {'name': 'atalaya', 'port': '8069', 'odoover': '7.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'atalaya', 'branch': '7.0'},
      ],
      'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0.atalaya'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
     #######################################################################

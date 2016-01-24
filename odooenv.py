@@ -92,7 +92,7 @@ def update_db(e):
     if e.debug_mode():
         params += '--debug '
 
-    if e.test_mode:
+    if e.test_mode():
         params += '--log-level=test --test-enable'
 
     sc_(params)
@@ -189,7 +189,12 @@ def install_client(e):
             param += '--addons-path=' + addons_path + ' '
 
         param += '--logfile=/var/log/odoo/odoo.log '
-        param += '--logrotate '
+
+        if cli.get_ver() == '7.0':
+            param += '--db_user=odoo '
+            param += '--db_password=odoo '
+        else:
+            param += '--logrotate '
 
         e.msginf('creating config file')
         if sc_(param):
@@ -254,7 +259,7 @@ def run_client(e):
         cli = e.get_client(clientName)
         txt = 'Running image for client ' + clientName
         if e.debug_mode():
-            txt += ' with debug debug mode on port ' + cli.get_port()
+            txt += ' with debug mode on port ' + cli.get_port()
 
         e.msgrun(txt)
         if e.debug_mode():
@@ -268,17 +273,23 @@ def run_client(e):
         params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
         params += '--link postgres:db '
+
         if not e.debug_mode():
             params += '--restart=always '
+
         params += '--name ' + cli.get_name() + ' '
         params += cli.get_image('odoo').get_image() + ' '
+
         if not e.no_dbfilter():
             params += '-- --db-filter=' + cli.get_name() + '_.* '
+
         if not e.debug_mode():
             params += '--logfile=/var/log/odoo/odoo.log '
-            params += '--logrotate'
+            if cli.get_ver() != '7.0':
+                params += '--logrotate '
         else:
             params += '--logfile=False '
+
         if sc_(params):
             e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
@@ -527,6 +538,18 @@ def cleanup(e):
         sc_(['sudo rm -r ' + e._home_template + '*'])
 
 
+def cron_jobs(e):
+    e.msginf('Adding cron jobs to this server')
+    croncmd = "/home/me/myfunction start 2> /home/me/myfunction/cron_errors < /dev/null"
+    cronjob = "0 0 * * * $croncmd " + '#Added by odooenv.py'
+
+
+#    sc_(['(sudo crontab -l | grep -v "$croncmd" ; echo "$cronjob" ) | sudo crontab -'])
+
+def cron_list(e):
+    e.msginf('List of cron backup jobs on this server')
+    sc_(['sudo crontab -l | grep "#Added by odooenv.py"'])
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Odoo environment setup v 2.0')
     parser.add_argument('-i', '--install-cli',
@@ -605,7 +628,7 @@ if __name__ == '__main__':
     parser.add_argument('-c',
                         action='append',
                         dest='client',
-                        help="Client name. You define can define multiple clients \
+                        help="Client name. You can define multiple clients \
                         like this: -c client1 -c client2 -c client3 and so one.")
 
     parser.add_argument('--backup',
@@ -644,6 +667,19 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--server-help',
                         action='store_true',
                         help="List server help requieres -c option")
+    parser.add_argument('-j', '--cron-jobs',
+                        action='append',
+                        dest='times',
+                        help='Cron Backup. it adds cron jobs for doing backup to a client\
+                        database. -j once backups once a day at 12 PM. \
+                        -j twice backups twice a day at 12 AM and 12 PM.\
+                        Needs a -c option to tell which client to backup.\
+                        You can define multiple clients for backup\
+                        like this: -j client1 -j client2 -j client3 and so one.\
+                        If there are multiple backups it will be spaced by five minutes.')
+    parser.add_argument('--cron-list',
+                        action='store_true',
+                        help="List available cron jobs")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
@@ -680,3 +716,7 @@ if __name__ == '__main__':
         cleanup(enviro)
     if args.server_help:
         server_help(enviro)
+    if args.times:
+        cron_jobs(enviro)
+    if args.cron_list:
+        cron_list(enviro)
