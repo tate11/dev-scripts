@@ -23,7 +23,7 @@ function msgerror {
 msgrun "-----------------------------------------"
 git status
 
-msgrun "Pulling scripts odoo v8 adhoc"
+msgrun "Pulling scripts"
 git pull
 msgrun "Installing scripts"
 sudo cp sd /usr/bin
