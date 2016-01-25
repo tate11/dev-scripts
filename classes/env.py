@@ -98,7 +98,7 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'atalaya', 'port': '8069', 'odoover': '7.0',
+    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'atalaya', 'branch': '7.0'},
      ],
