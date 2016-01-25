@@ -106,6 +106,7 @@ clients__ = [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0.atalaya'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
     #######################################################################
