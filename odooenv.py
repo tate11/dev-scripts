@@ -186,7 +186,12 @@ def install_client(e):
         param += '--db-filter=' + cli.get_name() + '_.* '
 
         if addons_path != '':
-            param += '--addons-path=' + addons_path + ' '
+            ### Warning ! this ugly harcoded path only works for my image !!!
+            if cli.get_ver() == '7.0':
+                aa = addons_path + ',/usr/lib/python2.7/dist-packages/openerp/addons'
+                param += '--addons-path=' + aa + ' '
+            else:
+                param += '--addons-path=' + addons_path + ' '
 
         param += '--logfile=/var/log/odoo/odoo.log '
 

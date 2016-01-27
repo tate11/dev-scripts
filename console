@@ -2,10 +2,5 @@
 #Include file lib in same dir as this file
 
 sudo docker run -it --rm \
-        -v ~/odoo-8.0/makeover/config:/etc/odoo \
-        -v ~/odoo-8.0/makeover/data_dir:/var/lib/odoo \
-        -v ~/odoo-8.0/sources:/mnt/extra-addons \
-	-v ~/odoo-8.0/makeover/log:/var/log/odoo \
 	--entrypoint=/bin/bash \
-        --link postgres:db \
-        jobiols/odoo-adhoc:8.0 $*
+        jobiols/odoo-adhoc:7.0.atalaya $*

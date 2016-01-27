@@ -100,10 +100,11 @@ clients__ = [
     #######################################################################
     {'name': 'atly', 'port': '8069', 'odoover': '7.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'atalaya', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-diff', 'branch': '7.0'},
      ],
      'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0.atalaya'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
