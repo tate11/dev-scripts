@@ -3,4 +3,5 @@
 
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
-        jobiols/odoo-adhoc:7.0.atalaya $*
+	-v /home/jorge/odoo-7.0/sources:/mnt/extra-addons \
+        jobiols/odoo-adhoc:7.0 $*

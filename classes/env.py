@@ -101,7 +101,7 @@ clients__ = [
     {'name': 'atly', 'port': '8069', 'odoover': '7.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
-         {'usr': 'jobiols', 'repo': 'atly-diff', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
@@ -142,6 +142,24 @@ clients__ = [
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
+     },
+
+    #######################################################################
+    {'name': 'gegy', 'port': '8091', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'margin-analysis', 'branch': '8.0'}
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ],
+     'install': ['l10n_ar_base', 'sale']
      },
 
     #######################################################################
