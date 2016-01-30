@@ -193,26 +193,35 @@ class Environment:
 
     def get_modules_from_params(self):
         if self._args.module is None:
-            self.msgerr('need -m option')
+            self.msgerr('need -m option (module name or all for all modules)')
         return self._args.module
 
     def get_database_from_params(self):
         if self._args.database is None:
-            self.msgerr('need -d option')
+            self.msgerr('need -d option (database name)')
         if len(self._args.database) > 1:
             self.msgerr('only one database expected')
         return self._args.database[0]
 
+    def get_new_database_from_params(self):
+        if self._args.new_database is None:
+            self.msgerr('need -w option (new database name)')
+        if len(self._args.new_database) > 1:
+            self.msgerr('only one new database name expected')
+        return self._args.new_database[0]
+
+
     def get_timestamp_from_params(self):
         if self._args.timestamp is None:
-            self.msgerr('need -t option')
+            self.msgerr(
+                'need -t option (timestamp, see --backup-list for available timestamps)')
         if len(self._args.database) > 1:
             self.msgerr('only one timestamp expected')
         return self._args.timestamp[0]
 
     def get_clients_from_params(self, cant='multi'):
         if self._args.client is None:
-            self.msgerr('need -c option')
+            self.msgerr('need -c option (client name)')
 
         for cli in self._args.client:
             if self.get_client(cli) is None:
@@ -290,6 +299,9 @@ class Client:
 
     def get_backup_dir(self):
         return self.get_home_dir() + self._name + '/backup/'
+
+    def get_log_backup_file(self):
+        return '/var/log/odoo/odoo.log'
 
     def get_repos(self):
         return self._repos

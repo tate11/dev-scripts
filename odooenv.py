@@ -37,6 +37,7 @@ import argparse
 import os
 from datetime import datetime
 import subprocess
+import time
 
 from classes import Environment, clients__
 
@@ -422,7 +423,43 @@ def docker_install(e):
     return True
 
 
+def log(e, text):
+    clientName = e.get_clients_from_params('one')
+    client = e.get_client(clientName)
+    with open(client.get_log_backup_file(), 'a') as f: f.write(
+        time.strftime('%d/%m/%Y %I:%M:%S') + ' ' + text + '\n')
+
+
+def post_backup(e):
+    e.msgrun('post backup')
+    log(e, 'postbackup')
+    clientName = e.get_clients_from_params('one')
+    client = e.get_client(clientName)
+    backup_dir = client.get_backup_dir()
+
+    # verify what to do before backup, default is backup housekeeping
+    #    TODO Definir si hacemos backup a la S3
+
+    limit_seconds = time.time() - 60 * 10  # 10*60*60*24
+
+    # walk the backup dir
+    for root, dirs, files in os.walk(backup_dir):
+        for file in files:
+            filename, file_extension = os.path.splitext(file)
+            seconds = os.path.getctime(root + file)
+            if seconds < limit_seconds:
+                sc_('sudo rm ' + root + file)
+                # os.remove(root+file)
+                log(e, 'Removed file ' + file + ' from client ' + clientName)
+
+
 def backup(e):
+    """
+    Launch a database backup, with docker image 'backup'. The backup file lives in
+    client_name/backup
+    """
+    # TODO: obtener el cliente del nombre de la base de datos asi me ahorro poner el -c
+
     dbname = e.get_database_from_params()
     clientName = e.get_clients_from_params('one')
     e.msgrun('Backing up database ' + dbname + ' of client ' + clientName)
@@ -439,8 +476,12 @@ def backup(e):
 
     if sc_(params):
         e.msgerr('failing backup. Aborting')
+        log(e, u'failing backup. Aborting')
 
     e.msgdone('Backup done')
+    log(e, 'Backup database "' + dbname + '" from client "' + clientName + '"')
+
+    post_backup(e)
     return True
 
 
@@ -448,8 +489,12 @@ def restore(e):
     dbname = e.get_database_from_params()
     clientName = e.get_clients_from_params('one')
     timestamp = e.get_timestamp_from_params()
+    new_dbname = e.get_new_database_from_params()
+    if dbname == new_dbname:
+        e.msgerr('new dbname should be different from old dbname')
 
-    e.msgrun('Restoriing database ' + dbname + ' of client ' + clientName)
+    e.msgrun(
+        'Restoring database ' + dbname + ' of client ' + clientName + ' onto database ' + new_dbname)
 
     client = e.get_client(clientName)
     img = client.get_image('backup')
@@ -458,20 +503,28 @@ def restore(e):
     params += '--link postgres:db '
     params += '--volumes-from ' + clientName + ' '
     params += '-v ' + client.get_backup_dir() + ':/backup '
-    params += '--env NEW_DBNAME=' + dbname + '-new '
+    params += '--env NEW_DBNAME=' + new_dbname + ' '
     params += '--env DBNAME=' + dbname + ' '
     params += '--env DATE=' + timestamp + ' '
     params += img.get_image() + ' restore'
 
     if sc_(params):
-        e.msgerr('failing backup. Aborting')
+        e.msgerr('failing restore. Aborting')
 
-    e.msgdone('Backup done')
+    e.msgdone('Restore done')
+    log(e, 'Restore database "' + dbname + '" from client "' + clientName + '"')
     return True
 
 
 def decode_backup(root, filename):
-    # bkp format: jeo_datos_201511022236
+    """
+    from root and filename generates human readable filename
+    i.e.: jeo_datos_201511022236
+
+    :param root: directory where backups reside
+    :param filename: backup filename without extension
+    :return: formatted filename
+    """
 
     # size of bkp
     path = os.path.join(root, filename + '.dump')
@@ -615,14 +668,13 @@ if __name__ == '__main__':
                         action='store',
                         nargs=1,
                         dest='database',
-                        help="Database to update.")
+                        help="Database name.")
 
-    parser.add_argument('-t',
+    parser.add_argument('-w',
                         action='store',
                         nargs=1,
-                        dest='timestamp',
-                        help="Timestamp to restore database, see --backup-list \
-                        for available timestamps.")
+                        dest='new_database',
+                        help="New database name.")
 
     parser.add_argument('-m',
                         action='append',
@@ -636,24 +688,12 @@ if __name__ == '__main__':
                         help="Client name. You can define multiple clients \
                         like this: -c client1 -c client2 -c client3 and so one.")
 
-    parser.add_argument('--backup',
-                        action='store_true',
-                        help="Lauch backup requieres -d and -c options.")
-
-    parser.add_argument('--restore',
-                        action='store_true',
-                        help="Lauch restore requieres -d, -c and -t options.")
-
     parser.add_argument('--debug',
                         action='store_true',
                         help='This option has two efects: \
                              when doing an update database, (option -u) it forces \
                              debug mode. When running environment it opens port 5432 \
                              to access postgres server databases.')
-
-    parser.add_argument('--backup-list',
-                        action='store_true',
-                        help="List available backups with timestamps to restore.")
 
     parser.add_argument('--cleanup',
                         action='store_true',
@@ -672,6 +712,29 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--server-help',
                         action='store_true',
                         help="List server help requieres -c option")
+
+    ## Backup
+    ####
+
+    parser.add_argument('--backup',
+                        action='store_true',
+                        help="Lauch backup requieres -d and -c options.")
+
+    parser.add_argument('--backup-list',
+                        action='store_true',
+                        help="List available backups with timestamps to restore.")
+
+    parser.add_argument('--restore',
+                        action='store_true',
+                        help="Lauch restore requieres -c, -d, -w and -t options.")
+
+    parser.add_argument('-t',
+                        action='store',
+                        nargs=1,
+                        dest='timestamp',
+                        help="Timestamp to restore database, see --backup-list \
+                        for available timestamps.")
+
     parser.add_argument('-j', '--cron-jobs',
                         action='append',
                         dest='times',
@@ -682,6 +745,7 @@ if __name__ == '__main__':
                         You can define multiple clients for backup\
                         like this: -j client1 -j client2 -j client3 and so one.\
                         If there are multiple backups it will be spaced by five minutes.')
+
     parser.add_argument('--cron-list',
                         action='store_true',
                         help="List available cron jobs")
