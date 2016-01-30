@@ -440,7 +440,7 @@ def post_backup(e):
     # verify what to do before backup, default is backup housekeeping
     #    TODO Definir si hacemos backup a la S3
 
-    limit_seconds = time.time() - 60 * 10  # 10*60*60*24
+    limit_seconds = time.time() - 10 * 60 * 60 * 24
 
     # walk the backup dir
     for root, dirs, files in os.walk(backup_dir):
