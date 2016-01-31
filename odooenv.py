@@ -36,17 +36,36 @@
 import argparse
 import os
 from datetime import datetime
-import subprocess
+import subprocess, shlex
 import time
-
 from classes import Environment, clients__
+import logging
+import logging.handlers
+
+LOG_FILENAME = 'example.log'
+# LOG_FILENAME = '/var/log/odoo/odoo.log'
+
+# Set up a specific logger with our desired output level
+my_logger = logging.getLogger(__name__)
+my_logger.setLevel(logging.DEBUG)
+
+# Add the log message handler to the logger
+handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20000,
+                                               backupCount=5)
+
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+
+my_logger.addHandler(handler)
+my_logger.info('odooenv.py starts')
 
 
 def sc_(params):
+    lparams = shlex.split(params)
     if args.verbose:
         print params
-    return subprocess.call(params, shell=True)
-
+        print lparams
+    return subprocess.call(lparams)
 
 def uninstall_client(e):
     clients = e.get_clients_from_params()
@@ -431,8 +450,6 @@ def log(e, text):
 
 
 def post_backup(e):
-    e.msgrun('post backup')
-    log(e, 'postbackup')
     clientName = e.get_clients_from_params('one')
     client = e.get_client(clientName)
     backup_dir = client.get_backup_dir()
@@ -450,15 +467,14 @@ def post_backup(e):
             if seconds < limit_seconds:
                 sc_('sudo rm ' + root + file)
                 # os.remove(root+file)
+                logger.info('Removed file %s from client %s', file, clientName)
                 log(e, 'Removed file ' + file + ' from client ' + clientName)
-
 
 def backup(e):
     """
     Launch a database backup, with docker image 'backup'. The backup file lives in
     client_name/backup
     """
-    # TODO: obtener el cliente del nombre de la base de datos asi me ahorro poner el -c
 
     dbname = e.get_database_from_params()
     clientName = e.get_clients_from_params('one')
@@ -473,17 +489,20 @@ def backup(e):
     params += '-v ' + client.get_backup_dir() + ':/backup '
     params += '--env DBNAME=' + dbname + ' '
     params += img.get_image() + ' backup'
-
-    if sc_(params):
-        e.msgerr('failing backup. Aborting')
-        log(e, u'failing backup. Aborting')
+    try:
+        if sc_(params):
+            e.msgerr('failing backup. Aborting')
+    except Exception as ex:
+        log(e, u'failing backup. Aborting' + str(ex))
+        logger.error('Failing backup %s', str(ex))
+        e.msgerr('failing backup. Aborting' + str(ex))
 
     e.msgdone('Backup done')
     log(e, 'Backup database "' + dbname + '" from client "' + clientName + '"')
+    logger.info('Backup database %s from client %s', dbname, clientName)
 
     post_backup(e)
     return True
-
 
 def restore(e):
     dbname = e.get_database_from_params()
@@ -513,6 +532,7 @@ def restore(e):
 
     e.msgdone('Restore done')
     log(e, 'Restore database "' + dbname + '" from client "' + clientName + '"')
+    logger.info('Restore database %s from client %s', dbname, clientName)
     return True
 
 
@@ -652,6 +672,10 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Go verbose mode.")
 
+    parser.add_argument('-q', '--quiet',
+                        action='store_true',
+                        help="Supress all standard output.")
+
     parser.add_argument('-n', '--no-ip-install',
                         action='store_true',
                         help="Install no-ip on this server.")
@@ -669,6 +693,16 @@ if __name__ == '__main__':
                         nargs=1,
                         dest='database',
                         help="Database name.")
+
+    parser.add_argument('--home',
+                        action='store',
+                        nargs=1,
+                        dest='home_dir',
+                        help="Your home dir expanded, if your user is john you must \
+                        write --home /home/john. It is only needed when running from a \
+                        diferent user,  i.e. if you run odooenv.py from cron to \
+                        schedule a backup the home defaults to /root instead of \
+                        /home/your_username")
 
     parser.add_argument('-w',
                         action='store',

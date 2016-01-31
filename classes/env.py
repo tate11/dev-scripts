@@ -21,6 +21,12 @@
 # #############################################################################
 import os
 import sys
+import logging
+
+my_logger = logging.getLogger(__name__)
+my_logger.info('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+my_logger.info('99999999999999999999999999999')
+print __name__
 
 clients__ = [
     #######################################################################
@@ -178,9 +184,18 @@ class Environment:
         for cli in dic:
             self._clients.append(Client(self, cli))
 
-        self._home_template = os.path.expanduser('~/odoo-')
-        self._psql = os.path.expanduser('~/postgresql/')
+        if args.home_dir:
+            home_dir = args.home_dir[0]
+            if home_dir[-1] != '/':
+                home_dir += '/'
+        else:
+            home_dir = os.path.expanduser('~/')
+
+        self._home_template = home_dir + 'odoo-'
+        self._psql = home_dir + 'postgresql/'
         self._args = args
+        my_logger.debug('entrando en env')
+
 
     def debug_mode(self):
         return self._args.debug
@@ -266,17 +281,21 @@ class Environment:
         return YELLOW_LIGHT + string + CLEAR
 
     def msgrun(self, msg):
-        print self.yellow(msg)
+        if not self._args.quiet:
+            print self.yellow(msg)
 
     def msgdone(self, msg):
-        print self.green(msg)
+        if not self._args.quiet:
+            print self.green(msg)
 
     def msgerr(self, msg):
-        print self.red(msg)
-        sys.exit()
+        if not self._args.quiet:
+            print self.red(msg)
+            sys.exit()
 
     def msginf(self, msg):
-        print self.yellow_light(msg)
+        if not self._args.quiet:
+            print self.yellow_light(msg)
 
 
 class Client:
