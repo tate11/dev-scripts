@@ -23,10 +23,8 @@ import os
 import sys
 import logging
 
-my_logger = logging.getLogger(__name__)
-my_logger.info('aaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-my_logger.info('99999999999999999999999999999')
-print __name__
+logger = logging.getLogger(__name__)
+logger.info('this does not work :(')
 
 clients__ = [
     #######################################################################
@@ -194,7 +192,6 @@ class Environment:
         self._home_template = home_dir + 'odoo-'
         self._psql = home_dir + 'postgresql/'
         self._args = args
-        my_logger.debug('entrando en env')
 
 
     def debug_mode(self):

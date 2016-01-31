@@ -36,29 +36,12 @@
 import argparse
 import os
 from datetime import datetime
-import subprocess, shlex
+import subprocess
+import shlex
 import time
-from classes import Environment, clients__
 import logging
 import logging.handlers
-
-LOG_FILENAME = 'example.log'
-# LOG_FILENAME = '/var/log/odoo/odoo.log'
-
-# Set up a specific logger with our desired output level
-my_logger = logging.getLogger(__name__)
-my_logger.setLevel(logging.DEBUG)
-
-# Add the log message handler to the logger
-handler = logging.handlers.RotatingFileHandler(LOG_FILENAME, maxBytes=20000,
-                                               backupCount=5)
-
-formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-handler.setFormatter(formatter)
-
-my_logger.addHandler(handler)
-my_logger.info('odooenv.py starts')
-
+from classes import Environment, clients__
 
 def sc_(params):
     lparams = shlex.split(params)
@@ -182,6 +165,12 @@ def install_client(e):
         # if not exist postgresql create it
         if not os.path.isdir(e.get_psql_dir()):
             sc_('mkdir ' + e.get_psql_dir())
+
+        # if not exist log create it
+        if not os.path.isfile(LOG_FILENAME):
+            sc_('sudo mkdir -p ' + os.path.dirname(LOG_FILENAME))
+            sc_('sudo touch ' + LOG_FILENAME)
+            sc_('sudo chmod 777 ' + LOG_FILENAME)
 
         # make sources dir
         # if not exist sources dir create it
@@ -340,7 +329,7 @@ def stop_client(e):
     return True
 
 
-def stopEnvironment(e):
+def stop_environment(e):
     images_to_stop = ['postgres', 'aeroo']
     e.msgrun('Stopping images ' + ', '.join(images_to_stop))
     err = 0
@@ -442,13 +431,6 @@ def docker_install(e):
     return True
 
 
-def log(e, text):
-    clientName = e.get_clients_from_params('one')
-    client = e.get_client(clientName)
-    with open(client.get_log_backup_file(), 'a') as f: f.write(
-        time.strftime('%d/%m/%Y %I:%M:%S') + ' ' + text + '\n')
-
-
 def post_backup(e):
     clientName = e.get_clients_from_params('one')
     client = e.get_client(clientName)
@@ -467,8 +449,8 @@ def post_backup(e):
             if seconds < limit_seconds:
                 sc_('sudo rm ' + root + file)
                 # os.remove(root+file)
-                logger.info('Removed file %s from client %s', file, clientName)
-                log(e, 'Removed file ' + file + ' from client ' + clientName)
+                logger.info('Removed backup file "%s"', file)
+
 
 def backup(e):
     """
@@ -493,16 +475,15 @@ def backup(e):
         if sc_(params):
             e.msgerr('failing backup. Aborting')
     except Exception as ex:
-        log(e, u'failing backup. Aborting' + str(ex))
         logger.error('Failing backup %s', str(ex))
         e.msgerr('failing backup. Aborting' + str(ex))
 
     e.msgdone('Backup done')
-    log(e, 'Backup database "' + dbname + '" from client "' + clientName + '"')
-    logger.info('Backup database %s from client %s', dbname, clientName)
+    logger.info('Backup database "%s"', dbname)
 
     post_backup(e)
     return True
+
 
 def restore(e):
     dbname = e.get_database_from_params()
@@ -531,8 +512,7 @@ def restore(e):
         e.msgerr('failing restore. Aborting')
 
     e.msgdone('Restore done')
-    log(e, 'Restore database "' + dbname + '" from client "' + clientName + '"')
-    logger.info('Restore database %s from client %s', dbname, clientName)
+    logger.info('Restore database %s', dbname)
     return True
 
 
@@ -624,11 +604,34 @@ def cron_jobs(e):
 
 #    sc_(['(sudo crontab -l | grep -v "$croncmd" ; echo "$cronjob" ) | sudo crontab -'])
 
+
 def cron_list(e):
     e.msginf('List of cron backup jobs on this server')
     sc_(['sudo crontab -l | grep "#Added by odooenv.py"'])
 
+
 if __name__ == '__main__':
+    # LOG_FILENAME = 'example.log'
+    LOG_FILENAME = '/var/log/odooenv/odooenv.log'
+    try:
+        # Set up a specific logger with our desired output level
+        logger = logging.getLogger(__name__)
+        logger.setLevel(logging.DEBUG)
+
+        # Add the log message handler to the logger
+        handler = logging.handlers.RotatingFileHandler(
+            LOG_FILENAME, maxBytes=20000, backupCount=5)
+
+        # formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
+        handler.setFormatter(formatter)
+
+        logger.addHandler(handler)
+    except:
+        logger = logging.getLogger(__name__)
+        print 'warning logfile not yet created!'
+
+
     parser = argparse.ArgumentParser(description='Odoo environment setup v 2.0')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
@@ -792,7 +795,7 @@ if __name__ == '__main__':
     if args.uninstall_cli:
         uninstall_client(enviro)
     if args.stop_env:
-        stopEnvironment(enviro)
+        stop_environment(enviro)
     if args.run_env:
         run_environment(enviro)
     if args.stop_cli:
