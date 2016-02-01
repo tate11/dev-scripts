@@ -1,5 +1,5 @@
 # dev-scripts
-###Odoo docker based  infrastructure management 
+###Docker based  infrastructure management for Odoo v7/8/9
  
     
     usage: odooenv.py [-h] [-i] [-U] [-R] [-S] [-r] [-s] [-p] [-l] [-v] [-q] [-n]
