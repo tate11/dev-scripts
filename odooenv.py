@@ -771,20 +771,20 @@ if __name__ == '__main__':
                         help="Timestamp to restore database, see --backup-list \
                         for available timestamps.")
 
-    parser.add_argument('-j', '--cron-jobs',
-                        action='append',
-                        dest='times',
-                        help='Cron Backup. it adds cron jobs for doing backup to a client\
-                        database. -j once backups once a day at 12 PM. \
-                        -j twice backups twice a day at 12 AM and 12 PM.\
-                        Needs a -c option to tell which client to backup.\
-                        You can define multiple clients for backup\
-                        like this: -j client1 -j client2 -j client3 and so one.\
-                        If there are multiple backups it will be spaced by five minutes.')
+    #    parser.add_argument('-j', '--cron-jobs',
+    #                        action='append',
+    #                        dest='times',
+    #                        help='Cron Backup. it adds cron jobs for doing backup to a client\
+    #                        database. -j once backups once a day at 12 PM. \
+    #                        -j twice backups twice a day at 12 AM and 12 PM.\
+    #                        Needs a -c option to tell which client to backup.\
+    #                        You can define multiple clients for backup\
+    #                        like this: -j client1 -j client2 -j client3 and so one.\
+    #                        If there are multiple backups it will be spaced by five minutes.')
 
-    parser.add_argument('--cron-list',
-                        action='store_true',
-                        help="List available cron jobs")
+    #    parser.add_argument('--cron-list',
+    #                        action='store_true',
+    #                        help="List available cron jobs")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
