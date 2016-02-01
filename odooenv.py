@@ -627,12 +627,11 @@ if __name__ == '__main__':
         handler.setFormatter(formatter)
 
         logger.addHandler(handler)
-    except:
+    except Exception as ex:
         logger = logging.getLogger(__name__)
-        print 'warning logfile not yet created!'
+        print 'Warning!, problems with logfile', str(ex)
 
-
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 2.0')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 2.1')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define \
