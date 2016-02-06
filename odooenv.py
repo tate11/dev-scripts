@@ -552,7 +552,7 @@ def decode_backup(root, filename):
     except:
         size += 0
 
-    size = size / 1000
+    size = size / 1000000
 
     # strip db name
     a = len(filename) - 13
@@ -566,7 +566,7 @@ def decode_backup(root, filename):
     fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M')
     n = 15 - len(dbname)
 
-    return dbname + n * ' ' + fdt + '  [' + date + '] ' + str(size) + 'k'
+    return dbname + n * ' ' + fdt + '  [' + date + '] ' + str(size) + 'M'
 
 
 def backup_list(e):
