@@ -133,11 +133,18 @@ clients__ = [
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'}
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '7.0'},
+         {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '7.0'},
+         {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'}
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.prestashop'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
@@ -162,6 +169,24 @@ clients__ = [
      },
 
     #######################################################################
+    {'name': 'pruebas', 'port': '8091', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cenit', 'branch': '8.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.mailchimp'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ],
+     'install': ['l10n_ar_base', 'sale']
+     }
 ]
 
 RED = "\033[1;31m"
