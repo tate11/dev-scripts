@@ -34,7 +34,7 @@
 ##############################################################################
 
 import argparse
-import os
+import os, pwd
 from datetime import datetime
 import subprocess
 import shlex
@@ -166,8 +166,15 @@ def install_client(e):
     e.msgrun('Install client' + plural + ' ' + ', '.join(clients))
 
     for clientName in clients:
+
         cli = e.get_client(clientName)
-        # Creating directory's for client
+
+        # Creating directory's for installation
+        sc_('sudo mkdir ' + cli.get_base_dir())
+        username = pwd.getpwuid(os.getuid()).pw_name
+        # change ownership to current user
+        sc_('sudo chown ' + username + ':' + username + ' ' + cli.get_base_dir())
+
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
@@ -182,7 +189,7 @@ def install_client(e):
         if not os.path.isfile(LOG_FILENAME):
             sc_('sudo mkdir -p ' + os.path.dirname(LOG_FILENAME))
             sc_('sudo touch ' + LOG_FILENAME)
-            sc_('sudo chmod 777 ' + LOG_FILENAME)
+            sc_('sudo chmod 666 ' + LOG_FILENAME)
 
         # make sources dir
         # if not exist sources dir create it
@@ -610,10 +617,9 @@ def cleanup(e):
 
 def cron_jobs(e):
     e.msginf('Adding cron jobs to this server')
+    e.msgerr('Actually in development!!!')
     croncmd = "/home/me/myfunction start 2> /home/me/myfunction/cron_errors < /dev/null"
     cronjob = "0 0 * * * $croncmd " + '#Added by odooenv.py'
-
-
 #    sc_(['(sudo crontab -l | grep -v "$croncmd" ; echo "$cronjob" ) | sudo crontab -'])
 
 
@@ -643,7 +649,7 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 2.1')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.1')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define \
@@ -708,16 +714,6 @@ if __name__ == '__main__':
                         dest='database',
                         help="Database name.")
 
-    parser.add_argument('--home',
-                        action='store',
-                        nargs=1,
-                        dest='home_dir',
-                        help="Your home dir expanded, if your user is john you must \
-                        write --home /home/john. It is only needed when running from a \
-                        diferent user,  i.e. if you run odooenv.py from cron to \
-                        schedule a backup the home defaults to /root instead of \
-                        /home/your_username")
-
     parser.add_argument('-w',
                         action='store',
                         nargs=1,
@@ -751,7 +747,8 @@ if __name__ == '__main__':
     parser.add_argument('--no-dbfilter',
                         action='store_true',
                         help='Eliminates dbfilter: The client can see any database. \
-                        Without this, only sees databases starting with clientname_')
+                        Without this, the client can only see databases starting with \
+                        clientname_')
 
     parser.add_argument('--test',
                         action='store_true',

@@ -29,27 +29,108 @@ GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
+REPOS_DIR = '~/git-repos/'
 
-data = [
-    {'ver': '8.0',      'dir': '~/git-repos/manufacture'},
-    {'ver': '8.0',      'dir': '~/git-repos/web'},
-    {'ver': '8.0',      'dir': '~/git-repos/odoo-web'},
-    {'ver': '8.0',      'dir': '~/git-repos/odoomrp-wip'},
-    {'ver': '8.0',      'dir': '~/git-repos/connector-magento'},
-    {'ver': 'master',   'dir': '~/git-repos/docker-odoo'},
-    {'ver': '8.0',      'dir': '~/git-repos/docker-odoo-adhoc'},
-    {'ver': '8.0',      'dir': '~/git-repos/odoo'},
-    {'ver': 'master',   'dir': '~/git-repos/yowsup'},
-    {'ver': 'master',   'dir': '~/git-repos/Python-Markdown'},
-    {'ver': '8.0',      'dir': '~/git-repos/account-financial-reporting'},
-    {'ver': '8.0',      'dir': '~/git-repos/odoo-argentina'},
-    {'ver': '8.0',      'dir': '~/git-repos/odoo-addons'},
-    {'ver': '8.0',      'dir': '~/git-repos/aeroo_reports'},
-    {'ver': '8.0',      'dir': '~/git-repos/server-tools'},
-    {'ver': '8.0',      'dir': '~/git-repos/management-system'},
-    {'ver': '8.0',      'dir': '~/git-repos/knowledge'},
-    {'ver': '8.0',      'dir': '~/git-repos/rma'},
+repos = [
+    {'usr': 'oca', 'repo': 'manufacture', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'web', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'connector-magento', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'server-tools', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'management-system', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'knowledge', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'rma', 'branch': '8.0'},
+
+    {'usr': 'aeroo', 'repo': 'aeroo_reports', 'branch': '8.0'},
+
+    {'usr': 'tgalal', 'repo': 'yowsup', 'branch': 'master'},
+
+    {'usr': 'waylan', 'repo': 'Python-Markdown', 'branch': 'master'},
+
+    {'usr': 'odoo', 'repo': 'odoo', 'branch': '8.0'},
+
+    {'usr': 'ctmil', 'repo': 'payment_mercadopago', 'branch': 'master'},
+
+    {'usr': 'ingadhoc', 'repo': 'docker-odoo', 'branch': 'master'},
+    {'usr': 'ingadhoc', 'repo': 'docker-odoo-adhoc', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'odoo-addons', 'branch': '8.0'},
+    # reemplazo de odoo-addons
+    {'usr': 'ingadhoc', 'repo': 'adhoc-account-analytic', 'upstream': 'account-analytic',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-account-financial-tools',
+     'upstream': 'account-financial-tools', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-account-invoicing',
+     'upstream': 'account-invoicing', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-account-payment', 'upstream': 'account-payment',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-crm', 'upstream': 'crm', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-hr', 'upstream': 'hr', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-manufacture', 'upstream': 'manufacture',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-miscellaneous', 'upstream': 'miscellaneous',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-multi-company', 'upstream': 'multi-company',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-partner', 'upstream': 'partner', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-product', 'upstream': 'product', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-purchase', 'upstream': 'purchase',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-reporting-engine', 'upstream': 'reporting-engine',
+     'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-sale', 'upstream': 'sale', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-stock', 'upstream': 'stock', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-survey', 'upstream': 'survey', 'branch': '8.0'},
+    {'usr': 'ingadhoc', 'repo': 'adhoc-surveyor', 'upstream': 'adhoc-surveyor',
+     'branch': '8.0'},
 ]
+
+
+class repository:
+    def __init__(self, usr, repo, branch):
+        self._usr = usr
+        self._repo = repo
+        self._branch = branch
+
+    def usr(self):
+        return self._usr
+
+    def repo(self):
+        return self._repo
+
+    def branch(self):
+        return self._branch
+
+    def clone_str(self):
+        return 'git clone -b ' + self._branch + \
+               ' https://github.com/' + self._usr + '/' + self._repo
+
+
+class unit:
+    def __init__(self, dict):
+        try:
+            upstream_repo = dict['upstream']
+        except:
+            upstream_repo = dict['repo']
+
+        self._upstream = repository(dict['usr'], upstream_repo, dict['branch'])
+        self._origin = repository('jobiols', dict['repo'], dict['branch'])
+        self._local = REPOS_DIR + dict['repo']
+
+    def upstream(self):
+        return self._upstream
+
+    def origin(self):
+        return self._origin
+
+    def dir(self):
+        return self._local
+
+    def add_remote(self):
+        return 'git -C ' + self._local + \
+               ' remote add upstream https://github.com/' + \
+               self._upstream.usr() + '/' + self._upstream.repo()
 
 def sc_(params):
     return subprocess.call(params, shell=True)
@@ -86,41 +167,68 @@ def msgerr(msg):
 def msginf(msg):
     print yellow_light(msg)
 
-def check_repo(repo):
-    msgrun(30 * '-' + ' ' + repo['ver']+' '+repo['dir'])
-    sc_('git -C ' + repo['dir'] + ' status')
-    sc_('git -C ' + repo['dir'] + ' remote -v')
-    msgdone('done')
-    return
 
-def update_repo(repo):
-    msgrun(30 * '-' + ' ' + repo['dir'])
+def create_local_repo(rp):
+    msgrun('Local repo does not exist!')
+
+    msgrun('cloning origin')
+    if sc_(rp.origin().clone_str() + ' ' + rp.dir()):
+        msgerr('Fail!')
+    # sc_('git -C ' + rp.dir() + ' remote -v ')
+
+    msgrun('adding remote upstream')
+    sc_(rp.add_remote())
+
+
+#    sc_('git -C ' + rp.dir() + ' remote -v ')
+
+
+def check_repo(dict):
+    rp = unit(dict)
+    msgrun(20 * '-' + ' ' +
+           rp.upstream().usr() + ' ' +
+           rp.upstream().repo() + ' ' +
+           rp.upstream().branch())
+
+    # chequear local repo y crearlo si no existe
+    if sc_('git -C ' + rp.dir() + ' status') != 0:
+        create_local_repo(rp)
+
     msgrun('fetch upstream')
-    sc_('git -C ' + repo['dir'] + ' fetch upstream')
+    sc_('git -C ' + rp.dir() + ' fetch upstream')
+
     msgrun('checkout')
-    sc_('git -C ' + repo['dir'] + ' checkout ' + repo['ver'])
+    sc_('git -C ' + rp.dir() + ' checkout ' + rp.upstream().branch())
+
     msgrun('merge')
-    sc_('git -C ' + repo['dir'] + ' merge upstream/' + repo['ver'])
+    sc_('git -C ' + rp.dir() + ' merge upstream/' + rp.upstream().branch())
+
     msgrun('push')
-    sc_('git -C ' + repo['dir'] + ' push origin ' + repo['ver'])
+    sc_('git -C ' + rp.dir() + ' push origin ' + rp.upstream().branch())
+
     msgdone('done')
-
-
-def updateAll():
-    for repo in data:
-        update_repo(repo)
     return
 
-def check_all():
-    for repo in data:
+
+def update_all():
+    for repo in repos:
         check_repo(repo)
+
 
 def list():
     msgrun('Currently maintained repositories')
-    for repo in new_data:
-        msginf(repo['ver'] + ' dir:' + repo['dir'])
-        msginf('origin:   '+ repo['origin'])
-        msginf('upstream:     ' +repo['upstream'])
+    for dict in repos:
+        msginf('{:8} {:7} {}'.format(dict['usr'], dict['branch'], dict['repo']))
+
+
+def update():
+    if args.repo is None:
+        msgerr('need -r')
+
+    for dict in repos:
+        if dict['repo'] == args.repo[0]:
+            check_repo(dict)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Update forks v 0.5')
@@ -128,15 +236,18 @@ if __name__ == '__main__':
                         '--update-all',
                         action='store_true',
                         help="Update all forks without warning")
+
     parser.add_argument('-u',
                         '--update',
+                        action='store_true',
+                        help="Update all forks without warning")
+
+    parser.add_argument('-r',
+                        '--repo',
                         action='append',
                         dest='repo',
-                        help="Update specific forks (not implemented yet)")
-    parser.add_argument('-c',
-                        '--check',
-                        action='store_true',
-                        help="Check upstream repos (not implemented yet)")
+                        help="Update specific forks")
+
     parser.add_argument('-l',
                         '--list',
                         action='store_true',
@@ -145,10 +256,10 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.update_all:
-        updateAll()
+        update_all()
 
     if args.list:
         list()
 
-    if args.check:
-        check_all()
+    if args.update:
+        update()

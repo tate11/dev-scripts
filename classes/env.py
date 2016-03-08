@@ -31,7 +31,13 @@ clients__ = [
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
@@ -151,24 +157,6 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'gegy', 'port': '8091', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'margin-analysis', 'branch': '8.0'}
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ],
-     'install': ['l10n_ar_base', 'sale']
-     },
-
-    #######################################################################
     {'name': 'pruebas', 'port': '8091', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -202,17 +190,13 @@ class Environment:
         for cli in dic:
             self._clients.append(Client(self, cli))
 
-        if args.home_dir:
-            home_dir = args.home_dir[0]
-            if home_dir[-1] != '/':
-                home_dir += '/'
-        else:
-            home_dir = os.path.expanduser('~/')
-
-        self._home_template = home_dir + 'odoo-'
-        self._psql = home_dir + 'postgresql/'
+        self._home_dir = '/odoo/'
+        self._home_template = self._home_dir + 'odoo-'
+        self._psql = self._home_dir + 'postgresql/'
         self._args = args
 
+    def get_base_dir(self):
+        return self._home_dir
 
     def debug_mode(self):
         return self._args.debug
@@ -330,6 +314,9 @@ class Client:
         for img in dic['images']:
             self._images.append(Image(self, img))
 
+    def get_base_dir(self):
+        return self._env.get_base_dir()
+
     def get_ver(self):
         return self._ver
 
@@ -408,7 +395,6 @@ class Repo:
                ' http://github.com/' + \
                self._getRepo() + ' ' + \
                self.getInstDir()
-
 
 class Image:
     def __init__(self, cli, dict):
