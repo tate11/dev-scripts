@@ -179,16 +179,13 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '7.0'},
-         {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'product-attribute', 'branch': '7.0'},
          {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'}
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.prestashop'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
