@@ -442,14 +442,6 @@ def no_ip_install(e):
     # sudo /usr/local/bin/noip2 -C
     return True
 
-
-def docker_install(e):
-    e.msgrun('Installing docker')
-    sc_('wget -qO- https://get.docker.com/ | sh')
-    e.msgdone('Done.')
-    return True
-
-
 def post_backup(e):
     clientName = e.get_clients_from_params('one')
     client = e.get_client(clientName)
@@ -700,10 +692,6 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Install no-ip on this server.")
 
-    parser.add_argument('-k', '--docker-install',
-                        action='store_true',
-                        help="Install docker on this server.")
-
     parser.add_argument('-u', '--update-db',
                         action='store_true',
                         help="Update database requires -d -c and -m options.")
@@ -816,8 +804,6 @@ if __name__ == '__main__':
         list_data(enviro)
     if args.no_ip_install:
         no_ip_install(enviro)
-    if args.docker_install:
-        docker_install(enviro)
     if args.update_db:
         update_db(enviro)
     if args.backup:
