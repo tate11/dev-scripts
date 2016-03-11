@@ -52,6 +52,9 @@ repos = [
 
     {'usr': 'ctmil', 'repo': 'payment_mercadopago', 'branch': 'master'},
 
+    {'usr': 'csrocha', 'repo': 'fpoc-chrome', 'branch': 'master'},
+    {'usr': 'csrocha', 'repo': 'odoo_fpoc', 'branch': 'master'},
+
     {'usr': 'ingadhoc', 'repo': 'docker-odoo', 'branch': 'master'},
     {'usr': 'ingadhoc', 'repo': 'docker-odoo-adhoc', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},

@@ -26,6 +26,27 @@ import logging
 logger = logging.getLogger(__name__)
 logger.info('this does not work :(')
 
+"""
+Help dict
+    'name':'clientname','port':'portnumber','odoover':'odoo-version'
+    'repos': [
+    # install repository of standard modules
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+    # install multiple single repos in a installdir
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': '8.0'},
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'payment_mercadopago', 'branch': '8.0'},
+    # install repo with inner path
+         {'usr': 'jobiols', 'innerdir':'addons/fpoc', 'repo': 'odoo_fpoc', 'branch': 'master'},
+    ]
+    'images':[
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+    ]
+    'install'[
+        'module-to-install',
+        'another-module'
+    ]
+"""
+
 clients__ = [
     #######################################################################
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
@@ -85,6 +106,50 @@ clients__ = [
      ]
      },
     #######################################################################
+    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
+    {'name': 'valente', 'port': '8069', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'instdir': 'product', 'repo': 'hide_product_variants',
+          'branch': '8.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+
+     ],
+     'install': ['l10n_ar_base',  # argentinian localization
+                 'account_accountant',  # Manage financial and analitical accounting
+                 'l10n_ar_bank_cbu',  # añade cbu a la información del banco
+                 'l10n_ar_generic_withholding',  # Add generic withholding management.
+                 'l10n_ar_aeroo_stock',
+                 'disable_openerp_online',  # Remove odoo.com bindings
+                 'sale',
+                 'purchase'
+                 'hide_product_variants',  # no trabajamos con variantes.
+                 ]
+     },
+    #######################################################################
     {'name': 'sooftart', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -105,33 +170,6 @@ clients__ = [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-     ]
-     },
-    #######################################################################
-    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
-         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
-     ],
-     'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################
-    {'name': 'tstmx', 'port': '8091', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'Vauxoo', 'repo': 'addons-vauxoo', 'branch': '8.0'},
-         {'usr': 'Vauxoo', 'repo': 'odoo-mexico', 'branch': '7.0'},
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
     #######################################################################
@@ -157,19 +195,20 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'pruebas', 'port': '8091', 'odoover': '8.0',
+    {'name': 'pos', 'port': '8091', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'cenit', 'branch': '8.0'},
+         {'usr': 'jobiols', 'innerdir': 'addons', 'repo': 'odoo_fpoc',
+          'branch': 'master'},
 
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.mailchimp'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ],
@@ -373,10 +412,13 @@ class Repo:
 
     def getPathDir(self):
         try:
-            #            ret = self._dict['instdir'] + '/' + self._dict['repo']
             ret = self._dict['instdir']
         except:
-            ret = self._dict['repo']
+            try:
+                ret = self._dict['repo'] + '/' + self._dict['innerdir']
+            except:
+                ret = self._dict['repo']
+
         return ret
 
     def getInstDir(self):
