@@ -97,6 +97,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'tablero_nixel', 'instdir': 'nixel', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -127,8 +128,9 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'instdir': 'product', 'repo': 'hide_product_variants',
+         {'usr': 'jobiols', 'instdir': 'valente', 'repo': 'hide_product_variants',
           'branch': '8.0'},
+         {'usr': 'jobiols', 'instdir': 'valente', 'repo': 'cerrajeria', 'branch': '8.0'},
 
      ],
      'images': [
