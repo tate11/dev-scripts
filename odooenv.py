@@ -59,7 +59,7 @@ def sc_(params):
             print item
             print lparams
 
-        ret += subprocess.call(lparams)
+        ret += subprocess.call(params, shell=True)
     return ret
 
 def uninstall_client(e):
@@ -178,7 +178,7 @@ def install_client(e):
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
-        sc_('chmod 777 -R ' + cli.get_home_dir() + cli.get_name())
+        sc_('chmod 666 -R ' + cli.get_home_dir() + cli.get_name())
         sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
 
         # if not exist postgresql create it
@@ -600,28 +600,31 @@ def backup_list(e):
 def cleanup(e):
     if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
         e.msginf('deleting all databases!')
-        sc_(['sudo rm -r ' + e.get_psql_dir()])
+        sc_('sudo rm -r ' + e.get_psql_dir())
 
     if raw_input('Delete clients and sources SURE?? (y/n) ') == 'y':
         e.msginf('deleting all client and sources!')
-        sc_(['sudo rm -r ' + e._home_template + '*'])
+        sc_('sudo rm -r ' + e._home_template + '*')
 
 
 def cron_jobs(e):
+    dbname = e.get_database_from_params()
+    client = e.get_clients_from_params('one')
     e.msginf('Adding cron jobs to this server')
-    e.msgerr('Actually in development!!!')
-    croncmd = "/home/me/myfunction start 2> /home/me/myfunction/cron_errors < /dev/null"
-    cronjob = "0 0 * * * $croncmd " + '#Added by odooenv.py'
-#    sc_(['(sudo crontab -l | grep -v "$croncmd" ; echo "$cronjob" ) | sudo crontab -'])
+    croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py'.format(
+        dbname, client)
+    cronjob = '0 0,12 * * * {}'.format(croncmd)
+    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(
+        croncmd, cronjob)
+    sc_(command)
 
 
 def cron_list(e):
     e.msginf('List of cron backup jobs on this server')
-    sc_(['sudo crontab -l | grep "#Added by odooenv.py"'])
+    sc_('sudo crontab -l | grep "#Added by odooenv.py"')
 
 
 if __name__ == '__main__':
-    # LOG_FILENAME = 'example.log'
     LOG_FILENAME = '/var/log/odooenv/odooenv.log'
     try:
         # Set up a specific logger with our desired output level
@@ -769,15 +772,10 @@ if __name__ == '__main__':
                         for available timestamps.")
 
     parser.add_argument('-j', '--cron-jobs',
-                        action='append',
-                        dest='times',
+                        action='store_true',
                         help='Cron Backup. it adds cron jobs for doing backup to a client\
-                        database. -j once backups once a day at 12 PM. \
-                        -j twice backups twice a day at 12 AM and 12 PM.\
-                        Needs a -c option to tell which client to backup.\
-                        You can define multiple clients for backup\
-                        like this: -j client1 -j client2 -j client3 and so one.\
-                        If there are multiple backups it will be spaced by five minutes.')
+                        database. backups twice a day at 12 AM and 12 PM.\
+                        Needs a -c option to tell which client to backup.')
 
     parser.add_argument('--cron-list',
                         action='store_true',
@@ -816,7 +814,7 @@ if __name__ == '__main__':
         cleanup(enviro)
     if args.server_help:
         server_help(enviro)
-    if args.times:
+    if args.cron_jobs:
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
