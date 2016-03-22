@@ -140,12 +140,12 @@ clients__ = [
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
 
      ],
-     'install': ['l10n_ar_base',  # argentinian localization
+     'install': ['disable_openerp_online',  # Remove odoo.com bindings
+                 'l10n_ar_base',  # argentinian localization
                  'account_accountant',  # Manage financial and analitical accounting
                  'l10n_ar_bank_cbu',  # añade cbu a la información del banco
                  'l10n_ar_generic_withholding',  # Add generic withholding management.
                  'l10n_ar_aeroo_stock',
-                 'disable_openerp_online',  # Remove odoo.com bindings
                  'sale',
                  'purchase'
                  'hide_product_variants',  # no trabajamos con variantes.
@@ -197,7 +197,6 @@ clients__ = [
     {'name': 'pos', 'port': '8091', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},

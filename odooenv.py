@@ -57,7 +57,7 @@ def sc_(params):
 
         if args.verbose:
             print item
-            print lparams
+        #            print lparams
 
         ret += subprocess.call(params, shell=True)
     return ret
@@ -165,9 +165,9 @@ def install_client(e):
         plural = ''
     e.msgrun('Install client' + plural + ' ' + ', '.join(clients))
 
-    for clientName in clients:
+    for client_name in clients:
 
-        cli = e.get_client(clientName)
+        cli = e.get_client(client_name)
 
         # Creating directory's for installation
         sc_('sudo mkdir ' + cli.get_base_dir())
@@ -178,7 +178,7 @@ def install_client(e):
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
-        sc_('chmod 666 -R ' + cli.get_home_dir() + cli.get_name())
+        sc_('chmod 777 -R ' + cli.get_home_dir() + cli.get_name())
         sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
 
         # if not exist postgresql create it
