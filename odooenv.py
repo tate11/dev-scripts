@@ -304,6 +304,8 @@ def run_client(e):
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
         params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+        if e.debug_mode():
+            params += '-v ' + cli.get_home_dir() + 'sources/openerp:/usr/lib/python2.7/dist-packages/openerp '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
         params += '--link postgres:db '
 
