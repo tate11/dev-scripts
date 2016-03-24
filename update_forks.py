@@ -41,14 +41,13 @@ repos = [
     {'usr': 'oca', 'repo': 'management-system', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'knowledge', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'rma', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'pos', 'branch': '8.0'},
 
     {'usr': 'aeroo', 'repo': 'aeroo_reports', 'branch': '8.0'},
 
     {'usr': 'tgalal', 'repo': 'yowsup', 'branch': 'master'},
 
     {'usr': 'waylan', 'repo': 'Python-Markdown', 'branch': 'master'},
-
-    {'usr': 'odoo', 'repo': 'odoo', 'branch': '8.0'},
 
     {'usr': 'ctmil', 'repo': 'payment_mercadopago', 'branch': 'master'},
 
