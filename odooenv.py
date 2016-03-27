@@ -34,7 +34,8 @@
 ##############################################################################
 
 import argparse
-import os, pwd
+import os
+import pwd
 from datetime import datetime
 import subprocess
 import shlex
@@ -57,7 +58,7 @@ def sc_(params):
 
         if args.verbose:
             print item
-        #            print lparams
+        # print lparams
 
         ret += subprocess.call(params, shell=True)
     return ret
@@ -325,10 +326,24 @@ def run_client(e):
         else:
             params += '--logfile=False '
 
+        if e.get_args().init:
+            params += '-d {} -init={} --stop-after-init '.format(
+                e.get_database_from_params(),
+                cli.get_init_modules())
+
         if sc_(params):
             e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
-        e.msgdone('Client ' + clientName + ' up and running on port ' + cli.get_port())
+
+        if e.get_args().init:
+            e.msgdone('Database {} for client {} succesfully initializad with '
+                      'modules {}'.format(e.get_database_from_params(),
+                                          clientName,
+                                          cli.get_init_modules())
+                      )
+        else:
+            e.msgdone(
+                'Client ' + clientName + ' up and running on port ' + cli.get_port())
 
     return True
 
@@ -646,20 +661,25 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.1')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.2')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
-                        help="Install clients, requires -c option. You can define \
-                        multiple clients like this: -c client1 -c client2 -c client3")
+                        help="Install clients, requires -c option. You can define "
+                             "multiple clients like this: -c client1 -c client2 -c "
+                             "client3")
 
     parser.add_argument('-U', '--uninstall-cli',
                         action='store_true',
-                        help='Uninstall client and erase all files from environment \
-                        including \
-                        database. The command ask for permission to erase database. \
-                        BE WARNED if say yes, all database files will be erased. \
-                        BE WARNED AGAIN, database is common to all clients!!!!  \
-                        Required -c option')
+                        help='Uninstall client and erase all files from environment '
+                             'including database. The command ask for permission to '
+                             'erase database. BE WARNED if say yes, all database files '
+                             'will be erased. BE WARNED AGAIN, database is common to '
+                             'all clients!!!! Required -c option')
+
+    parser.add_argument('--init',
+                        action='store_true',
+                        help="Install modules from install dict. Required -d. Used only "
+                             "with -r")
 
     parser.add_argument('-R', '--run-env',
                         action='store_true',
@@ -671,7 +691,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-r', '--run-cli',
                         action='store_true',
-                        help="Run client odoo images, requieres -c options.")
+                        help="Run client odoo images, requieres -c options. Optional "
+                             "--init for initial install of modules")
 
     parser.add_argument('-s', '--stop-cli',
                         action='store_true',
@@ -722,26 +743,25 @@ if __name__ == '__main__':
     parser.add_argument('-c',
                         action='append',
                         dest='client',
-                        help="Client name. You can define multiple clients \
-                        like this: -c client1 -c client2 -c client3 and so one.")
+                        help="Client name. You can define multiple clients like this: "
+                             "-c client1 -c client2 -c client3 and so one.")
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help='This option has two efects: \
-                             when doing an update database, (option -u) it forces \
-                             debug mode. When running environment it opens port 5432 \
-                             to access postgres server databases.')
+                        help='This option has two efects: when doing an update database, '
+                             '(option -u) it forces debug mode. When running environment '
+                             'it opens port 5432 to access postgres server databases.')
 
     parser.add_argument('--cleanup',
                         action='store_true',
-                        help='Delete all files clients, sources, and databases \
-                         in this server. It ask about each thing.')
+                        help='Delete all files clients, sources, and databases in this '
+                             'server. It ask about each thing.')
 
     parser.add_argument('--no-dbfilter',
                         action='store_true',
-                        help='Eliminates dbfilter: The client can see any database. \
-                        Without this, the client can only see databases starting with \
-                        clientname_')
+                        help='Eliminates dbfilter: The client can see any database. '
+                             'Without this, the client can only see databases starting '
+                             'with clientname_')
 
     parser.add_argument('--test',
                         action='store_true',
@@ -750,9 +770,6 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--server-help',
                         action='store_true',
                         help="List server help requieres -c option")
-
-    ## Backup
-    ####
 
     parser.add_argument('--backup',
                         action='store_true',
@@ -770,14 +787,14 @@ if __name__ == '__main__':
                         action='store',
                         nargs=1,
                         dest='timestamp',
-                        help="Timestamp to restore database, see --backup-list \
-                        for available timestamps.")
+                        help="Timestamp to restore database, see --backup-list for "
+                             "available timestamps.")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',
-                        help='Cron Backup. it adds cron jobs for doing backup to a client\
-                        database. backups twice a day at 12 AM and 12 PM.\
-                        Needs a -c option to tell which client to backup.')
+                        help='Cron Backup. it adds cron jobs for doing backup to a '
+                             'client database. backups twice a day at 12 AM and 12 PM. '
+                             'Needs a -c option to tell which client to backup.')
 
     parser.add_argument('--cron-list',
                         action='store_true',

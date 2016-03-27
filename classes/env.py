@@ -126,12 +126,10 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'instdir': 'valente', 'repo': 'hide_product_variants',
-          'branch': '8.0'},
-         {'usr': 'jobiols', 'instdir': 'valente', 'repo': 'cerrajeria', 'branch': '8.0'},
-
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -140,15 +138,14 @@ clients__ = [
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
 
      ],
-     'install': ['disable_openerp_online',  # Remove odoo.com bindings
-                 'l10n_ar_base',  # argentinian localization
-                 'account_accountant',  # Manage financial and analitical accounting
-                 'l10n_ar_bank_cbu',  # añade cbu a la información del banco
-                 'l10n_ar_generic_withholding',  # Add generic withholding management.
-                 'l10n_ar_aeroo_stock',
-                 'sale',
-                 'purchase'
+     'install': ['express_checkout'  # ventas express
                  'hide_product_variants',  # no trabajamos con variantes.
+                 'disable_openerp_online',  # Remove odoo.com bindings
+                 'l10n_ar_base',  # argentinian localization
+                 'l10n_ar_bank_cbu',  # añade cbu a la información del banco
+                 'l10n_ar_aeroo_stock',  # impresion de remitos
+                 'l10n_ar_chart_generic_withholding',  # Generic withholding management
+                 #                 'account_accountant',      # Manage financial and analitical accounting
                  ]
      },
     #######################################################################
@@ -222,9 +219,9 @@ CLEAR = "\033[0;m"
 
 
 class Environment:
-    def __init__(self, args, dic):
+    def __init__(self, args, clients):
         self._clients = []
-        for cli in dic:
+        for cli in clients:
             self._clients.append(Client(self, cli))
 
         self._home_dir = '/odoo/'
@@ -342,14 +339,20 @@ class Client:
         self._name = dic['name']
         self._port = dic['port']
         self._ver = dic['odoover']
-
         self._repos = []
         for rep in dic['repos']:
             self._repos.append(Repo(self, rep))
-
         self._images = []
         for img in dic['images']:
             self._images.append(Image(self, img))
+
+        try:
+            self._install = dic['install']
+        except:
+            self._install = None
+
+    def get_init_modules(self):
+        return ','.join(self._install)
 
     def get_base_dir(self):
         return self._env.get_base_dir()
