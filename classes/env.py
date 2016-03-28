@@ -127,9 +127,11 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -138,10 +140,11 @@ clients__ = [
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
 
      ],
-     'install': ['express_checkout'  # ventas express
-                 'hide_product_variants',  # no trabajamos con variantes.
-                 'disable_openerp_online',  # Remove odoo.com bindings
+     'install': ['disable_openerp_online',  # Remove odoo.com bindings
                  'l10n_ar_base',  # argentinian localization
+
+                 'express_checkout'  # ventas express
+                 'hide_product_variants',  # no trabajamos con variantes.
                  'l10n_ar_bank_cbu',  # añade cbu a la información del banco
                  'l10n_ar_aeroo_stock',  # impresion de remitos
                  'l10n_ar_chart_generic_withholding',  # Generic withholding management
