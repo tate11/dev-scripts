@@ -26,12 +26,39 @@ import logging
 logger = logging.getLogger(__name__)
 logger.info('this does not work :(')
 
+"""
+Help dict
+    'name':'clientname','port':'portnumber','odoover':'odoo-version'
+    'repos': [
+    # install repository of standard modules
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+    # install multiple single repos in a installdir
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': '8.0'},
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'payment_mercadopago', 'branch': '8.0'},
+    # install repo with inner path
+         {'usr': 'jobiols', 'innerdir':'addons/fpoc', 'repo': 'odoo_fpoc', 'branch': 'master'},
+    ]
+    'images':[
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+    ]
+    'install'[
+        'module-to-install',
+        'another-module'
+    ]
+"""
+
 clients__ = [
     #######################################################################
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
@@ -70,6 +97,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'tablero_nixel', 'instdir': 'nixel', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -77,6 +105,51 @@ clients__ = [
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
+     },
+    #######################################################################
+    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
+    {'name': 'valente', 'port': '8069', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+
+     ],
+     'install': ['disable_openerp_online',  # Remove odoo.com bindings
+                 'l10n_ar_base',  # argentinian localization
+
+                 'express_checkout'  # ventas express
+                 'hide_product_variants',  # no trabajamos con variantes.
+                 'l10n_ar_bank_cbu',  # añade cbu a la información del banco
+                 'l10n_ar_aeroo_stock',  # impresion de remitos
+                 'l10n_ar_chart_generic_withholding',  # Generic withholding management
+                 #                 'account_accountant',      # Manage financial and analitical accounting
+                 ]
      },
     #######################################################################
     {'name': 'sooftart', 'port': '8069', 'odoover': '8.0',
@@ -102,86 +175,38 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
-         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
-     ],
-     'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################
-    {'name': 'tstmx', 'port': '8091', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'Vauxoo', 'repo': 'addons-vauxoo', 'branch': '8.0'},
-         {'usr': 'Vauxoo', 'repo': 'odoo-mexico', 'branch': '7.0'},
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################
     {'name': 'textil', 'port': '8071', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '7.0'},
-         {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'product-attribute', 'branch': '7.0'},
          {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'}
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.prestashop'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
 
     #######################################################################
-    {'name': 'gegy', 'port': '8091', 'odoover': '8.0',
+    {'name': 'pos', 'port': '8091', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'margin-analysis', 'branch': '8.0'}
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'innerdir': 'addons', 'repo': 'odoo_fpoc',
+          'branch': 'master'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ],
-     'install': ['l10n_ar_base', 'sale']
-     },
-
-    #######################################################################
-    {'name': 'pruebas', 'port': '8091', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'cenit', 'branch': '8.0'},
-
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.mailchimp'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ],
@@ -197,22 +222,18 @@ CLEAR = "\033[0;m"
 
 
 class Environment:
-    def __init__(self, args, dic):
+    def __init__(self, args, clients):
         self._clients = []
-        for cli in dic:
+        for cli in clients:
             self._clients.append(Client(self, cli))
 
-        if args.home_dir:
-            home_dir = args.home_dir[0]
-            if home_dir[-1] != '/':
-                home_dir += '/'
-        else:
-            home_dir = os.path.expanduser('~/')
-
-        self._home_template = home_dir + 'odoo-'
-        self._psql = home_dir + 'postgresql/'
+        self._home_dir = '/odoo/'
+        self._home_template = self._home_dir + 'odoo-'
+        self._psql = self._home_dir + 'postgresql/'
         self._args = args
 
+    def get_base_dir(self):
+        return self._home_dir
 
     def debug_mode(self):
         return self._args.debug
@@ -321,14 +342,23 @@ class Client:
         self._name = dic['name']
         self._port = dic['port']
         self._ver = dic['odoover']
-
         self._repos = []
         for rep in dic['repos']:
             self._repos.append(Repo(self, rep))
-
         self._images = []
         for img in dic['images']:
             self._images.append(Image(self, img))
+
+        try:
+            self._install = dic['install']
+        except:
+            self._install = None
+
+    def get_init_modules(self):
+        return ','.join(self._install)
+
+    def get_base_dir(self):
+        return self._env.get_base_dir()
 
     def get_ver(self):
         return self._ver
@@ -386,10 +416,13 @@ class Repo:
 
     def getPathDir(self):
         try:
-            #            ret = self._dict['instdir'] + '/' + self._dict['repo']
             ret = self._dict['instdir']
         except:
-            ret = self._dict['repo']
+            try:
+                ret = self._dict['repo'] + '/' + self._dict['innerdir']
+            except:
+                ret = self._dict['repo']
+
         return ret
 
     def getInstDir(self):
@@ -408,7 +441,6 @@ class Repo:
                ' http://github.com/' + \
                self._getRepo() + ' ' + \
                self.getInstDir()
-
 
 class Image:
     def __init__(self, cli, dict):

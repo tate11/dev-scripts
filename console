@@ -1,7 +1,7 @@
 #!/bin/bash
-#Include file lib in same dir as this file
 
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
-	-v /home/jorge/odoo-7.0/sources:/mnt/extra-addons \
-        jobiols/odoo-adhoc:7.0 $*
+	-v /odoo/odoo-8.0/sources:/mnt/extra-addons \
+	-v /odoo/odoo-8.0/sources/openerp:/usr/lib/python2.7/dist-packages/openerp \
+        jobiols/odoo-jeo:8.0 $*

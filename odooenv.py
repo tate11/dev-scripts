@@ -35,6 +35,7 @@
 
 import argparse
 import os
+import pwd
 from datetime import datetime
 import subprocess
 import shlex
@@ -57,9 +58,9 @@ def sc_(params):
 
         if args.verbose:
             print item
-            print lparams
+        # print lparams
 
-        ret += subprocess.call(lparams)
+        ret += subprocess.call(params, shell=True)
     return ret
 
 def uninstall_client(e):
@@ -165,9 +166,16 @@ def install_client(e):
         plural = ''
     e.msgrun('Install client' + plural + ' ' + ', '.join(clients))
 
-    for clientName in clients:
-        cli = e.get_client(clientName)
-        # Creating directory's for client
+    for client_name in clients:
+
+        cli = e.get_client(client_name)
+
+        # Creating directory's for installation
+        sc_('sudo mkdir ' + cli.get_base_dir())
+        username = pwd.getpwuid(os.getuid()).pw_name
+        # change ownership to current user
+        sc_('sudo chown ' + username + ':' + username + ' ' + cli.get_base_dir())
+
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
@@ -182,7 +190,7 @@ def install_client(e):
         if not os.path.isfile(LOG_FILENAME):
             sc_('sudo mkdir -p ' + os.path.dirname(LOG_FILENAME))
             sc_('sudo touch ' + LOG_FILENAME)
-            sc_('sudo chmod 777 ' + LOG_FILENAME)
+            sc_('sudo chmod 666 ' + LOG_FILENAME)
 
         # make sources dir
         # if not exist sources dir create it
@@ -297,6 +305,8 @@ def run_client(e):
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
         params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+        if e.debug_mode():
+            params += '-v ' + cli.get_home_dir() + 'sources/openerp:/usr/lib/python2.7/dist-packages/openerp '
         params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
         params += '--link postgres:db '
 
@@ -316,10 +326,30 @@ def run_client(e):
         else:
             params += '--logfile=False '
 
+        if e.get_args().init:
+            params += '-d {} -init={} --stop-after-init '.format(
+                e.get_database_from_params(),
+                cli.get_init_modules())
+
+        if e.get_args().translate:
+            params += '--language=es --i18n-export=/etc/odoo/es.po --update ' \
+                      '--i18n-overwrite --modules={} --stop-after-init ' \
+                      '-d {}'.format(e.get_modules_from_params()[0],
+                                     e.get_database_from_params())
+
         if sc_(params):
             e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
-        e.msgdone('Client ' + clientName + ' up and running on port ' + cli.get_port())
+
+        if e.get_args().init:
+            e.msgdone('Database {} for client {} succesfully initializad with '
+                      'modules {}'.format(e.get_database_from_params(),
+                                          clientName,
+                                          cli.get_init_modules())
+                      )
+        else:
+            e.msgdone(
+                'Client ' + clientName + ' up and running on port ' + cli.get_port())
 
     return True
 
@@ -434,14 +464,6 @@ def no_ip_install(e):
     # To config defaults noip2 with capital C
     # sudo /usr/local/bin/noip2 -C
     return True
-
-
-def docker_install(e):
-    e.msgrun('Installing docker')
-    sc_('wget -qO- https://get.docker.com/ | sh')
-    e.msgdone('Done.')
-    return True
-
 
 def post_backup(e):
     clientName = e.get_clients_from_params('one')
@@ -601,29 +623,31 @@ def backup_list(e):
 def cleanup(e):
     if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
         e.msginf('deleting all databases!')
-        sc_(['sudo rm -r ' + e.get_psql_dir()])
+        sc_('sudo rm -r ' + e.get_psql_dir())
 
     if raw_input('Delete clients and sources SURE?? (y/n) ') == 'y':
         e.msginf('deleting all client and sources!')
-        sc_(['sudo rm -r ' + e._home_template + '*'])
+        sc_('sudo rm -r ' + e._home_template + '*')
 
 
 def cron_jobs(e):
+    dbname = e.get_database_from_params()
+    client = e.get_clients_from_params('one')
     e.msginf('Adding cron jobs to this server')
-    croncmd = "/home/me/myfunction start 2> /home/me/myfunction/cron_errors < /dev/null"
-    cronjob = "0 0 * * * $croncmd " + '#Added by odooenv.py'
-
-
-#    sc_(['(sudo crontab -l | grep -v "$croncmd" ; echo "$cronjob" ) | sudo crontab -'])
+    croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py'.format(
+        dbname, client)
+    cronjob = '0 0,12 * * * {}'.format(croncmd)
+    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(
+        croncmd, cronjob)
+    sc_(command)
 
 
 def cron_list(e):
     e.msginf('List of cron backup jobs on this server')
-    sc_(['sudo crontab -l | grep "#Added by odooenv.py"'])
+    sc_('sudo crontab -l | grep "#Added by odooenv.py"')
 
 
 if __name__ == '__main__':
-    # LOG_FILENAME = 'example.log'
     LOG_FILENAME = '/var/log/odooenv/odooenv.log'
     try:
         # Set up a specific logger with our desired output level
@@ -643,20 +667,25 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 2.1')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.2')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
-                        help="Install clients, requires -c option. You can define \
-                        multiple clients like this: -c client1 -c client2 -c client3")
+                        help="Install clients, requires -c option. You can define "
+                             "multiple clients like this: -c client1 -c client2 -c "
+                             "client3")
 
     parser.add_argument('-U', '--uninstall-cli',
                         action='store_true',
-                        help='Uninstall client and erase all files from environment \
-                        including \
-                        database. The command ask for permission to erase database. \
-                        BE WARNED if say yes, all database files will be erased. \
-                        BE WARNED AGAIN, database is common to all clients!!!!  \
-                        Required -c option')
+                        help='Uninstall client and erase all files from environment '
+                             'including database. The command ask for permission to '
+                             'erase database. BE WARNED if say yes, all database files '
+                             'will be erased. BE WARNED AGAIN, database is common to '
+                             'all clients!!!! Required -c option')
+
+    parser.add_argument('--init',
+                        action='store_true',
+                        help="Install modules from install dict. Required -d. Used only "
+                             "with -r")
 
     parser.add_argument('-R', '--run-env',
                         action='store_true',
@@ -668,7 +697,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-r', '--run-cli',
                         action='store_true',
-                        help="Run client odoo images, requieres -c options.")
+                        help="Run client odoo images, requieres -c options. Optional "
+                             "--init for initial install of modules")
 
     parser.add_argument('-s', '--stop-cli',
                         action='store_true',
@@ -694,10 +724,6 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Install no-ip on this server.")
 
-    parser.add_argument('-k', '--docker-install',
-                        action='store_true',
-                        help="Install docker on this server.")
-
     parser.add_argument('-u', '--update-db',
                         action='store_true',
                         help="Update database requires -d -c and -m options.")
@@ -707,16 +733,6 @@ if __name__ == '__main__':
                         nargs=1,
                         dest='database',
                         help="Database name.")
-
-    parser.add_argument('--home',
-                        action='store',
-                        nargs=1,
-                        dest='home_dir',
-                        help="Your home dir expanded, if your user is john you must \
-                        write --home /home/john. It is only needed when running from a \
-                        diferent user,  i.e. if you run odooenv.py from cron to \
-                        schedule a backup the home defaults to /root instead of \
-                        /home/your_username")
 
     parser.add_argument('-w',
                         action='store',
@@ -733,25 +749,25 @@ if __name__ == '__main__':
     parser.add_argument('-c',
                         action='append',
                         dest='client',
-                        help="Client name. You can define multiple clients \
-                        like this: -c client1 -c client2 -c client3 and so one.")
+                        help="Client name. You can define multiple clients like this: "
+                             "-c client1 -c client2 -c client3 and so one.")
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help='This option has two efects: \
-                             when doing an update database, (option -u) it forces \
-                             debug mode. When running environment it opens port 5432 \
-                             to access postgres server databases.')
+                        help='This option has two efects: when doing an update database, '
+                             '(option -u) it forces debug mode. When running environment '
+                             'it opens port 5432 to access postgres server databases.')
 
     parser.add_argument('--cleanup',
                         action='store_true',
-                        help='Delete all files clients, sources, and databases \
-                         in this server. It ask about each thing.')
+                        help='Delete all files clients, sources, and databases in this '
+                             'server. It ask about each thing.')
 
     parser.add_argument('--no-dbfilter',
                         action='store_true',
-                        help='Eliminates dbfilter: The client can see any database. \
-                        Without this, only sees databases starting with clientname_')
+                        help='Eliminates dbfilter: The client can see any database. '
+                             'Without this, the client can only see databases starting '
+                             'with clientname_')
 
     parser.add_argument('--test',
                         action='store_true',
@@ -760,9 +776,6 @@ if __name__ == '__main__':
     parser.add_argument('-H', '--server-help',
                         action='store_true',
                         help="List server help requieres -c option")
-
-    ## Backup
-    ####
 
     parser.add_argument('--backup',
                         action='store_true',
@@ -780,23 +793,23 @@ if __name__ == '__main__':
                         action='store',
                         nargs=1,
                         dest='timestamp',
-                        help="Timestamp to restore database, see --backup-list \
-                        for available timestamps.")
+                        help="Timestamp to restore database, see --backup-list for "
+                             "available timestamps.")
 
     parser.add_argument('-j', '--cron-jobs',
-                        action='append',
-                        dest='times',
-                        help='Cron Backup. it adds cron jobs for doing backup to a client\
-                        database. -j once backups once a day at 12 PM. \
-                        -j twice backups twice a day at 12 AM and 12 PM.\
-                        Needs a -c option to tell which client to backup.\
-                        You can define multiple clients for backup\
-                        like this: -j client1 -j client2 -j client3 and so one.\
-                        If there are multiple backups it will be spaced by five minutes.')
+                        action='store_true',
+                        help='Cron Backup. it adds cron jobs for doing backup to a '
+                             'client database. backups twice a day at 12 AM and 12 PM. '
+                             'Needs a -c option to tell which client to backup.')
 
     parser.add_argument('--cron-list',
                         action='store_true',
                         help="List available cron jobs")
+
+    parser.add_argument('--translate',
+                        action='store_true',
+                        help="Generate a po file for a module to translate, need a -r"
+                             "and -m option")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
@@ -819,8 +832,6 @@ if __name__ == '__main__':
         list_data(enviro)
     if args.no_ip_install:
         no_ip_install(enviro)
-    if args.docker_install:
-        docker_install(enviro)
     if args.update_db:
         update_db(enviro)
     if args.backup:
@@ -833,7 +844,7 @@ if __name__ == '__main__':
         cleanup(enviro)
     if args.server_help:
         server_help(enviro)
-    if args.times:
+    if args.cron_jobs:
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
