@@ -331,6 +331,12 @@ def run_client(e):
                 e.get_database_from_params(),
                 cli.get_init_modules())
 
+        if e.get_args().translate:
+            params += '--language=es --i18n-export=/etc/odoo/es.po --update ' \
+                      '--i18n-overwrite --modules={} --stop-after-init ' \
+                      '-d {}'.format(e.get_modules_from_params()[0],
+                                     e.get_database_from_params())
+
         if sc_(params):
             e.msgerr("Can't run client " + cli.get_name() +
                      ", by the way... did you run -R ?")
@@ -799,6 +805,11 @@ if __name__ == '__main__':
     parser.add_argument('--cron-list',
                         action='store_true',
                         help="List available cron jobs")
+
+    parser.add_argument('--translate',
+                        action='store_true',
+                        help="Generate a po file for a module to translate, need a -r"
+                             "and -m option")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
