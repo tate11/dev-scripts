@@ -3,5 +3,4 @@
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
 	-v /odoo/odoo-8.0/sources:/mnt/extra-addons \
-	-v /odoo/odoo-8.0/sources/openerp:/usr/lib/python2.7/dist-packages/openerp \
         jobiols/odoo-jeo:8.0 $*

@@ -242,13 +242,13 @@ if __name__ == '__main__':
     parser.add_argument('-u',
                         '--update',
                         action='store_true',
-                        help="Update all forks without warning")
+                        help="Update specifics forks")
 
     parser.add_argument('-r',
                         '--repo',
                         action='append',
                         dest='repo',
-                        help="Update specific forks")
+                        help="Repo to update")
 
     parser.add_argument('-l',
                         '--list',
