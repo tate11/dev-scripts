@@ -52,16 +52,14 @@ clients__ = [
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'str', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
@@ -152,21 +150,12 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'sooftart', 'port': '8069', 'odoover': '8.0',
+    {'name': 'jaja', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-
-         #    magento
-         {'usr': 'jobiols', 'repo': 'connector-magento', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector-ecommerce', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'connector', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'},
-
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
