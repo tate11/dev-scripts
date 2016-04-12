@@ -109,7 +109,11 @@ def update_db(e):
         params += '--debug '
 
     if e.test_mode():
-        params += '--log-level=test --test-enable'
+        repo, file = e.get_test_file()
+        params += '--log-level=test ' \
+                  '--test-enable ' \
+                  '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
+            repo, e.get_modules_from_params()[0], file)
 
     sc_(params)
 
@@ -770,10 +774,6 @@ if __name__ == '__main__':
                              'Without this, the client can only see databases starting '
                              'with clientname_')
 
-    parser.add_argument('--test',
-                        action='store_true',
-                        help='Run tests, requieres -d and -m options')
-
     parser.add_argument('-H', '--server-help',
                         action='store_true',
                         help="List server help requieres -c option")
@@ -796,6 +796,11 @@ if __name__ == '__main__':
                         dest='timestamp',
                         help="Timestamp to restore database, see --backup-list for "
                              "available timestamps.")
+    parser.add_argument('-T',
+                        action='store',
+                        nargs=2,
+                        metavar=('repo', 'test_file'),
+                        help="repo from where test lives and yml test file tu run.")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',

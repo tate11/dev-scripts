@@ -228,7 +228,7 @@ class Environment:
         return self._args.debug
 
     def test_mode(self):
-        return self._args.test
+        return self._args.T is not None
 
     def no_dbfilter(self):
         return self._args.no_dbfilter
@@ -237,6 +237,11 @@ class Environment:
         if self._args.module is None:
             self.msgerr('need -m option (module name or all for all modules)')
         return self._args.module
+
+    def get_test_file(self):
+        if self._args.T is None:
+            self.msgerr('need -T option (test file)')
+        return self._args.T[0], self._args.T[1]
 
     def get_database_from_params(self):
         if self._args.database is None:
