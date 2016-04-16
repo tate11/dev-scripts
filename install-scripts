@@ -21,6 +21,7 @@ function msgerror {
 ###########################################################
 
 msgrun "-----------------------------------------"
+git checkout master
 git status
 
 msgrun "Pulling scripts"
