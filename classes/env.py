@@ -116,6 +116,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
 
      ],
      'images': [
