@@ -854,3 +854,6 @@ if __name__ == '__main__':
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
+    if args.T:
+        if not args.update_db:
+            enviro.msgerr('need -u option')
