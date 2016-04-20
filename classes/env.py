@@ -204,11 +204,12 @@ clients__ = [
      'install': ['l10n_ar_base', 'sale']
      },
     #######################################################################
-    {'name': 'borges', 'port': '8069', 'odoover': '8.0',
+    {'name': 'accesorios', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
