@@ -84,7 +84,7 @@ repos = [
     {'usr': 'ingadhoc', 'repo': 'adhoc-sale', 'upstream': 'sale', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'adhoc-stock', 'upstream': 'stock', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'adhoc-survey', 'upstream': 'survey', 'branch': '8.0'},
-    {'usr': 'ingadhoc', 'repo': 'adhoc-surveyor', 'upstream': 'adhoc-surveyor',
+    {'usr': 'ingadhoc', 'repo': 'adhoc-surveyor', 'upstream': 'surveyor',
      'branch': '8.0'},
 ]
 
