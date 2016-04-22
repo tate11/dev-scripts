@@ -84,6 +84,7 @@ repos = [
     {'usr': 'ingadhoc', 'repo': 'adhoc-surveyor', 'upstream': 'surveyor',
      'branch': '8.0'},
     {'usr': 'oca', 'repo': 'connector-woocommerce', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
 ]
 
 
