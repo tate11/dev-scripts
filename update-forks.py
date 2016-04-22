@@ -35,7 +35,6 @@ repos = [
     {'usr': 'oca', 'repo': 'manufacture', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'web', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'odoomrp-wip', 'branch': '8.0'},
-    {'usr': 'oca', 'repo': 'connector-magento', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'server-tools', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'management-system', 'branch': '8.0'},
@@ -57,8 +56,6 @@ repos = [
     {'usr': 'ingadhoc', 'repo': 'docker-odoo', 'branch': 'master'},
     {'usr': 'ingadhoc', 'repo': 'docker-odoo-adhoc', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
-    {'usr': 'ingadhoc', 'repo': 'odoo-addons', 'branch': '8.0'},
-    # reemplazo de odoo-addons
     {'usr': 'ingadhoc', 'repo': 'adhoc-account-analytic', 'upstream': 'account-analytic',
      'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'adhoc-account-financial-tools',
@@ -86,6 +83,7 @@ repos = [
     {'usr': 'ingadhoc', 'repo': 'adhoc-survey', 'upstream': 'survey', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'adhoc-surveyor', 'upstream': 'surveyor',
      'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'connector-woocommerce', 'branch': '8.0'},
 ]
 
 
@@ -105,8 +103,8 @@ class repository:
         return self._branch
 
     def clone_str(self):
-        return 'git clone -b ' + self._branch + \
-               ' https://github.com/' + self._usr + '/' + self._repo
+        return 'git clone -b {} https://github.com/{}/{}'.format(
+            self._branch, self._usr, self._repo)
 
 
 class unit:
@@ -130,12 +128,14 @@ class unit:
         return self._local
 
     def add_remote(self):
-        return 'git -C ' + self._local + \
-               ' remote add upstream https://github.com/' + \
-               self._upstream.usr() + '/' + self._upstream.repo()
+        return 'git -C {} remote add upstream https://github.com/{}/{}'.format(
+            self._local, self._upstream.usr(), self._upstream.repo())
 
 def sc_(params):
+    if args.verbose:
+        print params
     return subprocess.call(params, shell=True)
+
 
 def green(string):
     return GREEN + string + CLEAR
@@ -176,13 +176,9 @@ def create_local_repo(rp):
     msgrun('cloning origin')
     if sc_(rp.origin().clone_str() + ' ' + rp.dir()):
         msgerr('Fail!')
-    # sc_('git -C ' + rp.dir() + ' remote -v ')
 
     msgrun('adding remote upstream')
     sc_(rp.add_remote())
-
-
-#    sc_('git -C ' + rp.dir() + ' remote -v ')
 
 
 def check_repo(dict):
@@ -197,16 +193,20 @@ def check_repo(dict):
         create_local_repo(rp)
 
     msgrun('fetch upstream')
-    sc_('git -C ' + rp.dir() + ' fetch upstream')
+    if sc_('git -C ' + rp.dir() + ' fetch upstream'):
+        msgerr('fetch fail')
 
     msgrun('checkout')
-    sc_('git -C ' + rp.dir() + ' checkout ' + rp.upstream().branch())
+    if sc_('git -C ' + rp.dir() + ' checkout ' + rp.upstream().branch()):
+        msgerr('checkout fail')
 
     msgrun('merge')
-    sc_('git -C ' + rp.dir() + ' merge upstream/' + rp.upstream().branch())
+    if sc_('git -C ' + rp.dir() + ' merge upstream/' + rp.upstream().branch()):
+        msgerr('merge fail')
 
     msgrun('push')
-    sc_('git -C ' + rp.dir() + ' push origin ' + rp.upstream().branch())
+    if sc_('git -C ' + rp.dir() + ' push origin ' + rp.upstream().branch()):
+        msgerr('push fail')
 
     msgdone('done')
     return
@@ -233,7 +233,14 @@ def update():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Update forks v 0.5')
+    parser = argparse.ArgumentParser(description="""
+    Update forks v 1.0 ---
+    This script manages a set of repositories, each one having three locations: The original one,
+    the fork of the original in my github and a clone of this fork in my workstation.
+    The program's goal is to update the fork in github to the latest version of the original repo.
+    To do that it makes a fetch to the original repo downloading the last version to the workstation,
+    does a merge and then makes a push to the fork.
+    """)
     parser.add_argument('-U',
                         '--update-all',
                         action='store_true',
@@ -254,6 +261,11 @@ if __name__ == '__main__':
                         '--list',
                         action='store_true',
                         help="List al currently maintained repos")
+
+    parser.add_argument('-v',
+                        '--verbose',
+                        action='store_true',
+                        help="Show commands")
 
     args = parser.parse_args()
 
