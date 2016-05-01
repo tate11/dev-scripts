@@ -78,6 +78,33 @@ def uninstall_client(e):
     return True
 
 
+def quality_test(e):
+    repo_name, test_file = e.get_qt_args_from_params()
+    db = e.get_database_from_params()
+    cli = e.get_client(e.get_clients_from_params('one'))
+    module_name = e.get_modules_from_params()[0]
+
+    msg = 'Performing test {} on repo {} for client {} and database {}'.format(
+        test_file, repo_name, cli.get_name(), db)
+    e.msgrun(msg)
+
+    params = 'sudo docker run --rm -it '
+    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+    params += '--link postgres:db '
+    params += '{} -- '.format(cli.get_image('odoo').get_image())
+    params += '--stop-after-init '
+    params += '--logfile=false '
+    params += '-d {} '.format(db)
+    params += '--log-level=test '
+    params += '--test-enable '
+    params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
+        repo_name, module_name, test_file)
+
+    sc_(params)
+
+
 def update_db(e):
     mods = e.get_modules_from_params()
     db = e.get_database_from_params()
@@ -89,35 +116,26 @@ def update_db(e):
     else:
         msg += ' of module(s) ' + ', '.join(mods)
 
-    msg += ' on database "' + db + '"'
+    msg += ' on database "{}"'.format(db)
 
     if e.debug_mode():
         msg += ' forcing debug mode'
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
-    params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
-    params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
     params += '--link postgres:db '
-    params += cli.get_image('odoo').get_image() + ' -- '
+    params += '{} -- '.format(cli.get_image('odoo').get_image())
     params += ' --stop-after-init '
     params += ' --logfile=false '
-    params += '-d ' + db + ' -u ' + ', '.join(mods) + ' '
-
+    params += '-d {} '.format(db)
+    params += ' -u ' + ', '.join(mods) + ' '
     if e.debug_mode():
         params += '--debug '
 
-    if e.test_mode():
-        repo, file = e.get_test_file()
-        params += '--log-level=test ' \
-                  '--test-enable ' \
-                  '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
-            repo, e.get_modules_from_params()[0], file)
-
     sc_(params)
-
-    return True
 
 
 def update_images_from_list(e, images):
@@ -672,7 +690,7 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.2')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v 3.4')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define "
@@ -796,11 +814,15 @@ if __name__ == '__main__':
                         dest='timestamp',
                         help="Timestamp to restore database, see --backup-list for "
                              "available timestamps.")
-    parser.add_argument('-T',
+
+    parser.add_argument('-T', '--quality-test',
                         action='store',
                         nargs=2,
-                        metavar=('repo', 'test_file'),
-                        help="repo from where test lives and yml test file tu run.")
+                        metavar=('repo_name', 'test_file'),
+                        help="Perform a test, arguments are Repo where test lives, "
+                             "and yml/py test file to run. Need -d, -m and -c options "
+                             "Note: for the test to run there must be an "
+                             "admin user with passw admin")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',
@@ -854,6 +876,5 @@ if __name__ == '__main__':
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
-    if args.T:
-        if not args.update_db:
-            enviro.msgerr('need -u option')
+    if args.quality_test:
+        quality_test(enviro)

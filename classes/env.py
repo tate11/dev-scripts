@@ -160,6 +160,8 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -251,21 +253,17 @@ class Environment:
     def debug_mode(self):
         return self._args.debug
 
-    def test_mode(self):
-        return self._args.T is not None
-
     def no_dbfilter(self):
         return self._args.no_dbfilter
+
+    def get_qt_args_from_params(self):
+        return self._args.quality_test[0], \
+               self._args.quality_test[1]
 
     def get_modules_from_params(self):
         if self._args.module is None:
             self.msgerr('need -m option (module name or all for all modules)')
         return self._args.module
-
-    def get_test_file(self):
-        if self._args.T is None:
-            self.msgerr('need -T option (test file)')
-        return self._args.T[0], self._args.T[1]
 
     def get_database_from_params(self):
         if self._args.database is None:
