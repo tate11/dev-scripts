@@ -75,7 +75,6 @@ def uninstall_client(e):
         e.msgrun('deleting client files for client ' + clientName)
         if sc_(['sudo rm -r ' + cli.get_home_dir() + clientName]):
             e.msgerr('fail uninstalling client ' + clientName)
-    return True
 
 
 def quality_test(e):
@@ -101,7 +100,6 @@ def quality_test(e):
     params += '--test-enable '
     params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
         repo_name, module_name, test_file)
-
     sc_(params)
 
 
@@ -134,7 +132,6 @@ def update_db(e):
     params += ' -u ' + ', '.join(mods) + ' '
     if e.debug_mode():
         params += '--debug '
-
     sc_(params)
 
 
@@ -152,7 +149,6 @@ def update_images_from_list(e, images):
         e.msginf('pulling image ' + img.getFormattedImage())
         if sc_(params):
             e.msgerr('Fail pulling image ' + img.get_name() + ' - Aborting.')
-    return True
 
 
 def update_repos_from_list(e, repos):
@@ -175,8 +171,6 @@ def update_repos_from_list(e, repos):
 
         if sc_(params):
             e.msgerr('Fail installing environment, uninstall and try again.')
-
-    return True
 
 
 def install_client(e):
@@ -430,8 +424,6 @@ def pull_all(e):
 
     e.msgdone('All repos ok ')
 
-    return True
-
 
 def list_data(e):
     # if no -c option get all clients else get -c clients
@@ -461,8 +453,6 @@ def list_data(e):
                      repo.get_formatted_repo() +
                      ' ' + repo.getInstDir())
         e.msgrun(' ')
-
-    return True
 
 
 def no_ip_install(e):
