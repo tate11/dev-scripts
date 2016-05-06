@@ -519,7 +519,7 @@ def post_backup(e):
                 # os.remove(root+file)
                 logger.info('Removed backup file "%s"', file)
 
-    # watch for upload_backup cmdfile and execute
+    # watch for upload-backup cmdfile and execute
     for root, dirs, files in os.walk(backup_dir):
         for file in files:
             print file, ' -------- ', file[-13:]
