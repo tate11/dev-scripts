@@ -522,7 +522,6 @@ def post_backup(e):
     # watch for upload-backup cmdfile and execute
     for root, dirs, files in os.walk(backup_dir):
         for file in files:
-            print file, backup_dir
             if file[-13:] == 'upload-backup':
                 sc_(backup_dir + file)
 
