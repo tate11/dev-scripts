@@ -77,32 +77,6 @@ def uninstall_client(e):
             e.msgerr('fail uninstalling client ' + clientName)
 
 
-def quality_test(e):
-    repo_name, test_file = e.get_qt_args_from_params()
-    db = e.get_database_from_params()
-    cli = e.get_client(e.get_clients_from_params('one'))
-    module_name = e.get_modules_from_params()[0]
-
-    msg = 'Performing test {} on repo {} for client {} and database {}'.format(
-        test_file, repo_name, cli.get_name(), db)
-    e.msgrun(msg)
-
-    params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
-    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
-    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
-    params += '--link postgres:db '
-    params += '{} -- '.format(cli.get_image('odoo').get_image())
-    params += '--stop-after-init '
-    params += '--logfile=false '
-    params += '-d {} '.format(db)
-    params += '--log-level=test '
-    params += '--test-enable '
-    params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
-        repo_name, module_name, test_file)
-    sc_(params)
-
-
 def update_db(e):
     mods = e.get_modules_from_params()
     db = e.get_database_from_params()
@@ -126,12 +100,15 @@ def update_db(e):
     params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
     params += '--link postgres:db '
     params += '{} -- '.format(cli.get_image('odoo').get_image())
-    params += ' --stop-after-init '
-    params += ' --logfile=false '
+    params += '--stop-after-init '
+    params += '--logfile=false '
     params += '-d {} '.format(db)
-    params += ' -u ' + ', '.join(mods) + ' '
+    params += '-u ' + ', '.join(mods) + ' '
     if e.debug_mode():
         params += '--debug '
+    if e.run_tests():
+        params += '--test-enable '
+        params += '--log-level=test '
     sc_(params)
 
 
@@ -301,15 +278,56 @@ def server_help(e):
     if sc_(params):
         e.msgerr("Can't run help")
 
-    return True
+
+def quality_test(e):
+    """
+    Corre un test especifico, los parametros necesarios son:
+    -T repositorio test_file.py -d database -c cliente -m modulo
+    """
+    cli = e.get_client(e.get_clients_from_params('one'))
+    module_name = e.get_modules_from_params()[0]
+    repo_name, test_file = e.get_qt_args_from_params()
+    db = e.get_database_from_params()
+
+    # chequear si el repo está dentro de los repos del cliente
+    repos_lst = []
+    for repo in cli.get_repos():
+        repos_lst.append(repo.get_name())
+    if not repo_name in repos_lst:
+        e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(), repo_name))
+
+    msg = 'Performing test {} on repo {} for client {} and database {}'.format(
+        test_file, repo_name, cli.get_name(), db)
+    e.msgrun(msg)
+
+    params = 'sudo docker run --rm -it '
+    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+    params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
+        cli.get_home_dir())
+    params += '-v {}sources/image-sources:/usr/local/lib/python2.7/dist-packages '.format(
+        cli.get_home_dir())
+    params += '--link postgres:db '
+    params += '{} -- '.format(cli.get_image('odoo').get_image())
+    params += '--stop-after-init '
+    params += '--logfile=false '
+    params += '-d {} '.format(db)
+    params += '--log-level=test '
+    params += '--test-enable '
+    #    params += '-u {} '.format(repo_name)
+    params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
+        repo_name, module_name, test_file)
+    sc_(params)
+
 
 def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
         cli = e.get_client(clientName)
-        txt = 'Running image for client ' + clientName
+        txt = 'Running image for client {}'.format(clientName)
         if e.debug_mode():
-            txt += ' with debug mode on port ' + cli.get_port()
+            txt += ' with debug mode on port {}'.format(cli.get_port())
 
         e.msgrun(txt)
         if e.debug_mode():
@@ -317,24 +335,27 @@ def run_client(e):
         else:
             params = 'sudo docker run -d '
         params += '--link aeroo:aeroo '
-        params += '-p ' + cli.get_port() + ':8069 '
-        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
-        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
-        params += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
+        params += '-p {}:8069 '.format(cli.get_port())
+        params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
+        params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(),
+                                                           cli.get_name())
+        params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
         if e.debug_mode():
-            params += '-v ' + cli.get_home_dir() + 'sources/openerp:/usr/lib/python2.7/dist-packages/openerp '
-            params += '-v ' + cli.get_home_dir() + 'sources/image-sources:/usr/local/lib/python2.7/dist-packages '
-        params += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
+            params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
+                cli.get_home_dir())
+            params += '-v {}sources/image-sources:/usr/local/lib/python2.7/dist-packages '.format(
+                cli.get_home_dir())
+        params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '--link postgres:db '
 
         if not e.debug_mode():
             params += '--restart=always '
 
-        params += '--name ' + cli.get_name() + ' '
-        params += cli.get_image('odoo').get_image() + ' '
+        params += '--name {} '.format(cli.get_name())
+        params += '{} '.format(cli.get_image('odoo').get_image())
 
         if not e.no_dbfilter():
-            params += '-- --db-filter=' + cli.get_name() + '_.* '
+            params += '-- --db-filter={}_.* '.format(cli.get_name())
 
         if not e.debug_mode():
             params += '--logfile=/var/log/odoo/odoo.log '
@@ -497,6 +518,12 @@ def post_backup(e):
                 sc_('sudo rm ' + root + file)
                 # os.remove(root+file)
                 logger.info('Removed backup file "%s"', file)
+
+    # watch for upload_backup cmdfile and execute
+    for root, dirs, files in os.walk(backup_dir):
+        for file in files:
+            if file[-13:] == 'upload_backup':
+                sc_(file)
 
 
 def backup(e):
@@ -698,7 +725,7 @@ if __name__ == '__main__':
     parser.add_argument('--init',
                         action='store_true',
                         help="Install modules from install dict. Required -d. Used only "
-                             "with -r")
+                             "with -r EXPERIMENTAL!!")
 
     parser.add_argument('-R', '--run-env',
                         action='store_true',
@@ -805,10 +832,8 @@ if __name__ == '__main__':
                         help="Timestamp to restore database, see --backup-list for "
                              "available timestamps.")
 
-    parser.add_argument('-T', '--quality-test',
-                        action='store',
-                        nargs=2,
-                        metavar=('repo_name', 'test_file'),
+    parser.add_argument('-T', '--run-tests',
+                        action='store_true',
                         help="Perform a test, arguments are Repo where test lives, "
                              "and yml/py test file to run. Need -d, -m and -c options "
                              "Note: for the test to run there must be an "
@@ -866,5 +891,3 @@ if __name__ == '__main__':
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
-    if args.quality_test:
-        quality_test(enviro)

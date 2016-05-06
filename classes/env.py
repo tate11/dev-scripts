@@ -78,10 +78,19 @@ clients__ = [
     {'name': 'jeo', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-crm', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-partner', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+
+
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -253,12 +262,11 @@ class Environment:
     def debug_mode(self):
         return self._args.debug
 
+    def run_tests(self):
+        return self._args.run_tests
+
     def no_dbfilter(self):
         return self._args.no_dbfilter
-
-    def get_qt_args_from_params(self):
-        return self._args.quality_test[0], \
-               self._args.quality_test[1]
 
     def get_modules_from_params(self):
         if self._args.module is None:
@@ -422,6 +430,9 @@ class Repo:
     def __init__(self, cli, dict):
         self._dict = dict
         self._cli = cli
+
+    def get_name(self):
+        return self._dict['repo']
 
     def _getRepo(self):
         return self._dict['usr'] + '/' + self._dict['repo']
