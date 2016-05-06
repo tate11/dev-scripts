@@ -524,8 +524,8 @@ def post_backup(e):
         for file in files:
             print file, ' -------- ', file[-13:]
             if file[-13:] == 'upload_backup':
+                print 'aaaaaaaaaaaaaaaaaaaaaaaaaa'
                 sc_(file)
-
 
 def backup(e):
     """
