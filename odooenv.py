@@ -523,7 +523,7 @@ def post_backup(e):
     for root, dirs, files in os.walk(backup_dir):
         for file in files:
             print file, ' -------- ', file[-13:]
-            if file[-13:] == 'upload_backup':
+            if file[-13:] == 'upload-backup':
                 print 'aaaaaaaaaaaaaaaaaaaaaaaaaa'
                 sc_(file)
 
