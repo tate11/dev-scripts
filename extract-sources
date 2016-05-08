@@ -1,0 +1,8 @@
+#!/bin/bash
+##############################################################
+# Extract odoo sources to host
+
+sudo docker run -it --rm \
+	--entrypoint=/bin/bash \
+	-v /odoo/odoo-8.0/sources/openerp/:/mnt/extra-addons/openerp \
+        jobiols/odoo-jeo:8.0 $*

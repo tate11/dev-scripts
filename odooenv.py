@@ -103,12 +103,14 @@ def update_db(e):
     params += '--stop-after-init '
     params += '--logfile=false '
     params += '-d {} '.format(db)
-    params += '-u ' + ', '.join(mods) + ' '
+    if e.run_tests():
+        params += '--test-enable --init {} '.format(', '.join(mods))
+        params += '--log-level=test '
+    else:
+        params += '-u {} '.format(', '.join(mods))
+        params += '--log-level=warn '
     if e.debug_mode():
         params += '--debug '
-    if e.run_tests():
-        params += '--test-enable '
-        params += '--log-level=test '
     sc_(params)
 
 

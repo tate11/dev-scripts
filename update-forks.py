@@ -41,6 +41,7 @@ repos = [
     {'usr': 'oca', 'repo': 'knowledge', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'rma', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'pos', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
 
     {'usr': 'aeroo', 'repo': 'aeroo_reports', 'branch': '8.0'},
 
