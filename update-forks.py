@@ -23,6 +23,7 @@
 import argparse
 import subprocess
 import sys
+from datetime import datetime
 
 RED = "\033[1;31m"
 GREEN = "\033[1;32m"
@@ -190,6 +191,12 @@ def check_repo(dict):
            rp.upstream().repo() + ' ' +
            rp.upstream().branch())
 
+    def _shortver():
+        return datetime.now().strftime('%Y%m%d%H%M')
+
+    def _longver():
+        return datetime.now().strftime(':%B %d, %Y')
+
     # chequear local repo y crearlo si no existe
     if sc_('git -C ' + rp.dir() + ' status') != 0:
         create_local_repo(rp)
@@ -202,12 +209,17 @@ def check_repo(dict):
     if sc_('git -C ' + rp.dir() + ' checkout ' + rp.upstream().branch()):
         msgerr('checkout fail')
 
+    msgrun('tagging repo')
+    if sc_('git -C {} tag -a v{} -m "update fork on {}"'.format(rp.dir(), _shortver(),
+                                                                _longver())):
+        msgerr('tagging fail')
+
     msgrun('merge')
     if sc_('git -C ' + rp.dir() + ' merge upstream/' + rp.upstream().branch()):
         msgerr('merge fail')
 
     msgrun('push')
-    if sc_('git -C ' + rp.dir() + ' push origin ' + rp.upstream().branch()):
+    if sc_('git -C ' + rp.dir() + ' push origin --tags ' + rp.upstream().branch()):
         msgerr('push fail')
 
     msgdone('done')
