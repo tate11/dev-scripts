@@ -378,8 +378,8 @@ def run_client(e):
                                      e.get_database_from_params())
 
         if sc_(params):
-            e.msgerr("Can't run client " + cli.get_name() +
-                     ", by the way... did you run -R ?")
+            e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
+                cli.get_name(), cli.get_name()))
 
         if e.get_args().init:
             e.msgdone('Database {} for client {} succesfully initializad with '
