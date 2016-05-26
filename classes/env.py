@@ -88,8 +88,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-partner', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-
-
+         {'usr': 'jobiols', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
 
      ],
      'images': [
