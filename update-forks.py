@@ -89,6 +89,7 @@ repos = [
     {'usr': 'oca', 'repo': 'bank-statement-import', 'branch': '8.0'},
     {'usr': 'serviciosbaeza', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'crm', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'contract', 'branch': '8.0'},
 ]
 
 

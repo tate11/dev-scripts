@@ -75,7 +75,7 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'jeo', 'port': '8069', 'odoover': '8.0',
+    {'name': 'jeo', 'port': '8000', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
@@ -87,6 +87,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-partner', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'crm', 'branch': '8.0'},
@@ -172,6 +173,10 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'jaja', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -180,15 +185,22 @@ clients__ = [
      ]
      },
     #######################################################################
-    {'name': 'textil', 'port': '8071', 'odoover': '8.0',
+    {'name': 'tds', 'port': '8071', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '7.0'},
-         {'usr': 'oca', 'repo': 'e-commerce', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'sale-workflow', 'branch': '8.0'}
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'contract', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -199,22 +211,16 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'pos', 'port': '8091', 'odoover': '8.0',
+    {'name': 'next', 'port': '8091', 'odoover': '9.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'innerdir': 'addons', 'repo': 'odoo_fpoc',
-          'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ],
-     'install': ['l10n_ar_base', 'sale']
      },
     #######################################################################
     {'name': 'accesorios', 'port': '8069', 'odoover': '8.0',
