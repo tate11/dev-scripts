@@ -175,6 +175,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
      ],
