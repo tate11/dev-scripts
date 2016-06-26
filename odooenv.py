@@ -103,12 +103,8 @@ def update_db(e):
     params += '--stop-after-init '
     params += '--logfile=false '
     params += '-d {} '.format(db)
-    if e.run_tests():
-        params += '--test-enable --init {} '.format(', '.join(mods))
-        params += '--log-level=test '
-    else:
-        params += '-u {} '.format(', '.join(mods))
-        params += '--log-level=warn '
+    params += '-u {} '.format(', '.join(mods))
+    params += '--log-level=warn '
     if e.debug_mode():
         params += '--debug '
     sc_(params)
@@ -281,14 +277,20 @@ def server_help(e):
         e.msgerr("Can't run help")
 
 
+"""
+-d openerp_test
+--stop-after-init
+--log-level info --log-handler openerp.tools.yaml_import:DEBUG --test-enable --init curso,makeover_default
+
+"""
 def quality_test(e):
     """
     Corre un test especifico, los parametros necesarios son:
     -T repositorio test_file.py -d database -c cliente -m modulo
     """
     cli = e.get_client(e.get_clients_from_params('one'))
-    module_name = e.get_modules_from_params()[0]
     repo_name, test_file = e.get_qt_args_from_params()
+    module_name = e.get_modules_from_params()[0]
     db = e.get_database_from_params()
 
     # chequear si el repo está dentro de los repos del cliente
@@ -833,12 +835,14 @@ if __name__ == '__main__':
                         help="Timestamp to restore database, see --backup-list for "
                              "available timestamps.")
 
-    parser.add_argument('-T', '--run-tests',
-                        action='store_true',
+    parser.add_argument('-T', '--quality-test',
+                        action='store',
+                        nargs=2,
+                        dest='quality_test',
                         help="Perform a test, arguments are Repo where test lives, "
                              "and yml/py test file to run. Need -d, -m and -c options "
-                             "Note: for the test to run there must be an "
-                             "admin user with passw admin")
+                             "Note: for the test to run there must be an admin user "
+                             "with passw admin and a database with demo data.")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',
@@ -892,3 +896,5 @@ if __name__ == '__main__':
         cron_jobs(enviro)
     if args.cron_list:
         cron_list(enviro)
+    if args.quality_test:
+        quality_test(enviro)

@@ -284,6 +284,17 @@ class Environment:
             self.msgerr('need -m option (module name or all for all modules)')
         return self._args.module
 
+    def get_qt_args_from_params(self):
+        if self._args.database is None:
+            self.msgerr('need -d option')
+        if len(self._args.database) > 1:
+            self.msgerr('only one database expected')
+        if self._args.client is None:
+            self.msgerr('need -c option (client name)')
+        if self._args.module is None:
+            self.msgerr('need -m option (module name)')
+        return self._args.quality_test
+
     def get_database_from_params(self):
         if self._args.database is None:
             self.msgerr('need -d option (database name)')
