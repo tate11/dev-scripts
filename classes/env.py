@@ -120,8 +120,8 @@ clients__ = [
     #######################################################################
     {'name': 'valente', 'port': '8091', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
@@ -131,6 +131,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'valente', 'branch': '8.0'},
 
      ],
      'images': [
