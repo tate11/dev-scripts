@@ -400,9 +400,6 @@ class Client:
         except:
             self._install = None
 
-    def get_init_modules(self):
-        return ','.join(self._install)
-
     def get_base_dir(self):
         return self._env.get_base_dir()
 

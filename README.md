@@ -8,7 +8,7 @@
                       [--no-dbfilter] [--test] [-H] [--backup] [--backup-list]
                       [--restore] [-t TIMESTAMP]
     
-    Odoo environment setup v 2.1
+    Odoo environment setup v 2.0.1.1
     
     optional arguments:
       -h, --help            show this help message and exit

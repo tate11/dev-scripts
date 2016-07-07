@@ -277,12 +277,6 @@ def server_help(e):
         e.msgerr("Can't run help")
 
 
-"""
--d openerp_test
---stop-after-init
---log-level info --log-handler openerp.tools.yaml_import:DEBUG --test-enable --init curso,makeover_default
-
-"""
 def quality_test(e):
     """
     Corre un test especifico, los parametros necesarios son:
@@ -368,11 +362,6 @@ def run_client(e):
         else:
             params += '--logfile=False '
 
-        if e.get_args().init:
-            params += '-d {} -init={} --stop-after-init '.format(
-                e.get_database_from_params(),
-                cli.get_init_modules())
-
         if e.get_args().translate:
             params += '--language=es --i18n-export=/etc/odoo/es.po --update ' \
                       '--i18n-overwrite --modules={} --stop-after-init ' \
@@ -383,12 +372,6 @@ def run_client(e):
             e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
                 cli.get_name(), cli.get_name()))
 
-        if e.get_args().init:
-            e.msgdone('Database {} for client {} succesfully initializad with '
-                      'modules {}'.format(e.get_database_from_params(),
-                                          clientName,
-                                          cli.get_init_modules())
-                      )
         else:
             e.msgdone(
                 'Client ' + clientName + ' up and running on port ' + cli.get_port())
@@ -725,11 +708,6 @@ if __name__ == '__main__':
                              'will be erased. BE WARNED AGAIN, database is common to '
                              'all clients!!!! Required -c option')
 
-    parser.add_argument('--init',
-                        action='store_true',
-                        help="Install modules from install dict. Required -d. Used only "
-                             "with -r EXPERIMENTAL!!")
-
     parser.add_argument('-R', '--run-env',
                         action='store_true',
                         help="Run database and aeroo images.")
@@ -740,8 +718,7 @@ if __name__ == '__main__':
 
     parser.add_argument('-r', '--run-cli',
                         action='store_true',
-                        help="Run client odoo images, requieres -c options. Optional "
-                             "--init for initial install of modules")
+                        help="Run client odoo images, requieres -c options. Optional")
 
     parser.add_argument('-s', '--stop-cli',
                         action='store_true',
