@@ -43,6 +43,7 @@ import time
 import logging
 import logging.handlers
 from classes import Environment, clients__
+from classes.git_issues import Issues
 
 def sc_(params):
     _params = []
@@ -434,6 +435,18 @@ def pull_all(e):
 
 
 def list_data(e):
+    # if --issues option get issues from github
+    if args.repo:
+        iss = Issues(args.repo[0])
+        try:
+            for issue in iss.get_issues():
+                for line in issue.lines():
+                    e.msginf(line)
+        except Exception as ex:
+            e.msgerr(str(ex))
+
+        exit(0)
+
     # if no -c option get all clients else get -c clients
     if args.client is None:
         clients = e.get_clients_form_dict()
@@ -673,6 +686,9 @@ def cron_list(e):
     sc_('sudo crontab -l | grep "#Added by odooenv.py"')
 
 
+def issues(e):
+    e.msginf('issues')
+
 if __name__ == '__main__':
     LOG_FILENAME = '/var/log/odooenv/odooenv.log'
     try:
@@ -730,7 +746,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-l', '--list',
                         action='store_true',
-                        help="List all data in this server. Clients and images.")
+                        help="List all data in this server. Clients and images. with "
+                             "--issues REPO list the github issues from repo")
 
     parser.add_argument('-v', '--verbose',
                         action='store_true',
@@ -819,7 +836,7 @@ if __name__ == '__main__':
                         help="Perform a test, arguments are Repo where test lives, "
                              "and yml/py test file to run. Need -d, -m and -c options "
                              "Note: for the test to run there must be an admin user "
-                             "with passw admin and a database with demo data.")
+                             "with passw admin")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',
@@ -835,6 +852,14 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Generate a po file for a module to translate, need a -r"
                              "and -m option")
+
+    parser.add_argument('--issues',
+                        dest='repo',
+                        nargs=1,
+                        action='store',
+                        help="list formatted and priorized issues from github, "
+                             "used with -l this option supports github API v3"
+                             "priority is the number between brackets in issue title")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
@@ -874,4 +899,5 @@ if __name__ == '__main__':
     if args.cron_list:
         cron_list(enviro)
     if args.quality_test:
+        quality_test(enviro)
         quality_test(enviro)

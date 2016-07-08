@@ -15,22 +15,19 @@ AUTH = (GITHUB_USER, GITHUB_PASSWORD)
 nnn = 0
 
 
-def write_issues(nnn, r):
+def write_issues(r):
     "output a list of issues to csv"
     if not r.status_code == 200:
         raise Exception(r.status_code)
-    for issue in r.json():
-        nnn += 1
-        print '#', nnn, issue['number'], issue['title']
-        print '-' * len(issue['title'])
-        if 'body' in issue:
-            print issue['body']
-            print '-' * len(issue['title'])
+    print r
 
 
-def get_pepe(ISSUES_FOR_REPO_URL, AUTH):
-    print 'get pepe'
-    return True
+#    for issue in r.json():
+#        print '#', nnn, issue['number'], issue['title']
+#        print '-' * len(issue['title'])
+#        if 'body' in issue:
+#            print issue['body']
+#            print '-' * len(issue['title'])
 
 
 def get_requests(ISSUES_FOR_REPO_URL, AUTH):
@@ -45,8 +42,7 @@ def get_requests(ISSUES_FOR_REPO_URL, AUTH):
 # csvout.writerow(('id', 'Title', 'Body', 'Created At', 'Updated At'))
 
 r = get_requests(ISSUES_FOR_REPO_URL, AUTH)
-get_pepe()
-write_issues(nnn, r)
+write_issues(r)
 print 'antes get pepe'
 
 print 'despues get'
@@ -59,8 +55,6 @@ if 'link' in r.headers:
 
     while 'last' in pages and 'next' in pages:
         print 'antes get >>>>>', pages
-        get_pepe()
-        get_pepe(pages['next'], 1, auth=AUTH)
         r = get_requests(pages['next'], 1, auth=AUTH)
         print 'aaa', r
         write_issues(r)
