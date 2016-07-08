@@ -26,7 +26,6 @@ GITHUB_USER = 'jobiols'
 GITHUB_PASSWORD = ''
 AUTH = (GITHUB_USER, GITHUB_PASSWORD)
 
-
 class Issue():
     """ Representa un issue, tiene una prioridad que eststá en el titulo entre []
         devuelve lo que hay que imprimir en una lista de strings
@@ -35,21 +34,26 @@ class Issue():
     def __init__(self, data):
         self._number = data['number']
         self._body = data['body']
-        self._milestone = data['milestone']
+        self.milestone = ''
+        if data['milestone']:
+            self.milestone = data['milestone']['title'] or False
         self._title = data['title']
         a = self._title
-        try:
-            self.prio = int(a[a.find('[') + 1:a.find(']')])
-        except:
-            self.prio = 9999
+        if '[' in a and ']' in a:
+            self.prio = a[a.find('[') + 1: a.find(']')]
+        else:
+            self.prio = '9999'
+        # definir el orden de prioridades
+        self.order = u'{0:a>10}{1:0>4}'.format(self.milestone, self.prio)
 
     def lines(self):
         """ Genera las lineas a imprimir para describir el issue
         """
         ret = []
-        ret.append(u'#{0:04} {1}'.format(
+        ret.append(u'{2} #{0:04} {1}'.format(
             self._number,
             self._title,
+            self.milestone
         )
         )
         if self._body:
@@ -123,7 +127,7 @@ class Issues():
                 if pages['next'] == pages['last']:
                     break
 
-        ret.sort(key=lambda x: x.prio, reverse=False)
+        ret.sort(key=lambda x: x.order)
         return ret
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
