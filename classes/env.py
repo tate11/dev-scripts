@@ -17,8 +17,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#-----------------------------------------------------------------------------------
-import os
+# -----------------------------------------------------------------------------------
 import sys
 import logging
 
@@ -276,6 +275,9 @@ class Environment:
     def run_tests(self):
         return self._args.run_tests
 
+    def get_tag(self):
+        return self._args.tag[0]
+
     def no_dbfilter(self):
         return self._args.no_dbfilter
 
@@ -308,7 +310,6 @@ class Environment:
         if len(self._args.new_database) > 1:
             self.msgerr('only one new database name expected')
         return self._args.new_database[0]
-
 
     def get_timestamp_from_params(self):
         if self._args.timestamp is None:
@@ -479,14 +480,20 @@ class Repo:
         return self._cli.get_home_dir() + 'sources/' + ret
 
     def getPullRepo(self):
-        return 'git -C ' + self.getInstDir() + ' pull'
+        return 'git -C {} pull'.format(self.getInstDir())
 
     def getCloneRepo(self):
-        return 'git clone --depth 1 -b ' + \
-               self._dict['branch'] + \
-               ' http://github.com/' + \
-               self._getRepo() + ' ' + \
-               self.getInstDir()
+        return 'git clone --depth 1 -b {} http://github.com/{} {}'.format(
+            self._dict['branch'], self._getRepo(), self.getInstDir())
+
+    def getTagRepo(self, tag):
+        return [
+            'rm -rf {}'.format(self.getInstDir()),
+            'git clone -b {} http://github.com/{} {}'.format(
+                self._dict['branch'], self._getRepo(), self.getInstDir()),
+            'git -C {} checkout tags/{}'.format(self.getInstDir(), tag)
+        ]
+
 
 class Image:
     def __init__(self, cli, dict):

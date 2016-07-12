@@ -20,8 +20,9 @@
 #
 #-----------------------------------------------------------------------------------
 # Directory structure
-#   ~/postgresql
-#   ~/odoo-[version]
+#
+#   /odoo/postgresql
+#   /odoo/odoov-[version]
 #       /sources
 #       /[clientname1]
 #           /config
@@ -29,8 +30,6 @@
 #           /data_dir
 #           /log
 #
-# TODO archivo xml que sobreescriba clients.
-# TODO Revisar el tema de los subcomandos
 ##############################################################################
 
 import argparse
@@ -137,16 +136,22 @@ def update_repos_from_list(e, repos):
             unique_repos.append(repo)
 
     for repo in unique_repos:
-        # Check if repo exists
-        if os.path.isdir(repo.getInstDir()):
-            e.msginf('pull  ' + repo.get_formatted_repo())
-            params = repo.getPullRepo()
+        # hay que actualizar a un tag especifico
+        if e.get_tag():
+            for command in repo.getTagRepo(e.get_tag()):
+                if sc_(command):
+                    e.msgerr('Fail installing environment, uninstall and try again.')
         else:
-            e.msginf('clone ' + repo.get_formatted_repo())
-            params = repo.getCloneRepo()
+            # Check if repo exists
+            if os.path.isdir(repo.getInstDir()):
+                e.msginf('pull  ' + repo.get_formatted_repo())
+                params = repo.getPullRepo()
+            else:
+                e.msginf('clone ' + repo.get_formatted_repo())
+                params = repo.getCloneRepo()
 
-        if sc_(params):
-            e.msgerr('Fail installing environment, uninstall and try again.')
+            if sc_(params):
+                e.msgerr('Fail installing environment, uninstall and try again.')
 
 
 def install_client(e):
@@ -829,7 +834,7 @@ if __name__ == '__main__':
                         help="Timestamp to restore database, see --backup-list for "
                              "available timestamps.")
 
-    parser.add_argument('-T', '--quality-test',
+    parser.add_argument('-Q', '--quality-test',
                         action='store',
                         nargs=2,
                         dest='quality_test',
@@ -850,7 +855,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--translate',
                         action='store_true',
-                        help="Generate a po file for a module to translate, need a -r"
+                        help="Generate a po file for a module to translate, need a -r "
                              "and -m option")
 
     parser.add_argument('--issues',
@@ -858,8 +863,15 @@ if __name__ == '__main__':
                         nargs=1,
                         action='store',
                         help="list formatted and priorized issues from github, "
-                             "used with -l this option supports github API v3"
+                             "used with -l this option supports github API v3 "
                              "priority is the number between brackets in issue title")
+
+    parser.add_argument('-T',
+                        action='store',
+                        nargs=1,
+                        dest='tag',
+                        help="Tag to restore all the repos from, need -p option")
+
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)

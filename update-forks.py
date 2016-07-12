@@ -137,6 +137,7 @@ class unit:
         return 'git -C {} remote add upstream https://github.com/{}/{}'.format(
             self._local, self._upstream.usr(), self._upstream.repo())
 
+
 def sc_(params):
     if args.verbose:
         print '>', params
@@ -187,12 +188,10 @@ def create_local_repo(rp):
     sc_(rp.add_remote())
 
 
-def check_repo(dict):
+def update_repo(dict):
     rp = unit(dict)
-    msgrun(20 * '-' + ' ' +
-           rp.upstream().usr() + ' ' +
-           rp.upstream().repo() + ' ' +
-           rp.upstream().branch())
+    msgrun('{} {} {} {}'.format(
+        20 * '-', rp.upstream().usr(), rp.upstream().repo(), rp.upstream().branch()))
 
     def _shortver():
         return datetime.now().strftime('%Y%m%d%H%M')
@@ -201,28 +200,42 @@ def check_repo(dict):
         return datetime.now().strftime(':%B %d, %Y')
 
     # chequear local repo y crearlo si no existe
-    if sc_('git -C ' + rp.dir() + ' status') != 0:
+    if not sc_('git -C {} status'.format(rp.dir())):
         create_local_repo(rp)
 
+    # traer el repo de upstream el repo original
     msgrun('fetch upstream')
-    if sc_('git -C ' + rp.dir() + ' fetch upstream'):
+    if sc_('git -C {} fetch upstream'.format(rp.dir())):
         msgerr('fetch fail')
 
+    # lo extraigo
     msgrun('checkout')
-    if sc_('git -C ' + rp.dir() + ' checkout ' + rp.upstream().branch()):
+    if sc_('git -C {} checkout {}'.format(
+            rp.dir(), rp.upstream().branch())):
         msgerr('checkout fail')
 
-    msgrun('tagging repo')
-    if sc_('git -C {} tag -a v{} -m "update fork on {}"'.format(rp.dir(), _shortver(),
-                                                                _longver())):
-        msgerr('tagging fail')
-
+    # lo mergeo con el mio
     msgrun('merge')
-    if sc_('git -C ' + rp.dir() + ' merge upstream/' + rp.upstream().branch()):
+    if sc_('git -C {} merge upstream/{}'.format(
+            rp.dir(), rp.upstream().branch())):
         msgerr('merge fail')
 
+    # le pongo el tag a la nueva versión creada
+    msgrun('tagging repo')
+    if sc_('git -C {} tag -a v{} -m "update fork on {}"'.format(
+            rp.dir(), _shortver(), _longver())):
+        msgerr('tagging fail')
+
+    # subo la version nueva a mi repo
     msgrun('push')
-    if sc_('git -C ' + rp.dir() + ' push origin --tags ' + rp.upstream().branch()):
+    if sc_('git -C {} push origin {}'.format(
+            rp.dir(rp.upstream().branch()))):
+        msgerr('push fail')
+
+    # subo el tag
+    msgrun('push --tags')
+    if sc_('git -C {} push origin --tags {}'.format(
+            rp.dir(rp.upstream().branch()))):
         msgerr('push fail')
 
     msgdone('done')
@@ -231,7 +244,7 @@ def check_repo(dict):
 
 def update_all():
     for repo in repos:
-        check_repo(repo)
+        update_repo(repo)
 
 
 def list():
@@ -246,7 +259,7 @@ def update():
 
     for dict in repos:
         if dict['repo'] == args.repo[0]:
-            check_repo(dict)
+            update_repo(dict)
 
 
 if __name__ == '__main__':
@@ -257,6 +270,7 @@ if __name__ == '__main__':
     The program's goal is to update the fork in github to the latest version of the original repo.
     To do that it makes a fetch to the original repo downloading the last version to the workstation,
     does a merge and then makes a push to the fork.
+
     """)
     parser.add_argument('-U',
                         '--update-all',
