@@ -134,7 +134,6 @@ def update_repos_from_list(e, repos):
         if repo.get_formatted_repo() not in tst_list:
             tst_list.append(repo.get_formatted_repo())
             unique_repos.append(repo)
-
     for repo in unique_repos:
         # hay que actualizar a un tag especifico
         if e.get_tag():
@@ -691,6 +690,13 @@ def cron_list(e):
     sc_('sudo crontab -l | grep "#Added by odooenv.py"')
 
 
+def tag_repos(e):
+    """ Tag all repos defined for this client
+    """
+    client, milestone = e.get_tag()
+    tag = client + '-' + milestone
+    e.msginf('tagging repos with ' + tag)
+
 def issues(e):
     e.msginf('issues')
 
@@ -836,10 +842,12 @@ if __name__ == '__main__':
 
     parser.add_argument('-Q', '--quality-test',
                         action='store',
+                        metavar=('repo', 'test_file'),
                         nargs=2,
                         dest='quality_test',
                         help="Perform a test, arguments are Repo where test lives, "
-                             "and yml/py test file to run. Need -d, -m and -c options "
+                             "and yml/py test file to run (please include extension). "
+                             "Need -d, -m and -c options "
                              "Note: for the test to run there must be an admin user "
                              "with passw admin")
 
@@ -868,9 +876,11 @@ if __name__ == '__main__':
 
     parser.add_argument('-T',
                         action='store',
-                        nargs=1,
-                        dest='tag',
-                        help="Tag to restore all the repos from, need -p option")
+                        nargs=2,
+                        metavar=('client', 'milestone'),
+                        dest='tag_repos',
+                        help="Tag all repos used by a client with a tag composed for "
+                             "client ntame and milestone from client sources")
 
 
     args = parser.parse_args()
@@ -912,4 +922,5 @@ if __name__ == '__main__':
         cron_list(enviro)
     if args.quality_test:
         quality_test(enviro)
-        quality_test(enviro)
+    if args.tag_repos:
+        tag_repos(enviro)

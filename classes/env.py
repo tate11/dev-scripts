@@ -276,7 +276,10 @@ class Environment:
         return self._args.run_tests
 
     def get_tag(self):
-        return self._args.tag[0]
+        if self._args.tag_repos:
+            return self._args.tag_repos[0], self._args.tag_repos[1]
+        else:
+            return False
 
     def no_dbfilter(self):
         return self._args.no_dbfilter
