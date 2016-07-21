@@ -63,6 +63,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
 
      ],
      'images': [
@@ -485,9 +486,17 @@ class Repo:
     def getPullRepo(self):
         return 'git -C {} pull'.format(self.getInstDir())
 
-    def getCloneRepo(self):
-        return 'git clone --depth 1 -b {} http://github.com/{} {}'.format(
-            self._dict['branch'], self._getRepo(), self.getInstDir())
+    def getCloneRepo(self, e):
+        if not e.debug_mode():
+            depth = ' --depth 1 '
+        else:
+            depth = ''
+
+        return 'git clone {} -b {} http://github.com/{} {}'.format(
+            depth,
+            self._dict['branch'],
+            self._getRepo(),
+            self.getInstDir())
 
     def getTagRepo(self, tag):
         return [

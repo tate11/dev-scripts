@@ -147,7 +147,7 @@ def update_repos_from_list(e, repos):
                 params = repo.getPullRepo()
             else:
                 e.msginf('clone ' + repo.get_formatted_repo())
-                params = repo.getCloneRepo()
+                params = repo.getCloneRepo(e)
 
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
@@ -720,7 +720,7 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v3.5.0')
+    parser = argparse.ArgumentParser(description='Odoo environment setup v3.6.0')
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define "
@@ -802,9 +802,11 @@ if __name__ == '__main__':
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help='This option has two efects: when doing an update database, '
-                             '(option -u) it forces debug mode. When running environment '
-                             'it opens port 5432 to access postgres server databases.')
+                        help='This option has three efects: 1.- when doing an update database, '
+                             '(option -u) it forces debug mode. 2.- When running environment '
+                             'it opens port 5432 to access postgres server databases. 3.- when '
+                             'doing a pull (option -p) it clones the full repo i.e. does not '
+                             'issue --depth 1 to git ')
 
     parser.add_argument('--cleanup',
                         action='store_true',

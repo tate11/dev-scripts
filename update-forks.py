@@ -200,7 +200,7 @@ def update_repo(dict):
         return datetime.now().strftime(':%B %d, %Y')
 
     # chequear local repo y crearlo si no existe
-    if not sc_('git -C {} status'.format(rp.dir())):
+    if sc_('git -C {} status'.format(rp.dir())):
         create_local_repo(rp)
 
     # traer el repo de upstream el repo original
@@ -229,13 +229,13 @@ def update_repo(dict):
     # subo la version nueva a mi repo
     msgrun('push')
     if sc_('git -C {} push origin {}'.format(
-            rp.dir(rp.upstream().branch()))):
+            rp.dir(), rp.upstream().branch())):
         msgerr('push fail')
 
     # subo el tag
     msgrun('push --tags')
     if sc_('git -C {} push origin --tags {}'.format(
-            rp.dir(rp.upstream().branch()))):
+            rp.dir(), rp.upstream().branch())):
         msgerr('push fail')
 
     msgdone('done')
