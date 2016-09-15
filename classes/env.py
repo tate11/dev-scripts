@@ -63,7 +63,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
