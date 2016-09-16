@@ -63,7 +63,15 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
+         # prestashop
+         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
+         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
+         {'usr': 'OCA', 'repo': 'product-attribute', 'branch': '8.0'},
+         {'usr': 'OCA', 'repo': 'e-commerce', 'branch': '8.0'},
+         {'usr': 'OCA', 'repo': 'sale-workflow', 'branch': '8.0'},
+         {'usr': 'Tecnativa', 'repo': 'connector-prestashop',
+          'branch': '8.0.connector_prestashop'},
+         {'usr': 'jobiols', 'repo': 'prest-mods', 'branch': '7.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
