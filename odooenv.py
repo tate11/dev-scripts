@@ -346,8 +346,6 @@ def run_client(e):
         if e.debug_mode():
             params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
                 cli.get_home_dir())
-            params += '-v {}sources/image-sources:/usr/local/lib/python2.7/dist-packages '.format(
-                cli.get_home_dir())
         params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '--link postgres:db '
 
