@@ -124,7 +124,7 @@ class Issues():
                 ret = self._get_issues_from_req(req, ret)
                 pages = self._get_pages(req, url)
 
-                if pages['next'] == pages['last']:
+                if pages.get('next') == pages.get('last'):
                     break
 
         ret.sort(key=lambda x: x.order)
