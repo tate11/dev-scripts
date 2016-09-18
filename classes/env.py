@@ -255,7 +255,7 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'makeover-9', 'port': '8069', 'odoover': '9.0',
+    {'name': 'makeover9', 'port': '8069', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
@@ -263,19 +263,20 @@ clients__ = [
           'branch': '9.0'},
          {'usr': 'OCA', 'repo': 'partner-contact', 'branch': '9.0'},
          #
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         {'usr': 'odoomrp', 'repo': 'odoomrp-wip', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
+         #         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
+         #         {'usr': 'odoomrp', 'repo': 'odoomrp-wip', 'branch': '9.0'},
+         #         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},

@@ -1,0 +1,15 @@
+#!/bin/bash
+##############################################################
+# Extract odoo sources to host
+# debe estar creado un directorio /odoo/odoo-9.0/sources/openerp
+# dentro de la imagen correr /extract-sources 
+
+sudo rm -r /odoo/odoo-9.0/sources/openerp
+sudo mkdir /odoo/odoo-9.0/sources/openerp
+sudo chmod -R o+w /odoo/odoo-9.0/sources/openerp
+sudo chown jorge.jorge /odoo/odoo-9.0/sources/openerp
+
+sudo docker run -it --rm \
+	--entrypoint=/bin/bash \
+	-v /odoo/odoo-9.0/sources/openerp/:/mnt/extra-addons/openerp \
+        jobiols/odoo-jeo:9.0 $*
