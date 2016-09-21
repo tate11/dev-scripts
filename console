@@ -3,4 +3,4 @@
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
 	-v /odoo/odoo-9.0/sources:/mnt/extra-addons \
-        jobiols/odoo-jeo:9.0 $*
+        adhoc/odoo:9.0 $*
