@@ -1,6 +1,0 @@
-#!/bin/bash
-
-sudo docker run -it --rm \
-	--entrypoint=/bin/bash \
-	-v /odoo/odoo-8.0.prestashop/sources:/mnt/extra-addons \
-        debian:latest $*

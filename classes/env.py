@@ -63,6 +63,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'OCA', 'repo': 'social', 'branch': '8.0'},
          # prestashop
          #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
          #         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
@@ -74,7 +75,7 @@ clients__ = [
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.prestashop'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
