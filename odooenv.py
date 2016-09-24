@@ -18,7 +18,7 @@
 #    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-#-----------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------
 # Directory structure
 #
 #   /odoo/postgresql
@@ -41,6 +41,7 @@ import shlex
 import time
 import logging
 import logging.handlers
+
 from classes import Environment, clients__
 from classes.git_issues import Issues
 
@@ -196,9 +197,6 @@ def install_client(e):
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())
 
-        # calculate addons path
-        addons_path = cli.get_addons_path()
-
         # creating config file for client
         param = 'sudo docker run --rm '
         param += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
@@ -210,21 +208,14 @@ def install_client(e):
         param += '-- --stop-after-init -s '
         param += '--db-filter=' + cli.get_name() + '_.* '
 
-        if addons_path != '':
-            ### Warning ! this ugly harcoded path only works for my image !!!
-            if cli.get_ver() == '7.0':
-                aa = addons_path + ',/usr/lib/python2.7/dist-packages/openerp/addons'
-                param += '--addons-path=' + aa + ' '
-            else:
-                param += '--addons-path=' + addons_path + ' '
-
-        param += '--logfile=/var/log/odoo/odoo.log '
-
-        if cli.get_ver() == '7.0':
-            param += '--db_user=odoo '
-            param += '--db_password=odoo '
+        if client_name == 'ou':
+            ou = '/opt/openerp/addons,'
         else:
-            param += '--logrotate '
+            ou = ''
+        param += '--addons-path=' + ou + cli.get_addons_path() + ' '
+        print '>>>', param
+        param += '--logfile=/var/log/odoo/odoo.log '
+        param += '--logrotate '
 
         e.msginf('creating config file')
         if sc_(param):
@@ -344,8 +335,10 @@ def run_client(e):
                                                            cli.get_name())
         params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
         if e.debug_mode():
-            params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
-                cli.get_home_dir())
+            # si es openupgrade el sourcesname es upgrade, sino es openerp
+            sourcesname = 'openerp' if clientName != 'ou' else 'upgrade'
+            params += '-v {}sources/{}:/usr/lib/python2.7/dist-packages/openerp '.format(
+                cli.get_home_dir(), sourcesname)
         params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '--link postgres:db '
 
@@ -360,8 +353,6 @@ def run_client(e):
 
         if not e.debug_mode():
             params += '--logfile=/var/log/odoo/odoo.log '
-            if cli.get_ver() != '7.0':
-                params += '--logrotate '
         else:
             params += '--logfile=False '
 
@@ -500,6 +491,7 @@ def no_ip_install(e):
     # To config defaults noip2 with capital C
     # sudo /usr/local/bin/noip2 -C
     return True
+
 
 def post_backup(e):
     clientName = e.get_clients_from_params('one')
@@ -881,7 +873,6 @@ if __name__ == '__main__':
                         dest='tag_repos',
                         help="Tag all repos used by a client with a tag composed for "
                              "client ntame and milestone from client sources")
-
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
