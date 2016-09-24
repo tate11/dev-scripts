@@ -286,7 +286,7 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'openupgrade9', 'port': '8069', 'odoover': '9.0',
+    {'name': 'ou', 'port': '8069', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
