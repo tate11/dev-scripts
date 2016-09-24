@@ -220,18 +220,6 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'next', 'port': '8091', 'odoover': '9.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-     ],
-     },
-    #######################################################################
     {'name': 'accesorios', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -264,19 +252,8 @@ clients__ = [
          {'usr': 'OCA', 'repo': 'partner-contact', 'branch': '9.0'},
          #
          {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         #         {'usr': 'odoomrp', 'repo': 'odoomrp-wip', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -295,19 +272,8 @@ clients__ = [
          {'usr': 'OCA', 'repo': 'partner-contact', 'branch': '9.0'},
          #
          {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         #         {'usr': 'odoomrp', 'repo': 'odoomrp-wip', 'branch': '9.0'},
-         #         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
