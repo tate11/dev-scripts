@@ -54,7 +54,6 @@ if 'link' in r.headers:
           r.headers['link'].split(',')]])
 
     while 'last' in pages and 'next' in pages:
-        print 'antes get >>>>>', pages
         r = get_requests(pages['next'], 1, auth=AUTH)
         print 'aaa', r
         write_issues(r)

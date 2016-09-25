@@ -213,7 +213,6 @@ def install_client(e):
         else:
             ou = ''
         param += '--addons-path=' + ou + cli.get_addons_path() + ' '
-        print '>>>', param
         param += '--logfile=/var/log/odoo/odoo.log '
         param += '--logrotate '
 

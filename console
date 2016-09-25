@@ -3,4 +3,5 @@
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
 	-v /odoo/odoo-9.0/sources:/mnt/extra-addons \
-        jobiols/docker-openupgrade:9.0 $*
+        jobiols/odoo-jeo:9.0 $*
+
