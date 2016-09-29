@@ -105,7 +105,7 @@ def update_db(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-    params += '--log-level=warn '
+    params += '--log-level=info '
     if e.debug_mode():
         params += '--debug '
     sc_(params)

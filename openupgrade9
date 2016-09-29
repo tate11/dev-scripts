@@ -1,0 +1,13 @@
+#!/bin/bash
+
+sudo docker run --rm -it \
+	-p 8070:8069 \
+	-v /odoo/odoo-9.0/openupgrade9/config:/etc/odoo \
+	-v /odoo/odoo-9.0/openupgrade9/data_dir:/var/lib/odoo \
+	-v /odoo/odoo-9.0/sources:/mnt/extra-addons \
+	-v /odoo/odoo-9.0/sources/upgrade:/usr/lib/python2.7/dist-packages/openerp \
+	-v /odoo/odoo-9.0/openupgrade9/log:/var/log/odoo \
+	--link postgres:db \
+	--name openupgrade9 \
+	--entrypoint=/bin/bash \
+	jobiols/docker-openupgrade:9.0 
