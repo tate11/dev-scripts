@@ -99,13 +99,16 @@ def update_db(e):
     params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
     params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
     params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+    if e.debug_mode():
+        params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
+            cli.get_home_dir())
     params += '--link postgres:db '
     params += '{} -- '.format(cli.get_image('odoo').get_image())
     params += '--stop-after-init '
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-    params += '--log-level=info '
+    params += '--log-level=warn '
     if e.debug_mode():
         params += '--debug '
     sc_(params)

@@ -55,7 +55,6 @@ repos = [
     {'usr': 'csrocha', 'repo': 'fpoc-chrome', 'branch': 'master'},
     {'usr': 'csrocha', 'repo': 'odoo_fpoc', 'branch': 'master'},
 
-    {'usr': 'ingadhoc', 'repo': 'docker-odoo', 'branch': 'master'},
     {'usr': 'ingadhoc', 'repo': 'docker-odoo-adhoc', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '8.0'},
     {'usr': 'ingadhoc', 'repo': 'adhoc-account-analytic', 'upstream': 'account-analytic',
@@ -90,6 +89,7 @@ repos = [
     {'usr': 'serviciosbaeza', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'crm', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'contract', 'branch': '8.0'},
+    {'usr': 'oca', 'repo': 'social', 'branch': '8.0'},
 ]
 
 

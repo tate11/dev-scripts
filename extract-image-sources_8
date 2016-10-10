@@ -1,0 +1,16 @@
+#!/bin/bash
+##############################################################
+# Extract odoo packages to host
+# debe estar creado un directorio /odoo/odoo-8.0/sources/dist-packages
+# dentro de la imagen correr /extract-packages 
+# cp -r /usr/local/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
+
+sudo rm -r /odoo/odoo-8.0/sources/dist-packages
+sudo mkdir /odoo/odoo-8.0/sources/dist-packages
+sudo chmod -R o+w /odoo/odoo-8.0/sources/dist-packages
+sudo chown jorge.jorge /odoo/odoo-8.0/sources/dist-packages
+
+sudo docker run -it --rm \
+	--entrypoint=/bin/bash \
+	-v /odoo/odoo-8.0/sources/dist-packages/:/mnt/extra-addons/dist-packages \
+        jobiols/odoo-jeo:8.0 $*

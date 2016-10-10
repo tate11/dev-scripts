@@ -63,7 +63,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         {'usr': 'OCA', 'repo': 'social', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
          # prestashop
          #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
          #         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
