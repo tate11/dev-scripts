@@ -1,7 +1,8 @@
 #!/bin/bash
 ##############################################################
 # Extract odoo sources to host
-# debe estar creado un directorio /odoo/odoo-8.0/sources/openerp
+# crea e inicializa un directorio /odoo/odoo-8.0/sources/openerp
+# entra en la imagen mapeando el directorio
 # dentro de la imagen correr /extract-sources 
 
 sudo rm -r /odoo/odoo-8.0/sources/openerp
