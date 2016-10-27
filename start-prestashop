@@ -1,0 +1,8 @@
+#!/bin/bash
+#
+sudo docker run -ti -d \
+	--name prestashop \
+	-v /home/jorge/www:/var/www \
+	-e PS_INSTALL_AUTO=1 \
+	-p 8080:80 prestashop/prestashop
+
