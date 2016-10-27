@@ -35,7 +35,7 @@ REPOS_DIR = '~/git-repos/'
 repos = [
     {'usr': 'oca', 'repo': 'manufacture', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'web', 'branch': '8.0'},
-    {'usr': 'oca', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+    #    {'usr': 'oca', 'repo': 'odoomrp-wip', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'server-tools', 'branch': '8.0'},
     {'usr': 'oca', 'repo': 'management-system', 'branch': '8.0'},

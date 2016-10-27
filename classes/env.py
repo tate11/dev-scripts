@@ -61,7 +61,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'}, lo sacaron de la oca
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
 # lo pide por un modulo lote lock o algo parecido al instalar base vacia
@@ -138,7 +138,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'valente', 'branch': '8.0'},
 

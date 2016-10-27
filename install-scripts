@@ -30,4 +30,5 @@ msgrun "Installing scripts"
 sudo cp sd /usr/bin
 sudo cp odooenv.py /usr/bin
 sudo cp -r classes/ /usr/bin
+sudo cp set_perms.py /usr/bin
 msgdone "Scripts installed"
