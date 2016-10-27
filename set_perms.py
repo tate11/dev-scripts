@@ -30,7 +30,7 @@ if __name__ == '__main__':
         exit()
 
     for root, dirs, files in os.walk(repo):
-        if '.idea' in root or '.git' in root:
+        if '.idea' in root or '.git' in root or 'dev-scripts' in root:
             continue
         for dir in dirs:
             if '.idea' in dir or '.git' in dir:
