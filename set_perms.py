@@ -25,21 +25,22 @@ import sys, os
 if __name__ == '__main__':
     repo = sys.argv[1]
 
-    for root, dirs, files in os.walk(repo):
-        if root == repo:
-            if '__init__.py' not in files and '__openerp__.py' not in files:
-                print 'does not seem a openerp repo';
-                exit()
+    if repo[-1] == '/':
+        print 'quitar la barra del directorio'
+        exit()
 
     for root, dirs, files in os.walk(repo):
-        for file in files:
-            print 'setting permission 644 ', root + '/' + file
-            params = 'sudo chmod 644 ' + root + '/' + file
-            subprocess.call(params, shell=True)
-
+        if '.idea' in root or '.git' in root:
+            continue
         for dir in dirs:
-            print 'setting permission 755 ', root + '/' + dir
-            params = 'sudo chmod 755 ' + root + '/' + dir
+            if '.idea' in dir or '.git' in dir:
+                continue
+            print 'setting permission 755 {}/{}'.format(root, dir)
+            params = 'sudo chmod 755 {}/{}'.format(root, dir)
             subprocess.call(params, shell=True)
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        for file in files:
+            if 'pyc' in file:
+                continue
+            print 'setting permission 644 {}/{}'.format(root, file)
+            params = 'sudo chmod 644 {}/{}'.format(root, file)
+            subprocess.call(params, shell=True)

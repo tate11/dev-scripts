@@ -64,6 +64,9 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
+# lo pide por un modulo lote lock o algo parecido al instalar base vacia
+         {'usr': 'oca',     'repo': 'stock-logistics-warehouse','branch': '8.0'},
+         {'usr': 'oca'    , 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          # prestashop
          #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
          #         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
@@ -247,13 +250,12 @@ clients__ = [
      'repos': [
          # requeridos por la localizacion argentina
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'odoo-argentina', 'repo': 'oca-account-financial-tools',
-          'branch': '9.0'},
-         {'usr': 'OCA', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          #
-         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
+#         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
+#         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
+#         {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -267,13 +269,12 @@ clients__ = [
      'repos': [
          # requeridos por la localizacion argentina
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'odoo-argentina', 'repo': 'oca-account-financial-tools',
-          'branch': '9.0'},
-         {'usr': 'OCA', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          #
-         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
+#         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
+#         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
+#         {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
