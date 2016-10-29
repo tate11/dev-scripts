@@ -1,5 +1,6 @@
 #!/bin/bash
 
 sudo docker run -it --rm \
+	-v /home/jorge/psimage:/mnt \
 	--entrypoint=/bin/bash \
         $*
