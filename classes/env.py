@@ -61,12 +61,14 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'}, lo sacaron de la oca
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},   #lo sacaron de la oca lo necesito por el recalculate_prices
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
 # lo pide por un modulo lote lock o algo parecido al instalar base vacia
          {'usr': 'oca',     'repo': 'stock-logistics-warehouse','branch': '8.0'},
          {'usr': 'oca'    , 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'ingadhoc','repo': 'website', 'branch': '8.0'},
+
          # prestashop
          #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
          #         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
@@ -138,7 +140,7 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         #         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'valente', 'branch': '8.0'},
 
