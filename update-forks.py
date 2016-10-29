@@ -21,7 +21,6 @@
 # ##############################################################################
 
 import argparse
-import subprocess
 import sys
 from datetime import datetime
 import json
@@ -33,10 +32,159 @@ YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 REPOS_DIR = '~/git-repos/'
 
+
+def sc_(params):
+    if args.verbose:
+        print '>', params
+
+
+# return subprocess.call(params, shell=True)
+
+def green(string):
+    return GREEN + string + CLEAR
+
+
+def yellow(string):
+    return YELLOW + string + CLEAR
+
+
+def red(string):
+    return RED + string + CLEAR
+
+
+def yellow_light(string):
+    return YELLOW_LIGHT + string + CLEAR
+
+
+def msgrun(msg):
+    print yellow(msg)
+
+
+def msgdone(msg):
+    print green(msg)
+
+
+def msgerr(msg):
+    print red(msg)
+    sys.exit()
+
+
+def msginf(msg):
+    print yellow_light(msg)
+
 # levantar datos de archivo de configuracion
 with open('update-forks-data.json') as f:
     json = json.load(f)
 repos = json['repos']
+
+
+class repo:
+    """ Repositorio
+    """
+
+    def __init__(self, dict):
+        self._usr = dict['usr']
+        self._repo = dict['repo']
+        self._branch = dict['branch']
+
+    def format_branches(self, branches):
+        if type(branches) == type([]):
+            ret = ','.join(branches)
+        else:
+            ret = branches
+        return ret
+
+    def name(self):
+        return '{:14} {:10} {}'.format(
+            self._usr,
+            self.format_branches(self._branch),
+            self._repo)
+
+
+class repos:
+    """ Conjunto de repositorios definido en el archivo de configuracion
+    """
+
+    def __init__(self, json):
+        self._repos = []
+        for dict in json['repos']:
+            if not self.alredy_exists(dict):
+                self._repos.append(repo(dict))
+
+    def alredy_exists(self, dict):
+        for rp in self._repos:
+            if rp._repo == dict['repo']:
+                msgerr('duplicate repo {}'.format(rp.name()))
+
+    def list_repos(self):
+        for rp in self._repos:
+            msginf(rp.name())
+
+
+rp = repos(json)
+
+# argparse options
+#########################################################################################
+def list():
+    msgrun('Currently maintained repositories')
+    rp.list_repos()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="""
+    Update forks v 1.1.0 ------------------------------------------------------
+    This script manages a set of repositories, each one having three locations: The
+    original one, the fork of the original in my github and a clone of this fork in my
+    workstation.
+    The program's goal is to update the fork in github to the latest version of the
+    original repo. To do that it makes a fetch to the original repo downloading the
+    last version to the workstation, does a merge and then performs a push to the fork.
+    """)
+    parser.add_argument('-U',
+                        '--update-all',
+                        action='store_true',
+                        help="Updates all branches of all forks")
+
+    parser.add_argument('-u',
+                        '--update',
+                        action='store_true',
+                        help="Update specifics fork, use -b to specify branch")
+
+    parser.add_argument('-r',
+                        '--repo',
+                        action='append',
+                        dest='repo',
+                        help="Repo to update")
+
+    parser.add_argument('-b',
+                        '--branch',
+                        action='append',
+                        dest='branch',
+                        help="Branch to update")
+
+    parser.add_argument('-l',
+                        '--list',
+                        action='store_true',
+                        help="List al currently maintained repos")
+
+    parser.add_argument('-v',
+                        '--verbose',
+                        action='store_true',
+                        help="Show commands")
+
+    args = parser.parse_args()
+
+    if args.update_all:
+        update_all()
+
+    if args.list:
+        list()
+
+    if args.update:
+        update()
+
+exit()
+############################################################################################333
 
 class repository:
     def __init__(self, usr, repo, branch):
@@ -81,45 +229,6 @@ class unit:
     def add_remote(self):
         return 'git -C {} remote add upstream https://github.com/{}/{}'.format(
             self._local, self._upstream.usr(), self._upstream.repo())
-
-
-def sc_(params):
-    if args.verbose:
-        print '>', params
-    return subprocess.call(params, shell=True)
-
-
-def green(string):
-    return GREEN + string + CLEAR
-
-
-def yellow(string):
-    return YELLOW + string + CLEAR
-
-
-def red(string):
-    return RED + string + CLEAR
-
-
-def yellow_light(string):
-    return YELLOW_LIGHT + string + CLEAR
-
-
-def msgrun(msg):
-    print yellow(msg)
-
-
-def msgdone(msg):
-    print green(msg)
-
-
-def msgerr(msg):
-    print red(msg)
-    sys.exit()
-
-
-def msginf(msg):
-    print yellow_light(msg)
 
 
 def create_local_repo(rp):
@@ -192,12 +301,6 @@ def update_all():
         update_repo(repo)
 
 
-def list():
-    msgrun('Currently maintained repositories')
-    for dict in repos:
-        msginf('{:8} {:7} {}'.format(dict['usr'], dict['branch'], dict['repo']))
-
-
 def update():
     if args.repo is None:
         msgerr('need -r')
@@ -205,51 +308,3 @@ def update():
     for dict in repos:
         if dict['repo'] == args.repo[0]:
             update_repo(dict)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description="""
-    Update forks v 1.0 ---
-    This script manages a set of repositories, each one having three locations: The original one,
-    the fork of the original in my github and a clone of this fork in my workstation.
-    The program's goal is to update the fork in github to the latest version of the original repo.
-    To do that it makes a fetch to the original repo downloading the last version to the workstation,
-    does a merge and then makes a push to the fork.
-
-    """)
-    parser.add_argument('-U',
-                        '--update-all',
-                        action='store_true',
-                        help="Update all forks without warning")
-
-    parser.add_argument('-u',
-                        '--update',
-                        action='store_true',
-                        help="Update specifics forks")
-
-    parser.add_argument('-r',
-                        '--repo',
-                        action='append',
-                        dest='repo',
-                        help="Repo to update")
-
-    parser.add_argument('-l',
-                        '--list',
-                        action='store_true',
-                        help="List al currently maintained repos")
-
-    parser.add_argument('-v',
-                        '--verbose',
-                        action='store_true',
-                        help="Show commands")
-
-    args = parser.parse_args()
-
-    if args.update_all:
-        update_all()
-
-    if args.list:
-        list()
-
-    if args.update:
-        update()
