@@ -5,220 +5,346 @@
       "repo": "manufacture",
       "branch": [
         "8.0",
-        "9.0"
+        "9.0",
+        "10.0"
       ]
     },
     {
       "usr": "oca",
       "repo": "web",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "account-financial-reporting",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "server-tools",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "management-system",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "knowledge",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "rma",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "pos",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
     },
     {
       "usr": "oca",
       "repo": "stock-logistics-warehouse",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "connector-woocommerce",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "bank-statement-import",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "crm",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "contract",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "social",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "serviciosbaeza",
+      "repo": "serviciosbaeza-odoo-addons",
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "aeroo",
       "repo": "aeroo_reports",
-      "branch": "8.0"
+      "branch": [
+        "8.0"
+      ]
     },
     {
       "usr": "tgalal",
       "repo": "yowsup",
-      "branch": "master"
+      "branch": [
+        "master"
+      ]
     },
     {
       "usr": "waylan",
       "repo": "Python-Markdown",
-      "branch": "master"
+      "branch": [
+        "master"
+      ]
     },
     {
       "usr": "ctmil",
       "repo": "payment_mercadopago",
-      "branch": "master"
+      "branch": [
+        "master",
+        "9.0"
+      ]
     },
     {
       "usr": "csrocha",
       "repo": "fpoc-chrome",
-      "branch": "master"
+      "branch": [
+        "master"
+      ]
     },
     {
       "usr": "csrocha",
       "repo": "odoo_fpoc",
-      "branch": "master"
+      "branch": [
+        "master"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "docker-odoo-adhoc",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "odoo-argentina",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-account-analytic",
       "upstream": "account-analytic",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-account-financial-tools",
       "upstream": "account-financial-tools",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-account-invoicing",
       "upstream": "account-invoicing",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-account-payment",
       "upstream": "account-payment",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-crm",
       "upstream": "crm",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-hr",
       "upstream": "hr",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-manufacture",
       "upstream": "manufacture",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-miscellaneous",
       "upstream": "miscellaneous",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-multi-company",
       "upstream": "multi-company",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-partner",
       "upstream": "partner",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-product",
       "upstream": "product",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-purchase",
       "upstream": "purchase",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-reporting-engine",
       "upstream": "reporting-engine",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-sale",
       "upstream": "sale",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-stock",
       "upstream": "stock",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-survey",
       "upstream": "survey",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     },
     {
       "usr": "ingadhoc",
       "repo": "adhoc-surveyor",
       "upstream": "surveyor",
-      "branch": "8.0"
-    },
-    {
-      "usr": "oca",
-      "repo": "connector-woocommerce",
-      "branch": "8.0"
-    },
-    {
-      "usr": "oca",
-      "repo": "bank-statement-import",
-      "branch": "8.0"
-    },
-    {
-      "usr": "serviciosbaeza",
-      "repo": "serviciosbaeza-odoo-addons",
-      "branch": "8.0"
-    },
-    {
-      "usr": "oca",
-      "repo": "crm",
-      "branch": "8.0"
-    },
-    {
-      "usr": "oca",
-      "repo": "contract",
-      "branch": "8.0"
-    },
-    {
-      "usr": "oca",
-      "repo": "social",
-      "branch": "8.0"
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     }
   ]
 }
