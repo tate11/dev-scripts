@@ -1,6 +1,7 @@
 #!/bin/bash
-
+#-v /odoo/odoo-8.0/sources:/mnt/extra-addons \
+#
 sudo docker run -it --rm \
-	-v /home/jorge/psimage:/mnt \
+	-v /odoo/odoo-8.0/sources:/mnt/extra-addons \
 	--entrypoint=/bin/bash \
         $*
