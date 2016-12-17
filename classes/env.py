@@ -28,21 +28,26 @@ logger.info('this does not work :(')
 Help dict
     'name':'clientname','port':'portnumber','odoover':'odoo-version'
     'repos': [
-    # install repository of standard modules
+    # install repository of standard modules (1)
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-    # install multiple single repos in a installdir
+    # install multiple single repos in a installdir (2)
          {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': '8.0'},
          {'usr': 'jobiols', 'instdir':'ml', 'repo': 'payment_mercadopago', 'branch': '8.0'},
-    # install repo with inner path
-         {'usr': 'jobiols', 'innerdir':'addons/fpoc', 'repo': 'odoo_fpoc', 'branch': 'master'},
+    # install repo with inner path (3)
+         {'usr': 'jobiols', 'innerdir':'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
     ]
     'images':[
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
     ]
-    'install'[
-        'module-to-install',
-        'another-module'
-    ]
+
+NOTES:
+    1- standard directory structure as in all oca repos, there is a repo name with
+       many modules inside.
+    2- single repo structure, the repo name is the module name then you must provide an
+       install dir to get things in standard form.
+    3- inner repo structure, the module is located in an inner path as in
+       https://github.com/ctmil/odoo_fpoc.git, you must declare the innerdir to reach the
+       module and put the things in standard form.
 """
 
 clients__ = [
@@ -58,6 +63,9 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         # repos para impresora fiscal
+         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -71,7 +79,14 @@ clients__ = [
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
