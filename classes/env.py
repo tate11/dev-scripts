@@ -87,13 +87,14 @@ clients__ = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         # repos para temas ecommerce
+         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          # repos para impresora fiscal
          {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
          {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
           'branch': 'master'},
          {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
-         {'usr': 'odoo-l10n-ar', 'innerdir': 'addons', 'repo': 'l10n_ar_invoice',
-          'branch': '8.0'},
 
      ],
      'images': [
@@ -306,12 +307,16 @@ clients__ = [
      },
 
     #######################################################################
+    # ODOO V9
+    #######################################################################
     {'name': 'makeover9', 'port': '8069', 'odoover': '9.0',
      'repos': [
-         # requeridos por la localizacion argentina
+         # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
          #
 #         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
 #         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
@@ -325,13 +330,57 @@ clients__ = [
      },
 
     #######################################################################
-    {'name': 'ou', 'port': '8069', 'odoover': '9.0',
+    {'name': 'test9', 'port': '8001', 'odoover': '9.0',
      'repos': [
-         # requeridos por la localizacion argentina
+         # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
-         #
+         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+
+    #######################################################################
+    {'name': 'jeo9', 'port': '8091', 'odoover': '9.0',
+     'repos': [
+         # requeridos por la localizacion argentina -- 19/12/17
+         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
+         # customizacion
+         {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
+         # oca tools
+         {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'social', 'branch': '9.0'},
+         # repos para temas ecommerce
+         #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '9.0'}, no funciona
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+
+    #######################################################################
+    {'name': 'ou', 'port': '8069', 'odoover': '9.0',
+     'repos': [
+         # requeridos por la localizacion argentina -- 19/12/17
+         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
+
 #         {'usr': 'jobiols', 'repo': 'temp_modules', 'branch': '9.0'},
 #         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '9.0'},
 #         {'usr': 'oca', 'repo': 'knowledge', 'branch': '9.0'},
