@@ -95,6 +95,8 @@ clients__ = [
          {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
           'branch': 'master'},
          {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
+         # repos para mario
+         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
 
      ],
      'images': [

@@ -19,7 +19,7 @@
 #
 # -----------------------------------------------------------------------------------
 # https://api.github.com/repos/jobiols/valente/issues?state=all
-import requests
+# import requests
 import textwrap
 
 GITHUB_USER = 'jobiols'
