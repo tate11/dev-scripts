@@ -136,6 +136,15 @@
       ]
     },
     {
+      "usr": "oca",
+      "repo": "reporting-engine",
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
+    },
+
+    {
       "usr": "serviciosbaeza",
       "repo": "serviciosbaeza-odoo-addons",
       "branch": [
@@ -149,6 +158,14 @@
       "upstream": "aeroo_reports",
       "branch": [
         "8.0",
+        "9.0"
+      ]
+    },
+    {
+      "usr": "ingadhoc",
+      "repo": "adhoc-argentina-reporting",
+      "upstream": "argentina-reporting",
+      "branch": [
         "9.0"
       ]
     },
