@@ -42,8 +42,10 @@ import time
 import logging
 import logging.handlers
 
-from classes import Environment, clients__
+from classes import Environment
 from classes.git_issues import Issues
+from classes.client_data import clients__
+
 
 def sc_(params):
     _params = []
@@ -170,11 +172,12 @@ def install_client(e):
 
         cli = e.get_client(client_name)
 
-        # Creating directory's for installation
-        sc_('sudo mkdir ' + cli.get_base_dir())
-        username = pwd.getpwuid(os.getuid()).pw_name
-        # change ownership to current user
-        sc_('sudo chown ' + username + ':' + username + ' ' + cli.get_base_dir())
+        # Creating directory's for installation if does not exist
+        if not os.path.isdir(cli.get_base_dir()):
+            sc_('sudo mkdir ' + cli.get_base_dir())
+            username = pwd.getpwuid(os.getuid()).pw_name
+            # change ownership to current user
+            sc_('sudo chown ' + username + ':' + username + ' ' + cli.get_base_dir())
 
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
         sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
@@ -211,10 +214,9 @@ def install_client(e):
         param += '-- --stop-after-init -s '
         param += '--db-filter=' + cli.get_name() + '_.* '
 
-        if client_name == 'ou':
-            ou = '/opt/openerp/addons,'
-        else:
-            ou = ''
+        # patch for openupgrade image
+        ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
+
         param += '--addons-path=' + ou + cli.get_addons_path() + ' '
         param += '--logfile=/var/log/odoo/odoo.log '
         param += '--logrotate '
@@ -224,7 +226,6 @@ def install_client(e):
             e.msgerr('failing to write config file. Aborting')
 
     e.msgdone('Installing done')
-    return True
 
 
 def run_environment(e):
@@ -521,6 +522,7 @@ def post_backup(e):
             if file[-13:] == 'upload-backup':
                 sc_(backup_dir + file)
 
+
 def backup(e):
     """
     Launch a database backup, with docker image 'backup'. The backup file lives in
@@ -689,8 +691,10 @@ def tag_repos(e):
     tag = client + '-' + milestone
     e.msginf('tagging repos with ' + tag)
 
+
 def issues(e):
     e.msginf('issues')
+
 
 if __name__ == '__main__':
     LOG_FILENAME = '/var/log/odooenv/odooenv.log'

@@ -17,4 +17,5 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -----------------------------------------------------------------------------------
-from env import Client, Environment, Image, Repo, clients__
+from env import Client, Environment, Image, Repo
+from client_data import clients__
