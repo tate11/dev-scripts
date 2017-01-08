@@ -127,6 +127,15 @@
       ]
     },
     {
+      "usr": "oca",
+      "repo": "partner-contact",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
       "usr": "serviciosbaeza",
       "repo": "serviciosbaeza-odoo-addons",
       "branch": [
@@ -135,10 +144,12 @@
       ]
     },
     {
-      "usr": "aeroo",
-      "repo": "aeroo_reports",
+      "usr": "ingadhoc",
+      "repo": "adhoc-aeroo_reports",
+      "upstream": "aeroo_reports",
       "branch": [
-        "8.0"
+        "8.0",
+        "9.0"
       ]
     },
     {
