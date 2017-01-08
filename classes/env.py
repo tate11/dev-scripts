@@ -335,11 +335,16 @@ clients__ = [
     {'name': 'test9', 'port': '8001', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina -- 19/12/17
-         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
+         # customizacion
+         {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
+         # oca tools
+         {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -352,25 +357,16 @@ clients__ = [
     {'name': 'jeo9', 'port': '8091', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina -- 19/12/17
-         {'usr': 'ingadhoc', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'account-financial-tools', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'account-payment', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'aeroo_reports', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-reporting', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
-
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
          # customizacion
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
          # oca tools
          {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'social', 'branch': '9.0'},
-         # repos para temas ecommerce
-         #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '9.0'}, no funciona
-
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -597,7 +593,7 @@ class Client:
         path = '/mnt/extra-addons/'
         paths = []
         for repo in self.get_repos():
-            paths.append(path + repo.getPathDir())
+            paths.append(path + repo.get_addons_dir())
         return ','.join(paths)
 
 
@@ -627,12 +623,15 @@ class Repo:
 
         return ret
 
-    def getInstDir(self):
+    def get_addons_dir(self):
         try:
             ret = self._dict['instdir'] + '/' + self._dict['repo']
         except:
             ret = self._dict['repo']
-        return self._cli.get_home_dir() + 'sources/' + ret
+        return ret
+
+    def getInstDir(self):
+        return self._cli.get_home_dir() + 'sources/' + self.get_addons_dir()
 
     def getPullRepo(self):
         return 'git -C {} pull'.format(self.getInstDir())
