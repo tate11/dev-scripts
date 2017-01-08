@@ -147,7 +147,12 @@ class repo:
     def _longver(self):
         return datetime.now().strftime(':%B %d, %Y')
 
-    def update(self):
+    def update(self, branch):
+        # remove not wanted branches, if there is a -b directive
+        if branch:
+            if branch[0] not in self.branch():
+                msgerr('bad branch ' + branch[0])
+            self._branch = branch
         msgrun('{} {}/{}:({})'.format(
             20 * '-', self.usr(), self.repo(), ', '.join(self.branch())))
 
@@ -231,10 +236,10 @@ class repos:
         for rp in self._repos:
             msginf(rp.name())
 
-    def update(self, repo_name):
+    def update(self, repo_name, branch):
         for r in self._repos:
             if r.repo() == repo_name:
-                r.update()
+                r.update(branch)
                 return True
         msgerr('repo "{}" not found'.format(repo_name))
 
@@ -252,10 +257,10 @@ def list():
     rp.list_repos()
 
 
-def update():
+def update(branch):
     if args.repo is None:
         msgerr('need -r')
-    rp.update(args.repo[0])
+    rp.update(args.repo[0], branch)
 
 
 def delete():
@@ -333,7 +338,7 @@ if __name__ == '__main__':
         list()
 
     if args.update:
-        update()
+        update(args.branch)
 
     if args.delete:
         delete()
