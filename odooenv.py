@@ -716,7 +716,12 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description='Odoo environment setup v3.6.0')
+    parser = argparse.ArgumentParser(description= \
+                                         """
+                                         ==========================================================================
+                                         Odoo environment setup v3.7.0 by jeo Software <jorge.obiols@gmail.com>
+                                         ==========================================================================
+                                         """)
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define "

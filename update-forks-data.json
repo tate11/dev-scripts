@@ -370,7 +370,6 @@
       "repo": "adhoc-surveyor",
       "upstream": "surveyor",
       "branch": [
-        "8.0",
         "9.0"
       ]
     }

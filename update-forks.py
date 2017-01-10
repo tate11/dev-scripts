@@ -148,10 +148,14 @@ class repo:
         return datetime.now().strftime(':%B %d, %Y')
 
     def update(self, branch):
+        print 'update --- ', self._usr, self._repo, self._branch
         # remove not wanted branches, if there is a -b directive
         if branch:
             if branch[0] not in self.branch():
-                msgerr('bad branch ' + branch[0])
+                msginf(
+                    'the branch in -u {}{} -b {} does not exist in manifest ({})'.format(
+                        self._usr, self._repo, branch[0], self._branch))
+                return
             self._branch = branch
         msgrun('{} {}/{}:({})'.format(
             20 * '-', self.usr(), self.repo(), ', '.join(self.branch())))
@@ -243,9 +247,9 @@ class repos:
                 return True
         msgerr('repo "{}" not found'.format(repo_name))
 
-    def update_all(self):
+    def update_all(self, branch):
         for r in self._repos:
-            r.update()
+            r.update(branch)
 
 
 rp = repos(json)
@@ -273,8 +277,8 @@ def delete_all():
     rp.delete_local_repos()
 
 
-def update_all():
-    rp.update_all()
+def update_all(branch):
+    rp.update_all(branch)
 
 
 if __name__ == '__main__':
@@ -332,7 +336,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.update_all:
-        update_all()
+        update_all(args.branch)
 
     if args.list:
         list()
