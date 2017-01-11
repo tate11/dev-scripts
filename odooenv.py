@@ -883,7 +883,7 @@ if __name__ == '__main__':
                         metavar=('client', 'milestone'),
                         dest='tag_repos',
                         help="Tag all repos used by a client with a tag composed for "
-                             "client ntame and milestone from client sources")
+                             "client name and milestone from client sources")
 
     args = parser.parse_args()
     enviro = Environment(args, clients__)
