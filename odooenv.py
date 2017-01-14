@@ -21,14 +21,26 @@
 # -----------------------------------------------------------------------------------
 # Directory structure
 #
-#   /odoo/postgresql
-#   /odoo/odoov-[version]
-#       /sources
-#       /[clientname1]
-#           /config
-#               openerp-server.conf
-#           /data_dir
-#           /log
+#   ├──odoo
+#      ├─ postgresql
+#      ├──odoov-8.0
+#      │  ├──[clientname]
+#      │  │   ├──config
+#      │  │   │  └──openerp-server.conf
+#      │  │   ├──data_dir
+#      │  │   │  └──[filestore]
+#      │  │   └──log
+#      │  │      └──odoo.log
+#      │  └──sources
+#      └──odoov-9.0
+#         ├──[clientname]
+#         │   ├──config
+#         │   │  └──openerp-server.conf
+#         │   ├──data_dir
+#         │   │  └──[filestore]
+#         │   └──log
+#         │      └──odoo.log
+#         └──sources
 #
 ##############################################################################
 
