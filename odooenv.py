@@ -78,6 +78,7 @@ def sc_(params):
         ret += subprocess.call(params, shell=True)
     return ret
 
+
 def uninstall_client(e):
     clients = e.get_clients_from_params()
     if raw_input('Delete postgresql directory? (y/n) ') == 'y':
@@ -115,7 +116,7 @@ def update_db(e):
     params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
     if e.debug_mode():
         params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
-            cli.get_home_dir())
+                cli.get_home_dir())
     params += '--link postgres:db '
     params += '{} -- '.format(cli.get_image('odoo').get_image())
     params += '--stop-after-init '
@@ -153,7 +154,7 @@ def update_repos_from_list(e, repos):
             tst_list.append(repo.get_formatted_repo())
             unique_repos.append(repo)
     for repo in unique_repos:
-        # hay que actualizar a un tag especifico
+        # hay que actualizar a un tag específico
         if e.get_tag():
             for command in repo.getTagRepo(e.get_tag()):
                 if sc_(command):
@@ -165,7 +166,7 @@ def update_repos_from_list(e, repos):
                 params = repo.getPullRepo()
             else:
                 e.msginf('clone ' + repo.get_formatted_repo())
-                params = repo.getCloneRepo(e)
+                params = 'sudo ' + repo.getCloneRepo(e)
 
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
@@ -306,7 +307,7 @@ def quality_test(e):
         e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(), repo_name))
 
     msg = 'Performing test {} on repo {} for client {} and database {}'.format(
-        test_file, repo_name, cli.get_name(), db)
+            test_file, repo_name, cli.get_name(), db)
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
@@ -326,7 +327,7 @@ def quality_test(e):
     params += '--test-enable '
     #    params += '-u {} '.format(repo_name)
     params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
-        repo_name, module_name, test_file)
+            repo_name, module_name, test_file)
     sc_(params)
 
 
@@ -353,7 +354,7 @@ def run_client(e):
             # si es openupgrade el sourcesname es upgrade, sino es openerp
             sourcesname = 'openerp' if clientName != 'ou' else 'upgrade'
             params += '-v {}sources/{}:/usr/lib/python2.7/dist-packages/openerp '.format(
-                cli.get_home_dir(), sourcesname)
+                    cli.get_home_dir(), sourcesname)
         params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '--link postgres:db '
 
@@ -379,11 +380,11 @@ def run_client(e):
 
         if sc_(params):
             e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
-                cli.get_name(), cli.get_name()))
+                    cli.get_name(), cli.get_name()))
 
         else:
             e.msgdone(
-                'Client ' + clientName + ' up and running on port ' + cli.get_port())
+                    'Client ' + clientName + ' up and running on port ' + cli.get_port())
 
     return True
 
@@ -509,8 +510,8 @@ def no_ip_install(e):
 
 
 def post_backup(e):
-    clientName = e.get_clients_from_params('one')
-    client = e.get_client(clientName)
+    client_name = e.get_clients_from_params('one')
+    client = e.get_client(client_name)
     backup_dir = client.get_backup_dir()
 
     # verify what to do before backup, default is backup housekeeping
@@ -577,7 +578,7 @@ def restore(e):
         e.msgerr('new dbname should be different from old dbname')
 
     e.msgrun(
-        'Restoring database ' + dbname + ' of client ' + clientName + ' onto database ' + new_dbname)
+            'Restoring database ' + dbname + ' of client ' + clientName + ' onto database ' + new_dbname)
 
     client = e.get_client(clientName)
     img = client.get_image('backup')
@@ -684,10 +685,10 @@ def cron_jobs(e):
     client = e.get_clients_from_params('one')
     e.msginf('Adding cron jobs to this server')
     croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py'.format(
-        dbname, client)
+            dbname, client)
     cronjob = '0 0,12 * * * {}'.format(croncmd)
     command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(
-        croncmd, cronjob)
+            croncmd, cronjob)
     sc_(command)
 
 
@@ -717,7 +718,7 @@ if __name__ == '__main__':
 
         # Add the log message handler to the logger
         handler = logging.handlers.RotatingFileHandler(
-            LOG_FILENAME, maxBytes=2000000, backupCount=5)
+                LOG_FILENAME, maxBytes=2000000, backupCount=5)
 
         # formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
