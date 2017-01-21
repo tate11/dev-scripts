@@ -4,12 +4,14 @@ This proyect support [semver](http://semver.org/)
     
     usage: odooenv.py [-h] [-i] [-U] [-R] [-S] [-r] [-s] [-p] [-l] [-v] [-q] [-n]
                       [-u] [-d DATABASE] [-w NEW_DATABASE] [-m MODULE] [-c CLIENT]
-                      [--debug] [--cleanup] [--no-dbfilter] [-H] [--backup]
-                      [--backup-list] [--restore] [-t TIMESTAMP]
-                      [-Q repo test_file] [-j] [--cron-list] [--translate]
-                      [--issues REPO] [-T client milestone]
+                      [--debug] [--no-dbfilter] [-H] [--backup] [--backup-list]
+                      [--restore] [-t TIMESTAMP] [-Q repo test_file] [-j]
+                      [--cron-list] [--translate] [--issues REPO]
+                      [-T client milestone]
     
-    Odoo environment setup v3.6.0
+    ==========================================================================
+    Odoo environment setup v3.8.0 by jeo Software <jorge.obiols@gmail.com>
+    ==========================================================================
     
     optional arguments:
       -h, --help            show this help message and exit
@@ -44,8 +46,6 @@ This proyect support [semver](http://semver.org/)
                             postgres server databases. 3.- when doing a pull
                             (option -p) it clones the full repo i.e. does not
                             issue --depth 1 to git
-      --cleanup             Delete all files clients, sources, and databases in
-                            this server. It ask about each thing.
       --no-dbfilter         Eliminates dbfilter: The client can see any database.
                             Without this, the client can only see databases
                             starting with clientname_
@@ -71,4 +71,4 @@ This proyect support [semver](http://semver.org/)
                             with -l this option supports github API v3 priority is
                             the number between brackets in issue title
       -T client milestone   Tag all repos used by a client with a tag composed for
-                            client ntame and milestone from client sources
+                            client name and milestone from client sources

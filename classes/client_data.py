@@ -76,24 +76,24 @@ clients__ = [
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         # repos para temas ecommerce
-         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
-         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
-         # repos para impresora fiscal
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
-          'branch': 'master'},
-         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
-         # repos para mario
-         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+#         # repos para temas ecommerce
+#         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
+#         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+#         # repos para impresora fiscal
+#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
+#          'branch': 'master'},
+#         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
+#         # repos para mario
+#         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
 
      ],
      'images': [

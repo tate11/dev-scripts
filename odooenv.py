@@ -45,38 +45,28 @@
 ##############################################################################
 
 import argparse
-import os
-import pwd
-from datetime import datetime
-import subprocess
-import shlex
-import time
 import logging
 import logging.handlers
+import os
+import pwd
+import shlex
+import subprocess
+import time
+from datetime import datetime
 
 from classes import Environment
-from classes.git_issues import Issues
 from classes.client_data import clients__
+from classes.git_issues import Issues
+
+# el archivo a ejecutar después de hacer backup
+POST_BACKUP_ACTION = 'upload-backup'
 
 
 def sc_(params):
-    _params = []
-    ret = 0
-    if type(params) == type([]):
-        for item in params:
-            _params.append(item)
-    else:
-        _params.append(params)
-
-    for item in _params:
-        lparams = shlex.split(item)
-
-        if args.verbose:
-            print item
-        # print lparams
-
-        ret += subprocess.call(params, shell=True)
-    return ret
+    params = shlex.split(params)
+    if args.verbose:
+        print ' '.join(params)
+    return subprocess.call(params)
 
 
 def uninstall_client(e):
@@ -146,6 +136,13 @@ def update_images_from_list(e, images):
 
 
 def update_repos_from_list(e, repos):
+    # check if /odoo exists
+    if not os.path.isdir(e.get_base_dir()):
+        sc_('sudo mkdir {}'.format(e.get_base_dir()))
+        username = pwd.getpwuid(os.getuid()).pw_name
+        # change ownership to current user
+        sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
+
     # avoid repo duplicates
     tst_list = []
     unique_repos = []
@@ -166,7 +163,7 @@ def update_repos_from_list(e, repos):
                 params = repo.getPullRepo()
             else:
                 e.msginf('clone ' + repo.get_formatted_repo())
-                params = 'sudo ' + repo.getCloneRepo(e)
+                params = repo.getCloneRepo(e)
 
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
@@ -187,50 +184,47 @@ def install_client(e):
 
         # Creating directory's for installation if does not exist
         if not os.path.isdir(cli.get_base_dir()):
-            sc_('sudo mkdir ' + cli.get_base_dir())
+            sc_('sudo mkdir {}'.format(cli.get_base_dir()))
             username = pwd.getpwuid(os.getuid()).pw_name
             # change ownership to current user
-            sc_('sudo chown ' + username + ':' + username + ' ' + cli.get_base_dir())
+            sc_('sudo chown {}:{} {}'.format(username, username, cli.get_base_dir()))
 
-        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/config')
-        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/data_dir')
-        sc_('mkdir -p ' + cli.get_home_dir() + cli.get_name() + '/log')
-        sc_('chmod 777 -R ' + cli.get_home_dir() + cli.get_name())
-        sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
+        sc_('mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
+        sc_('mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
+        sc_('mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
+        sc_('mkdir -p {}sources'.format(cli.get_home_dir()))
+        #        sc_('chmod 755 -R {}sources'.format(cli.get_home_dir()))
 
         # if not exist postgresql create it
         if not os.path.isdir(e.get_psql_dir()):
-            sc_('mkdir ' + e.get_psql_dir())
+            sc_('mkdir {}'.format(e.get_psql_dir()))
 
         # if not exist log create it
         if not os.path.isfile(LOG_FILENAME):
-            sc_('sudo mkdir -p ' + os.path.dirname(LOG_FILENAME))
-            sc_('sudo touch ' + LOG_FILENAME)
-            sc_('sudo chmod 666 ' + LOG_FILENAME)
+            sc_('sudo mkdir -p {}'.format(os.path.dirname(LOG_FILENAME)))
+            sc_('sudo touch {}'.format(LOG_FILENAME))
+            sc_('sudo chmod 666 {}'.format(LOG_FILENAME))
 
-        # make sources dir
-        # if not exist sources dir create it
-        if not os.path.isdir(cli.get_home_dir() + 'sources'):
-            sc_('mkdir -p ' + cli.get_home_dir() + 'sources')
+        sc_('chmod 607 -R {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
 
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())
 
         # creating config file for client
         param = 'sudo docker run --rm '
-        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/config:/etc/odoo '
-        param += '-v ' + cli.get_home_dir() + 'sources:/mnt/extra-addons '
-        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/data_dir:/var/lib/odoo '
-        param += '-v ' + cli.get_home_dir() + cli.get_name() + '/log:/var/log/odoo '
-        param += '--name ' + cli.get_name() + '_tmp '
-        param += cli.get_image('odoo').get_image() + ' '
+        param += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
+        param += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+        param += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
+        param += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
+        param += '--name {}_tmp '.format(cli.get_name())
+        param += '{} '.format(cli.get_image('odoo').get_image())
         param += '-- --stop-after-init -s '
-        param += '--db-filter=' + cli.get_name() + '_.* '
+        param += '--db-filter={}_.* '.format(cli.get_name())
 
         # patch for openupgrade image
         ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
 
-        param += '--addons-path=' + ou + cli.get_addons_path() + ' '
+        param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
         param += '--logfile=/var/log/odoo/odoo.log '
         param += '--logrotate '
 
@@ -243,10 +237,9 @@ def install_client(e):
 
 def run_environment(e):
     e.msgrun('Running environment images')
-    clientNames = e.get_clients_from_params()
+    client_name = e.get_clients_from_params(cant='one')
 
-    # TODO ver si lo modificamos para multiples clientes
-    cli = e.get_client(clientNames[0])
+    cli = e.get_client(client_name)
 
     err = 0
     image = cli.get_image('postgres')
@@ -255,16 +248,16 @@ def run_environment(e):
         params += '-p 5432:5432 '
     params += '-e POSTGRES_USER=odoo '
     params += '-e POSTGRES_PASSWORD=odoo '
-    params += '-v ' + e.get_psql_dir() + ':/var/lib/postgresql/data '
+    params += '-v {}:/var/lib/postgresql/data '.format(e.get_psql_dir())
     params += '--restart=always '
-    params += '--name ' + image.get_name() + ' '
+    params += '--name {} '.format(image.get_name())
     params += image.get_image()
     err += sc_(params)
 
     image = cli.get_image('aeroo')
     params = 'sudo docker run -d '
     params += '-p 127.0.0.1:8989:8989 '
-    params += '--name=' + image.get_name() + ' '
+    params += '--name={} '.format(image.get_name())
     params += '--restart=always '
     params += image.get_image()
     err += sc_(params)
@@ -303,7 +296,7 @@ def quality_test(e):
     repos_lst = []
     for repo in cli.get_repos():
         repos_lst.append(repo.get_name())
-    if not repo_name in repos_lst:
+    if repo_name not in repos_lst:
         e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(), repo_name))
 
     msg = 'Performing test {} on repo {} for client {} and database {}'.format(
@@ -515,24 +508,23 @@ def post_backup(e):
     backup_dir = client.get_backup_dir()
 
     # verify what to do before backup, default is backup housekeeping
-    #    TODO Definir si hacemos backup a la S3
-
     limit_seconds = time.time() - 10 * 60 * 60 * 24
 
     # walk the backup dir
     for root, dirs, files in os.walk(backup_dir):
         for file in files:
-            filename, file_extension = os.path.splitext(file)
             seconds = os.path.getctime(root + file)
             if seconds < limit_seconds:
-                sc_('sudo rm ' + root + file)
-                # os.remove(root+file)
-                logger.info('Removed backup file "%s"', file)
+                # no eliminar el archivo de postbackup
+                if file[-13:] != POST_BACKUP_ACTION:
+                    sc_('sudo rm ' + root + file)
+                    # os.remove(root+file)
+                    logger.info('Removed backup file "%s"', file)
 
     # watch for upload-backup cmdfile and execute
     for root, dirs, files in os.walk(backup_dir):
         for file in files:
-            if file[-13:] == 'upload-backup':
+            if file[-13:] == POST_BACKUP_ACTION:
                 sc_(backup_dir + file)
 
 
@@ -571,21 +563,21 @@ def backup(e):
 
 def restore(e):
     dbname = e.get_database_from_params()
-    clientName = e.get_clients_from_params('one')
+    client_name = e.get_clients_from_params('one')
     timestamp = e.get_timestamp_from_params()
     new_dbname = e.get_new_database_from_params()
     if dbname == new_dbname:
         e.msgerr('new dbname should be different from old dbname')
 
     e.msgrun(
-            'Restoring database ' + dbname + ' of client ' + clientName + ' onto database ' + new_dbname)
+            'Restoring database ' + dbname + ' of client ' + client_name + ' onto database ' + new_dbname)
 
-    client = e.get_client(clientName)
+    client = e.get_client(client_name)
     img = client.get_image('backup')
 
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
-    params += '--volumes-from ' + clientName + ' '
+    params += '--volumes-from ' + client_name + ' '
     params += '-v ' + client.get_backup_dir() + ':/backup '
     params += '--env NEW_DBNAME=' + new_dbname + ' '
     params += '--env DBNAME=' + dbname + ' '
@@ -624,7 +616,7 @@ def decode_backup(root, filename):
     except:
         size += 0
 
-    size = size / 1000000
+    size /= 1000000
 
     # strip db name
     a = len(filename) - 13
@@ -668,16 +660,6 @@ def backup_list(e):
             e.msgrun('List of available backups for client ' + clientName)
             for fn in filenames:
                 e.msginf(decode_backup(root, fn))
-
-
-def cleanup(e):
-    if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
-        e.msginf('deleting all databases!')
-        sc_('sudo rm -r ' + e.get_psql_dir())
-
-    if raw_input('Delete clients and sources SURE?? (y/n) ') == 'y':
-        e.msginf('deleting all client and sources!')
-        sc_('sudo rm -r ' + e._home_template + '*')
 
 
 def cron_jobs(e):
@@ -729,12 +711,11 @@ if __name__ == '__main__':
         logger = logging.getLogger(__name__)
         print 'Warning!, problems with logfile', str(ex)
 
-    parser = argparse.ArgumentParser(description= \
-                                         """
-                                         ==========================================================================
-                                         Odoo environment setup v3.7.0 by jeo Software <jorge.obiols@gmail.com>
-                                         ==========================================================================
-                                         """)
+    parser = argparse.ArgumentParser(description="""
+        ==========================================================================
+        Odoo environment setup v3.8.0 by jeo Software <jorge.obiols@gmail.com>
+        ==========================================================================
+    """)
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
                         help="Install clients, requires -c option. You can define "
@@ -821,11 +802,6 @@ if __name__ == '__main__':
                              'it opens port 5432 to access postgres server databases. 3.- when '
                              'doing a pull (option -p) it clones the full repo i.e. does not '
                              'issue --depth 1 to git ')
-
-    parser.add_argument('--cleanup',
-                        action='store_true',
-                        help='Delete all files clients, sources, and databases in this '
-                             'server. It ask about each thing.')
 
     parser.add_argument('--no-dbfilter',
                         action='store_true',
@@ -927,8 +903,6 @@ if __name__ == '__main__':
         restore(enviro)
     if args.backup_list:
         backup_list(enviro)
-    if args.cleanup:
-        cleanup(enviro)
     if args.server_help:
         server_help(enviro)
     if args.cron_jobs:
