@@ -99,7 +99,7 @@ _clients = [
     #######################################################################1
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'testing_tags', 'branch': '8.0'},
 #         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
 #         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
 #         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},

@@ -18,8 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 # -----------------------------------------------------------------------------------
-import sys
 import logging
+import sys
 
 logger = logging.getLogger(__name__)
 logger.info('this does not work :(')
@@ -32,7 +32,7 @@ CLEAR = "\033[0;m"
 
 
 class Environment:
-    def __init__(self, args, clients):
+    def __init__(self, args=None, clients=[]):
         self._clients = []
         for cli in clients:
             self._clients.append(Client(self, cli))
@@ -44,6 +44,9 @@ class Environment:
 
     def get_base_dir(self):
         return self._home_dir
+
+    def get_tag(self):
+        return self._args.checkout_tag
 
     def debug_mode(self):
         return self._args.debug
@@ -87,7 +90,7 @@ class Environment:
     def get_timestamp_from_params(self):
         if self._args.timestamp is None:
             self.msgerr(
-                'need -t option (timestamp, see --backup-list for available timestamps)')
+                    'need -t option (timestamp, see --backup-list for available timestamps)')
         if len(self._args.database) > 1:
             self.msgerr('only one timestamp expected')
         return self._args.timestamp[0]
@@ -139,21 +142,17 @@ class Environment:
         return YELLOW_LIGHT + string + CLEAR
 
     def msgrun(self, msg):
-        if not self._args.quiet:
-            print self.yellow(msg)
+        print self.yellow(msg)
 
     def msgdone(self, msg):
-        if not self._args.quiet:
-            print self.green(msg)
+        print self.green(msg)
 
     def msgerr(self, msg):
-        if not self._args.quiet:
-            print self.red(msg)
-            sys.exit()
+        print self.red(msg)
+        sys.exit()
 
     def msginf(self, msg):
-        if not self._args.quiet:
-            print self.yellow_light(msg)
+        print self.yellow_light(msg)
 
 
 class Client:
@@ -283,26 +282,49 @@ class Repo:
             depth = ''
 
         return 'git clone {} -b {} http://github.com/{} {}'.format(
-            depth,
-            self._dict['branch'],
-            self._getRepo(),
-            self.get_inst_dir())
+                depth,
+                self._dict['branch'],
+                self._getRepo(),
+                self.get_inst_dir())
 
-    def get_tag_repo(self, tag):
+    def do_checkout(self, version):
         """
-        Devuelve el un comando multiple que hace lo siguiente
-            borra el directorio de instalación del repositorio.
-            clona el repositorio origen
-            hace checkout del tag
+        Hace checkout de la version
 
-        :param tag: a bajarse
-        :return: devuelve los tres comandos en forma de lista
+        :param version:
+        :return: devuelve el comando
+        """
+        return 'git -C {} checkout {}'.format(
+                self.get_inst_dir(),
+                version
+        )
+
+    def do_checkout_tag(self, tag):
+        """
+        Hace checkout del tag
+
+        :param tag:
+        :return: devuelve el comando
+        """
+        return 'git -C {} checkout tags/{}'.format(
+                self.get_inst_dir(),
+                tag)
+
+    def do_tag_repo(self, tag):
+        """
+        tags the origin repo with two commands
+            tag the repo
+            push the tag to origin
+
+        :param tag:
         """
         return [
-            'rm -rf {}'.format(self.get_inst_dir()),
-            'git clone -b {} http://github.com/{} {}'.format(
-                self._dict['branch'], self._getRepo(), self.get_inst_dir()),
-            'git -C {} checkout tags/{}'.format(self.get_inst_dir(), tag)
+            'git -C {} tag {}'.format(
+                    self.get_inst_dir(),
+                    tag),
+            'git -C {} push origin {}'.format(
+                    self.get_inst_dir(),
+                    tag),
         ]
 
 
@@ -311,14 +333,14 @@ class Image:
         self._cli = cli
         self._dict = dict
 
-    def getVer(self):
+    def get_ver(self):
         try:
             ver = self._dict['ver']
         except:
             ver = 'latest'
         return ver
 
-    def getFormattedImage(self):
+    def get_formatted_image(self):
         ret = self._dict['usr']
         try:
             ret += '/' + self._dict['img']
@@ -359,5 +381,5 @@ class Image:
     def get_name(self):
         return self._dict['name']
 
-    def getPullImage(self):
-        return 'sudo docker pull ' + self.get_image()
+    def get_pull_image(self):
+        return 'sudo docker pull {}'.format(self.get_image())

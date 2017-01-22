@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 ###############################################
 # shortcut for sudo docker
+# sudo docker $*
 ###############################################
 import subprocess
 import sys

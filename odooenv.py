@@ -63,24 +63,31 @@ POST_BACKUP_ACTION = 'upload-backup'
 
 
 def sc_(params):
-    params = shlex.split(params)
-    if args.verbose:
-        print ' '.join(params)
-    return subprocess.call(params)
+    """Run command or command list with arguments.  Wait for commands to complete, then
 
+    If args.verbose is true, prints command
+    If any errors stop list execution and returns error
 
-def uninstall_client(e):
-    clients = e.get_clients_from_params()
-    if raw_input('Delete postgresql directory? (y/n) ') == 'y':
-        if raw_input('Delete ALL databases for ALL clients SURE?? (y/n) ') == 'y':
-            e.msginf('deleting all databases!')
-            sc_(['sudo rm -r ' + e.get_psql_dir()])
+    :param params: command or command list
+    :return: error return
+    """
+    # if not a list convert to a one element list
+    if not isinstance(params, list):
+        params = [params]
 
-    for clientName in clients:
-        cli = e.get_client(clientName)
-        e.msgrun('deleting client files for client ' + clientName)
-        if sc_(['sudo rm -r ' + cli.get_home_dir() + clientName]):
-            e.msgerr('fail uninstalling client ' + clientName)
+    # traverse list executing commands
+    for cmd in params:
+        # lexical analysis posix style
+        cmd = shlex.split(cmd)
+        if args.verbose:
+            Environment().msgrun(' ')
+            Environment().msgrun(' '.join(cmd))
+            Environment().msgrun(' ')
+        ret = subprocess.call(cmd)
+        if ret:
+            return ret
+
+    return 0
 
 
 def update_db(e):
@@ -124,13 +131,13 @@ def update_images_from_list(e, images):
     tst_list = []
     unique_images = []
     for img in images:
-        if img.getFormattedImage() not in tst_list:
-            tst_list.append(img.getFormattedImage())
+        if img.get_formatted_image() not in tst_list:
+            tst_list.append(img.get_formatted_image())
             unique_images.append(img)
 
     for img in unique_images:
-        params = img.getPullImage()
-        e.msginf('pulling image ' + img.getFormattedImage())
+        params = img.get_pull_image()
+        e.msginf('pulling image ' + img.get_formatted_image())
         if sc_(params):
             e.msgerr('Fail pulling image ' + img.get_name() + ' - Aborting.')
 
@@ -150,22 +157,22 @@ def update_repos_from_list(e, repos):
         if repo.get_formatted_repo() not in tst_list:
             tst_list.append(repo.get_formatted_repo())
             unique_repos.append(repo)
-    for repo in unique_repos:
-        # hay que actualizar a un tag específico
-        if e.get_tag():
-            for command in repo.get_tag_repo(e.get_tag()):
-                if sc_(command):
-                    e.msgerr('Fail installing environment, uninstall and try again.')
-        else:
-            # Check if repo exists
-            if os.path.isdir(repo.get_inst_dir()):
-                e.msginf('pull  ' + repo.get_formatted_repo())
-                params = repo.do_pull_repo()
-            else:
-                e.msginf('clone ' + repo.get_formatted_repo())
-                params = repo.do_clone_repo(e)
 
-            if sc_(params):
+    for repo in unique_repos:
+        # Check if repo exists
+        if os.path.isdir(repo.get_inst_dir()):
+            e.msginf('pull  ' + repo.get_formatted_repo())
+            params = repo.do_pull_repo()
+        else:
+            e.msginf('clone ' + repo.get_formatted_repo())
+            params = repo.do_clone_repo(e)
+
+        if sc_(params):
+            e.msgerr('Fail installing environment, uninstall and try again.')
+
+        # if tag checkout this repo to a known tag
+        if e.get_tag():
+            if sc_(repo.do_checkout_tag(e.get_tag())):
                 e.msgerr('Fail installing environment, uninstall and try again.')
 
 
@@ -466,7 +473,7 @@ def list_data(e):
                  72 * '-')
         for image in cli.get_images():
             e.msgrun('   ' +
-                     image.getFormattedImage())
+                     image.get_formatted_image())
         e.msgrun(' ')
         e.msgrun(3 * '-' + 'branch' +
                  4 * '-' + 'repository' +
@@ -677,30 +684,68 @@ def cron_list(e):
 
 def tag_repos(e):
     """
-    Taggea todos los repos que tiene este cliente con timestamp+client_name
-    Por cada repo le agrega el tag y le hace un push
+    Pone un tag a todos los repos que tiene este cliente con timestamp+client_name
 
     :param e: Environment
     """
-    # actual client from params
     client_name = e.get_clients_from_params(cant='one')
     ts = datetime.now()
     # build tag
-    tag = '{}-{}'.format(ts.strftime('%Y-%m-%dT%H:%m.%S'), client_name)
+    tag = '{}-{}'.format(ts.strftime('%Y-%m-%d-%H-%m-%S'), client_name)
 
-    # get all repos from this client
+    e.msginf('All this repos will be tagged')
     cli = e.get_client(client_name)
     for repo in cli.get_repos():
-        print repo.get_tag_repo
+        e.msginf('tagging {} to [{}]'.format(tag, repo.get_formatted_repo()))
+
+    ans = raw_input('proceed with tagging? (y/n)')
+    if ans != 'y':
+        e.msgerr('command aborted')
+
+    for repo in cli.get_repos():
+        e.msginf('tagging {} to [{}]'.format(tag, repo.get_formatted_repo()))
+        if sc_(repo.do_tag_repo(tag)):
+            e.msgerr('tag failed')
+
+    e.msgdone('all repos tagged')
 
 
+def checkout_tag(e):
+    client_name = e.get_clients_from_params(cant='one')
+    tag = e.get_args().checkout_tag[0]
+    e.msginf('Checking out tag {} for all repos belonging to client {}'.format(
+        tag,
+        client_name
+    ))
 
+    cli = e.get_client(client_name)
+    for repo in cli.get_repos():
+        e.msginf('checking out >> {}'.format(repo.get_formatted_repo()))
+        if sc_(repo.do_checkout_tag(tag)):
+            e.msginf('there is no such tag in this repo')
 
-    e.msginf('tagging repos with ' + tag)
+    e.msgdone('All repos with this tag were checked out')
 
 
 def issues(e):
-    e.msginf('issues')
+    pass
+
+
+def revert_checkout(e):
+    client_name = e.get_clients_from_params(cant='one')
+    cli = e.get_client(client_name)
+
+    e.msginf('Checking out branch {} for all repos belonging to client {}'.format(
+        cli.get_ver(),
+        client_name
+    ))
+
+    for repo in cli.get_repos():
+        e.msginf('checking out >> {}'.format(repo.get_formatted_repo()))
+        if sc_(repo.do_checkout(cli.get_ver())):
+            e.msginf('there is no such version in this repo')
+
+    e.msgdone('All repos with this version were checked out')
 
 
 if __name__ == '__main__':
@@ -725,22 +770,18 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v3.8.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v4.0.0 by jeo Software <jorge.obiols@gmail.com>
         ==========================================================================
     """)
+    parser.add_argument('-p', '--pull-all',
+                        action='store_true',
+                        help="Pull all images and repos for a client, need a -c "
+                             "option")
+
     parser.add_argument('-i', '--install-cli',
                         action='store_true',
-                        help="Install clients, requires -c option. You can define "
-                             "multiple clients like this: -c client1 -c client2 -c "
-                             "client3")
-
-    parser.add_argument('-U', '--uninstall-cli',
-                        action='store_true',
-                        help='Uninstall client and erase all files from environment '
-                             'including database. The command ask for permission to '
-                             'erase database. BE WARNED if say yes, all database files '
-                             'will be erased. BE WARNED AGAIN, database is common to '
-                             'all clients!!!! Required -c option')
+                        help="Install client, requires -c option. Pull repos and "
+                             "generate odoo config file")
 
     parser.add_argument('-R', '--run-env',
                         action='store_true',
@@ -752,15 +793,11 @@ if __name__ == '__main__':
 
     parser.add_argument('-r', '--run-cli',
                         action='store_true',
-                        help="Run client odoo images, requieres -c options. Optional")
+                        help="Run client odoo images, requires -c options. Optional")
 
     parser.add_argument('-s', '--stop-cli',
                         action='store_true',
-                        help="Stop client images, requieres -c options.")
-
-    parser.add_argument('-p', '--pull-all',
-                        action='store_true',
-                        help="Pull all images and repos.")
+                        help="Stop client images, requires -c options.")
 
     parser.add_argument('-l', '--list',
                         action='store_true',
@@ -769,15 +806,11 @@ if __name__ == '__main__':
 
     parser.add_argument('-v', '--verbose',
                         action='store_true',
-                        help="Go verbose mode.")
-
-    parser.add_argument('-q', '--quiet',
-                        action='store_true',
-                        help="Supress all standard output.")
+                        help="Go verbose mode. Prints every command")
 
     parser.add_argument('-n', '--no-ip-install',
                         action='store_true',
-                        help="Install no-ip on this server.")
+                        help="Install no-ip on this server. Experimental")
 
     parser.add_argument('-u', '--update-db',
                         action='store_true',
@@ -793,41 +826,40 @@ if __name__ == '__main__':
                         action='store',
                         nargs=1,
                         dest='new_database',
-                        help="New database name.")
+                        help="New database name. Only for restore command")
 
     parser.add_argument('-m',
                         action='append',
                         dest='module',
-                        help="Module to update or all, you can specify multiple -m \
-                        options.")
+                        help="Module to update or all for updating all the reegistered "
+                             "modules, you can specify multiple -m options.")
 
     parser.add_argument('-c',
                         action='append',
                         dest='client',
-                        help="Client name. You can define multiple clients like this: "
-                             "-c client1 -c client2 -c client3 and so one.")
+                        help="Client name.")
 
     parser.add_argument('--debug',
                         action='store_true',
-                        help='This option has three efects: 1.- when doing an update database, '
-                             '(option -u) it forces debug mode. 2.- When running environment '
-                             'it opens port 5432 to access postgres server databases. 3.- when '
-                             'doing a pull (option -p) it clones the full repo i.e. does not '
-                             'issue --depth 1 to git ')
+                        help='This option has three efects: '
+                             '1.- when doing an update database, (option -u) it forces debug mode. '
+                             '2.- When running environment (option -R) it opens port 5432 to access '
+                             'postgres server databases. '
+                             '3.- when doing a pull (option -p) it clones the full repo i.e. does '
+                             'not issue --depth 1 to git ')
 
     parser.add_argument('--no-dbfilter',
                         action='store_true',
                         help='Eliminates dbfilter: The client can see any database. '
-                             'Without this, the client can only see databases starting '
-                             'with clientname_')
+                             'Without this, the client can only see databases starting with clientname_')
 
     parser.add_argument('-H', '--server-help',
                         action='store_true',
-                        help="List server help requieres -c option")
+                        help="List server help requires -c option (because needs to run a image)")
 
     parser.add_argument('--backup',
                         action='store_true',
-                        help="Lauch backup requieres -d and -c options.")
+                        help="Lauch backup. requires -d and -c options.")
 
     parser.add_argument('--backup-list',
                         action='store_true',
@@ -835,7 +867,7 @@ if __name__ == '__main__':
 
     parser.add_argument('--restore',
                         action='store_true',
-                        help="Lauch restore requieres -c, -d, -w and -t options.")
+                        help="Launch restore requires -c, -d, -w and -t options.")
 
     parser.add_argument('-t',
                         action='store',
@@ -877,22 +909,39 @@ if __name__ == '__main__':
                         help="list formatted and priorized issues from github, "
                              "used with -l this option supports github API v3 "
                              "priority is the number between brackets in issue title"
-                             "THIS COMMAND IS DEPRECATED"
+                             "THIS COMMAND IS DEPRECATED IN FAVOR OF GITHUB PROJECTS"
                         )
 
-    parser.add_argument('-T',
+    parser.add_argument('-T' '--tag-repos',
                         dest='tag_repos',
                         action='store_true',
-                        help="Tag all repos used by a client with a tag composed for "
-                             "client name and a timestamp")
+                        help="Tag all repos used by a client with a tag consisting of "
+                             "client name and a timestamp. Need -c option")
+
+    parser.add_argument('--checkout-tag',
+                        action='store',
+                        nargs=1,
+                        help='checkouts a tag from all the repos belonging to a client '
+                             'needs -c option. If some repo does not have the tag, reports the'
+                             'error and continues with next repo.'
+                             'The tag was previously setted with -T option'
+
+                             'To revert this situation issue a --revert-checkout'
+                        )
+
+    parser.add_argument('--revert-checkout',
+                        action='store_true',
+                        help='checkouts the normal branch (i.e. odoo version) for all the repos belonging '
+                             'to the client. Needs -c option. '
+                             'This revers the --checkout-tags to the normal state. Warning: if there is any '
+                             'local change in a repo, the checkout will fail.'
+                        )
 
     args = parser.parse_args()
     environment = Environment(args, _clients)
 
     if args.install_cli:
         install_client(environment)
-    if args.uninstall_cli:
-        uninstall_client(environment)
     if args.stop_env:
         stop_environment(environment)
     if args.run_env:
@@ -925,3 +974,7 @@ if __name__ == '__main__':
         quality_test(environment)
     if args.tag_repos:
         tag_repos(environment)
+    if args.checkout_tag:
+        checkout_tag(environment)
+    if args.revert_checkout:
+        revert_checkout(environment)
