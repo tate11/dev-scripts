@@ -46,7 +46,31 @@ NOTES:
 """
 
 clients__ = [
-    #######################################################################1
+
+
+
+    #######################################################################
+    #
+    # ODOO V7
+    #
+    #######################################################################
+    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
+         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
+    #
+    # ODOO V8
+    #
+    #######################################################################
     {'name': 'reves', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -252,19 +276,6 @@ clients__ = [
                  ]
      },
     #######################################################################
-    {'name': 'atly', 'port': '8069', 'odoover': '7.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'atly-work', 'branch': '7.0'},
-         {'usr': 'jobiols', 'repo': 'atly-orig', 'branch': '7.0'},
-     ],
-     'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################
     {'name': 'jaja', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -336,7 +347,9 @@ clients__ = [
      },
 
     #######################################################################
+    #
     # ODOO V9
+    #
     #######################################################################
     {'name': 'makeover9', 'port': '8069', 'odoover': '9.0',
      'repos': [
@@ -439,6 +452,22 @@ clients__ = [
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
+    #######################################################################
+    #
+    # ODOO V10
+    #
+    #######################################################################
+    {'name': 'test10', 'port': '8000', 'odoover': '10.0',
+     'repos': [
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+
+
+
 ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

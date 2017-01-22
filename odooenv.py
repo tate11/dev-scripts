@@ -224,7 +224,8 @@ def install_client(e):
         # patch for openupgrade image
         ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
 
-        param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
+        if cli.get_addons_path():
+            param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
         param += '--logfile=/var/log/odoo/odoo.log '
         param += '--logrotate '
 
