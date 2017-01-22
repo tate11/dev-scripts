@@ -18,4 +18,4 @@
 #
 # -----------------------------------------------------------------------------------
 from env import Client, Environment, Image, Repo
-from client_data import clients__
+from client_data import _clients

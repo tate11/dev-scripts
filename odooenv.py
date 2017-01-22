@@ -55,7 +55,7 @@ import time
 from datetime import datetime
 
 from classes import Environment
-from classes.client_data import clients__
+from classes.client_data import _clients
 from classes.git_issues import Issues
 
 # el archivo a ejecutar después de hacer backup
@@ -153,17 +153,17 @@ def update_repos_from_list(e, repos):
     for repo in unique_repos:
         # hay que actualizar a un tag específico
         if e.get_tag():
-            for command in repo.getTagRepo(e.get_tag()):
+            for command in repo.get_tag_repo(e.get_tag()):
                 if sc_(command):
                     e.msgerr('Fail installing environment, uninstall and try again.')
         else:
             # Check if repo exists
-            if os.path.isdir(repo.getInstDir()):
+            if os.path.isdir(repo.get_inst_dir()):
                 e.msginf('pull  ' + repo.get_formatted_repo())
-                params = repo.getPullRepo()
+                params = repo.do_pull_repo()
             else:
                 e.msginf('clone ' + repo.get_formatted_repo())
-                params = repo.getCloneRepo(e)
+                params = repo.do_clone_repo(e)
 
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
@@ -445,8 +445,8 @@ def list_data(e):
             for issue in iss.get_issues():
                 for line in issue.lines():
                     e.msginf(line)
-        except Exception as ex:
-            e.msgerr(str(ex))
+        except Exception as EX:
+            e.msgerr(str(EX))
 
         exit(0)
 
@@ -475,7 +475,7 @@ def list_data(e):
         for repo in cli.get_repos():
             e.msgrun('   ' +
                      repo.get_formatted_repo() +
-                     ' ' + repo.getInstDir())
+                     ' ' + repo.get_inst_dir())
         e.msgrun(' ')
 
 
@@ -513,53 +513,47 @@ def post_backup(e):
 
     # walk the backup dir
     for root, dirs, files in os.walk(backup_dir):
-        for file in files:
-            seconds = os.path.getctime(root + file)
+        for filename in files:
+            seconds = os.path.getctime(root + filename)
             if seconds < limit_seconds:
                 # no eliminar el archivo de postbackup
-                if file[-13:] != POST_BACKUP_ACTION:
-                    sc_('sudo rm ' + root + file)
+                if filename[-13:] != POST_BACKUP_ACTION:
+                    sc_('sudo rm ' + root + filename)
                     # os.remove(root+file)
-                    logger.info('Removed backup file "%s"', file)
+                    logger.info('Removed backup file "%s"', filename)
 
     # watch for upload-backup cmdfile and execute
     for root, dirs, files in os.walk(backup_dir):
-        for file in files:
-            if file[-13:] == POST_BACKUP_ACTION:
-                sc_(backup_dir + file)
+        for filename in files:
+            if filename[-13:] == POST_BACKUP_ACTION:
+                sc_(backup_dir + filename)
 
 
 def backup(e):
-    """
-    Launch a database backup, with docker image 'backup'. The backup file lives in
-    client_name/backup
-    """
-
     dbname = e.get_database_from_params()
-    clientName = e.get_clients_from_params('one')
-    e.msgrun('Backing up database ' + dbname + ' of client ' + clientName)
+    client_name = e.get_clients_from_params('one')
+    e.msgrun('Backing up database ' + dbname + ' of client ' + client_name)
 
-    client = e.get_client(clientName)
+    client = e.get_client(client_name)
     img = client.get_image('backup')
 
     params = 'sudo docker run --rm -i '
     params += '--link postgres:db '
-    params += '--volumes-from ' + clientName + ' '
-    params += '-v ' + client.get_backup_dir() + ':/backup '
-    params += '--env DBNAME=' + dbname + ' '
-    params += img.get_image() + ' backup'
+    params += '--volumes-from {} '.format(client_name)
+    params += '-v {}:/backup '.format(client.get_backup_dir())
+    params += '--env DBNAME={} '.format(dbname)
+    params += '{}  backup'.format(img.get_image())
     try:
         if sc_(params):
             e.msgerr('failing backup. Aborting')
-    except Exception as ex:
-        logger.error('Failing backup %s', str(ex))
-        e.msgerr('failing backup. Aborting' + str(ex))
+    except Exception as EX:
+        logger.error('Failing backup %s', str(EX))
+        e.msgerr('failing backup. Aborting {}'.format(str(EX)))
 
     e.msgdone('Backup done')
     logger.info('Backup database "%s"', dbname)
 
     post_backup(e)
-    return True
 
 
 def restore(e):
@@ -628,7 +622,7 @@ def decode_backup(root, filename):
     dt = datetime.strptime(date, '%Y%m%d%H%M')
 
     # format date
-    fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M')
+    fdt = datetime.strftime(dt, '%d/%m/%Y %H:%M GMT')
     n = 15 - len(dbname)
 
     return dbname + n * ' ' + fdt + '  [' + date + '] ' + str(size) + 'M'
@@ -645,22 +639,23 @@ def backup_list(e):
 
     for clientName in clients:
         cli = e.get_client(clientName)
-        dir = cli.get_backup_dir()
+        backup_dir = cli.get_backup_dir()
 
         filenames = []
+        root = ''
         # walk the backup dir
-        for root, dirs, files in os.walk(dir):
-            for file in files:
-                # get the .dump files and decode it to human redable format
-                filename, file_extension = os.path.splitext(file)
+        for root, dirs, files in os.walk(backup_dir):
+            for filedesc in files:
+                # get the .dump files and decode it to human readable format
+                filename, file_extension = os.path.splitext(filedesc)
                 if file_extension == '.dump':
                     filenames.append(filename)
 
         if len(filenames):
             filenames.sort()
             e.msgrun('List of available backups for client ' + clientName)
-            for fn in filenames:
-                e.msginf(decode_backup(root, fn))
+            for filedesc in filenames:
+                e.msginf(decode_backup(root, filedesc))
 
 
 def cron_jobs(e):
@@ -681,10 +676,26 @@ def cron_list(e):
 
 
 def tag_repos(e):
-    """ Tag all repos defined for this client
     """
-    client, milestone = e.get_tag()
-    tag = client + '-' + milestone
+    Taggea todos los repos que tiene este cliente con timestamp+client_name
+    Por cada repo le agrega el tag y le hace un push
+
+    :param e: Environment
+    """
+    # actual client from params
+    client_name = e.get_clients_from_params(cant='one')
+    ts = datetime.now()
+    # build tag
+    tag = '{}-{}'.format(ts.strftime('%Y-%m-%dT%H:%m.%S'), client_name)
+
+    # get all repos from this client
+    cli = e.get_client(client_name)
+    for repo in cli.get_repos():
+        print repo.get_tag_repo
+
+
+
+
     e.msginf('tagging repos with ' + tag)
 
 
@@ -842,7 +853,7 @@ if __name__ == '__main__':
                              "and yml/py test file to run (please include extension). "
                              "Need -d, -m and -c options "
                              "Note: for the test to run there must be an admin user "
-                             "with passw admin")
+                             "with password admin")
 
     parser.add_argument('-j', '--cron-jobs',
                         action='store_true',
@@ -865,52 +876,52 @@ if __name__ == '__main__':
                         action='store',
                         help="list formatted and priorized issues from github, "
                              "used with -l this option supports github API v3 "
-                             "priority is the number between brackets in issue title")
+                             "priority is the number between brackets in issue title"
+                             "THIS COMMAND IS DEPRECATED"
+                        )
 
     parser.add_argument('-T',
-                        action='store',
-                        nargs=2,
-                        metavar=('client', 'milestone'),
                         dest='tag_repos',
+                        action='store_true',
                         help="Tag all repos used by a client with a tag composed for "
-                             "client name and milestone from client sources")
+                             "client name and a timestamp")
 
     args = parser.parse_args()
-    enviro = Environment(args, clients__)
+    environment = Environment(args, _clients)
 
     if args.install_cli:
-        install_client(enviro)
+        install_client(environment)
     if args.uninstall_cli:
-        uninstall_client(enviro)
+        uninstall_client(environment)
     if args.stop_env:
-        stop_environment(enviro)
+        stop_environment(environment)
     if args.run_env:
-        run_environment(enviro)
+        run_environment(environment)
     if args.stop_cli:
-        stop_client(enviro)
+        stop_client(environment)
     if args.run_cli:
-        run_client(enviro)
+        run_client(environment)
     if args.pull_all:
-        pull_all(enviro)
+        pull_all(environment)
     if args.list:
-        list_data(enviro)
+        list_data(environment)
     if args.no_ip_install:
-        no_ip_install(enviro)
+        no_ip_install(environment)
     if args.update_db:
-        update_db(enviro)
+        update_db(environment)
     if args.backup:
-        backup(enviro)
+        backup(environment)
     if args.restore:
-        restore(enviro)
+        restore(environment)
     if args.backup_list:
-        backup_list(enviro)
+        backup_list(environment)
     if args.server_help:
-        server_help(enviro)
+        server_help(environment)
     if args.cron_jobs:
-        cron_jobs(enviro)
+        cron_jobs(environment)
     if args.cron_list:
-        cron_list(enviro)
+        cron_list(environment)
     if args.quality_test:
-        quality_test(enviro)
+        quality_test(environment)
     if args.tag_repos:
-        tag_repos(enviro)
+        tag_repos(environment)

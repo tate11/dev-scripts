@@ -51,12 +51,6 @@ class Environment:
     def run_tests(self):
         return self._args.run_tests
 
-    def get_tag(self):
-        if self._args.tag_repos:
-            return self._args.tag_repos[0], self._args.tag_repos[1]
-        else:
-            return False
-
     def no_dbfilter(self):
         return self._args.no_dbfilter
 
@@ -258,13 +252,31 @@ class Repo:
             ret = self._dict['repo']
         return ret
 
-    def getInstDir(self):
-        return self._cli.get_home_dir() + 'sources/' + self.get_addons_dir()
+    def get_inst_dir(self):
+        """
+        Devuelve el directorio de instalación del repo
 
-    def getPullRepo(self):
-        return 'git -C {} pull'.format(self.getInstDir())
+        :return:
+        """
+        return '{}sources/{}'.format(
+                self._cli.get_home_dir(),
+                self.get_addons_dir())
 
-    def getCloneRepo(self, e):
+    def do_pull_repo(self):
+        """
+        Comando para hacer pull a un repo ya existente
+
+        :return: comando
+        """
+        return 'git -C {} pull'.format(self.get_inst_dir())
+
+    def do_clone_repo(self, e):
+        """
+        Devuelve un comando que clona el repo localmente
+
+        :param e: Environment
+        :return: comando
+        """
         if not e.debug_mode():
             depth = ' --depth 1 '
         else:
@@ -274,14 +286,23 @@ class Repo:
             depth,
             self._dict['branch'],
             self._getRepo(),
-            self.getInstDir())
+            self.get_inst_dir())
 
-    def getTagRepo(self, tag):
+    def get_tag_repo(self, tag):
+        """
+        Devuelve el un comando multiple que hace lo siguiente
+            borra el directorio de instalación del repositorio.
+            clona el repositorio origen
+            hace checkout del tag
+
+        :param tag: a bajarse
+        :return: devuelve los tres comandos en forma de lista
+        """
         return [
-            'rm -rf {}'.format(self.getInstDir()),
+            'rm -rf {}'.format(self.get_inst_dir()),
             'git clone -b {} http://github.com/{} {}'.format(
-                self._dict['branch'], self._getRepo(), self.getInstDir()),
-            'git -C {} checkout tags/{}'.format(self.getInstDir(), tag)
+                self._dict['branch'], self._getRepo(), self.get_inst_dir()),
+            'git -C {} checkout tags/{}'.format(self.get_inst_dir(), tag)
         ]
 
 
