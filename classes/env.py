@@ -226,11 +226,11 @@ class Repo:
     def get_name(self):
         return self._dict['repo']
 
-    def _getRepo(self):
+    def _get_repo(self):
         return self._dict['usr'] + '/' + self._dict['repo']
 
     def get_formatted_repo(self):
-        ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self._getRepo().ljust(30)
+        ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self._get_repo().ljust(30)
         return ret
 
     def getPathDir(self):
@@ -284,7 +284,7 @@ class Repo:
         return 'git clone {} -b {} http://github.com/{} {}'.format(
                 depth,
                 self._dict['branch'],
-                self._getRepo(),
+                self._get_repo(),
                 self.get_inst_dir())
 
     def do_checkout(self, version):

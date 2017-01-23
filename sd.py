@@ -34,6 +34,6 @@ if __name__ == '__main__':
     params = process_input(sys.argv)
     try:
         if len(params) > 1:
-            subprocess.call(params)
+            exit(subprocess.call(params))
     except Exception as ex:
         print ex
