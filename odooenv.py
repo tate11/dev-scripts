@@ -57,7 +57,6 @@ from datetime import datetime
 from classes import Environment
 from classes.client_data import _clients
 from classes.git_issues import Issues
-from classes.testio import available_port
 
 # el archivo a ejecutar después de hacer backup
 POST_BACKUP_ACTION = 'upload-backup'
@@ -337,10 +336,6 @@ def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
         cli = e.get_client(clientName)
-
-        # check for open port
-        if not available_port(cli.get_port()):
-            e.msgerr('por {} already open'.format(cli.get_port()))
 
         txt = 'Running image for client {}'.format(clientName)
         if e.debug_mode():

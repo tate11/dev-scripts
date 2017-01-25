@@ -10,10 +10,12 @@ def available_port(host_ip='127.0.0.1', port=80):
     :return: True if port is open
     """
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s = socket.socket()
     try:
-        s.connect((host_ip, port))
-        s.shutdown(2)
-        return True
-    except:
+        s.connect((host_ip, int(port)))
+        s.close()
         return False
+    except socket.error, e:
+        return True
+
+
