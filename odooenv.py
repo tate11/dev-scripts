@@ -57,6 +57,7 @@ from datetime import datetime
 from classes import Environment
 from classes.client_data import _clients
 from classes.git_issues import Issues
+from classes.testio import available_port
 
 # el archivo a ejecutar después de hacer backup
 POST_BACKUP_ACTION = 'upload-backup'
@@ -212,7 +213,7 @@ def install_client(e):
             sc_('sudo touch {}'.format(LOG_FILENAME))
             sc_('sudo chmod 666 {}'.format(LOG_FILENAME))
 
-#        sc_('chmod 777 -R {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
+        # sc_('chmod 777 -R {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
 
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())
@@ -336,6 +337,11 @@ def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
         cli = e.get_client(clientName)
+
+        # check for open port
+        if not available_port(cli.get_port()):
+            e.msgerr('por {} already open'.format(cli.get_port()))
+
         txt = 'Running image for client {}'.format(clientName)
         if e.debug_mode():
             txt += ' with debug mode on port {}'.format(cli.get_port())
@@ -714,8 +720,8 @@ def checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     tag = e.get_args().checkout_tag[0]
     e.msginf('Checking out tag {} for all repos belonging to client {}'.format(
-        tag,
-        client_name
+            tag,
+            client_name
     ))
 
     cli = e.get_client(client_name)
@@ -736,8 +742,8 @@ def revert_checkout(e):
     cli = e.get_client(client_name)
 
     e.msginf('Checking out branch {} for all repos belonging to client {}'.format(
-        cli.get_ver(),
-        client_name
+            cli.get_ver(),
+            client_name
     ))
 
     for repo in cli.get_repos():
