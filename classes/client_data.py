@@ -71,7 +71,7 @@ _clients = [
     # ODOO V8
     #
     #######################################################################
-    {'name': 'demo', 'port': '8069', 'odoover': '8.0',
+    {'name': 'demo', 'port': '8001', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
