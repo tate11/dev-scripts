@@ -489,18 +489,20 @@ def list_data(e):
 
 def no_ip_install(e):
     e.msgrun('Installing no-ip client')
+    # download and unpack noip client for linux
     cmdr = [
         'sudo apt-get update',
-        'sudo apt-get install gcc wget make -yq',
+        'sudo apt-get install gcc wget make -y -qq',
         'sudo wget -O /usr/local/src/noip.tar.gz \
              http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
-        'sudo tar xf /usr/local/src/noip.tar.gz -C /usr/local/src/',
-        'cd /usr/local/src/noip-2.1.9-1 && sudo make install'
+        'sudo tar xf /usr/local/src/noip.tar.gz -C /usr/local/src/'
     ]
     sc_(cmdr)
     e.msginf("Please answer some questions")
+    # compile, configure an install as a deamon
     cmdr = [
-        'sudo rm /usr/local/src/noip-duc-linux.tar.gz',
+        'cd /usr/local/src/noip-2.1.9-1 && sudo make install',
+        'sudo rm /usr/local/src/noip.tar.gz',
         'sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
         'sudo chmod +x /etc/init.d/debian.noip2.sh',
         'sudo update-rc.d debian.noip2.sh defaults',
