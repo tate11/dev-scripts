@@ -120,7 +120,7 @@ def update_db(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-    params += '--log-level=warn '
+#    params += '--log-level=warn '
     if e.debug_mode():
         params += '--debug '
     sc_(params)
@@ -489,26 +489,28 @@ def list_data(e):
 
 def no_ip_install(e):
     e.msgrun('Installing no-ip client')
-    sc_('sudo apt-get install make')
-    sc_('sudo apt-get -y install gcc')
-    sc_('wget -O /usr/local/src/noip.tar.gz \
-    http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
-    sc_('sudo tar -xf noip.tar.gz -C /usr/local/src/')
-    sc_('sudo wget -P /usr/local/src/ \
-    http://www.noip.com/client/linux/noip-duc-linux.tar.gz')
-    sc_('sudo tar xf /usr/local/src/noip-duc-linux.tar.gz -C /usr/local/src/')
-    sc_('cd /usr/local/src/noip-2.1.9-1 && sudo make install')
+    cmdr = [
+        'sudo apt-get update',
+        'sudo apt-get install gcc wget make -yq',
+        'sudo wget -O /usr/local/src/noip.tar.gz \
+             http://www.noip.com/client/linux/noip-duc-linux.tar.gz',
+        'sudo tar xf /usr/local/src/noip.tar.gz -C /usr/local/src/',
+        'cd /usr/local/src/noip-2.1.9-1 && sudo make install'
+    ]
+    sc_(cmdr)
     e.msginf("Please answer some questions")
-    sc_('sudo rm /usr/local/src/noip-duc-linux.tar.gz')
-    sc_('sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/')
-    sc_('sudo chmod +x /etc/init.d/debian.noip2.sh')
-    sc_('sudo update-rc.d debian.noip2.sh defaults')
-    sc_('sudo /etc/init.d/debian.noip2.sh restart')
+    cmdr = [
+        'sudo rm /usr/local/src/noip-duc-linux.tar.gz',
+        'sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
+        'sudo chmod +x /etc/init.d/debian.noip2.sh',
+        'sudo update-rc.d debian.noip2.sh defaults',
+        'sudo /etc/init.d/debian.noip2.sh restart',
+    ]
+    sc_(cmdr)
     e.msgdone('no-ip service running')
 
-    # To config defaults noip2 with capital C
-    # sudo /usr/local/bin/noip2 -C
-    return True
+    e.msginf('To config defaults issue noip2 with capital C as follows:')
+    e.msginf('sudo /usr/local/bin/noip2 -C')
 
 
 def post_backup(e):

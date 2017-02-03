@@ -111,6 +111,8 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
+        # testeando stock report
+         {'usr': 'oca', 'repo': 'stock-logistics-reporting', 'branch': '8.0'},
 
          # repos para impresora fiscal
          #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
@@ -127,7 +129,7 @@ _clients = [
     #######################################################################1
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'testing_tags', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -137,15 +139,17 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          # repos para temas ecommerce
-         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
-         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
+#         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          # repos para impresora fiscal
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
-          'branch': 'master'},
-         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
+#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
+#          'branch': 'master'},
+#         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
          # repos para mario
-         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'commission', 'branch': '8.0'},
+         # repos de estilos web
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
 
      ],
      'images': [
@@ -416,9 +420,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'rma', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'crm', 'branch': '9.0'},
-
+         {'usr': 'oca', 'repo': 'report-print-send', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -487,6 +489,7 @@ _clients = [
     #######################################################################
     {'name': 'test10', 'port': '8000', 'odoover': '10.0',
      'repos': [
+         {'usr': 'syleam', 'repo': 'report-print-send', 'branch': '10.0-migrate-base_report_to_printer'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
