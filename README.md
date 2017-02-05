@@ -1,5 +1,5 @@
 # dev-scripts
-###Docker based  infrastructure management for Odoo 
+###Docker based  infrastructure management *for* _Odoo_ 
 This proyect support [semver](http://semver.org/) 
     
     usage: odooenv.py [-h] [-p] [-i] [-R] [-S] [-r] [-s] [-l] [-v] [-n] [-u]
