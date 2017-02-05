@@ -120,7 +120,7 @@ def update_db(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-#    params += '--log-level=warn '
+    #    params += '--log-level=warn '
     if e.debug_mode():
         params += '--debug '
     sc_(params)
@@ -353,10 +353,17 @@ def run_client(e):
                                                            cli.get_name())
         params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
         if e.debug_mode():
-            # si es openupgrade el sourcesname es upgrade, sino es openerp
-            sourcesname = 'openerp' if clientName != 'ou' else 'upgrade'
-            params += '-v {}sources/{}:/usr/lib/python2.7/dist-packages/openerp '.format(
-                    cli.get_home_dir(), sourcesname)
+            # a partir de la version 10 cambia a odoo el nombre de los fuentes
+            sources_image = 'odoo' if float(cli.get_ver()) > float('9.0') else 'openerp'
+            sources_host = sources_image
+
+            # si es openupgrade el sources_image es upgrade
+            if clientName == 'ou':
+                sources_image = 'upgrade'
+
+            params += '-v {}sources/{}:/usr/lib/python2.7/dist-packages/{} '.format(
+                    cli.get_home_dir(), sources_image, sources_host)
+
         params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '--link postgres:db '
 
@@ -500,13 +507,14 @@ def no_ip_install(e):
     sc_(cmdr)
     e.msginf("Please answer some questions")
     # compile, configure an install as a deamon
+    # TODO parece que falla con el &&
     cmdr = [
         'cd /usr/local/src/noip-2.1.9-1 && sudo make install',
         'sudo rm /usr/local/src/noip.tar.gz',
         'sudo cp /usr/local/src/noip-2.1.9-1/debian.noip2.sh  /etc/init.d/',
         'sudo chmod +x /etc/init.d/debian.noip2.sh',
         'sudo update-rc.d debian.noip2.sh defaults',
-        'sudo /etc/init.d/debian.noip2.sh restart',
+        'sudo /etc/init.d/debian.noip2.sh restart'
     ]
     sc_(cmdr)
     e.msgdone('no-ip service running')
@@ -775,7 +783,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v4.0.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v4.0.2 by jeo Software <jorge.obiols@gmail.com>
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
