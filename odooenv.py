@@ -120,7 +120,11 @@ def update_db(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-    #    params += '--log-level=warn '
+
+    # TODO revisar porque si le pongo log-level=warn a la v9 no funciona
+    if cli.get_ver() == '8.0':
+        params += '--log-level=warn '
+
     if e.debug_mode():
         params += '--debug '
     sc_(params)
