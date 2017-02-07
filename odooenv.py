@@ -49,7 +49,6 @@ import logging
 import logging.handlers
 import os
 import pwd
-import shlex
 import subprocess
 import time
 from datetime import datetime
@@ -62,11 +61,11 @@ from classes.git_issues import Issues
 POST_BACKUP_ACTION = 'upload-backup'
 
 
-def sc_(params):
-    """Run command or command list with arguments.  Wait for commands to complete, then
-
-    If args.verbose is true, prints command
-    If any errors stop list execution and returns error
+def sc_(params, shell=False):
+    """ Run command or command list with arguments.  Wait for commands to complete
+        If args.verbose is true, prints command
+        If any errors stop list execution and returns error
+        if shell=True go shell mode (only for --cron-jobs)
 
     :param params: command or command list
     :return: error return
@@ -76,14 +75,17 @@ def sc_(params):
         params = [params]
 
     # traverse list executing commands
-    for cmd in params:
-        # lexical analysis posix style
-        cmd = shlex.split(cmd)
+    for _cmd in params:
+        # si shell = True no hacemos el split
+        cmd = _cmd if shell else _cmd.split()
         if args.verbose:
             Environment().msgrun(' ')
-            Environment().msgrun(' '.join(cmd))
+            if shell:
+                Environment().msgrun(cmd)
+            else:
+                Environment().msgrun(' '.join(cmd))
             Environment().msgrun(' ')
-        ret = subprocess.call(cmd)
+        ret = subprocess.call(cmd, shell=shell)
         if ret:
             return ret
 
@@ -683,15 +685,27 @@ def backup_list(e):
 
 
 def cron_jobs(e):
+    """
+        Agrega un job en el crontab de admin para hacer backup dos veces por dia.
+            crontab -l lista el crontab
+            grep -v {} filtra dejando pasar todo menos lo que hay en {}
+            echo {} agrega {}
+            sudo crontab - mete todo lo anterior en crontab
+    """
     dbname = e.get_database_from_params()
     client = e.get_clients_from_params('one')
     e.msginf('Adding cron jobs to this server')
-    croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py'.format(
+
+    # el comando que cron tiene que lanzar. Suponiendo que nadie lo edita, al lanzar nuevamente
+    # este proceso se elimina y se vuelve a crear permitiendo modificar el cronjob.
+    croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py DO NOT EDIT MANUALLY'.format(
             dbname, client)
+
+    # la linea que agregaremos a cron sería en que momento backupear + el croncmd
     cronjob = '0 0,12 * * * {}'.format(croncmd)
-    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(
-            croncmd, cronjob)
-    sc_(command)
+
+    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(croncmd, cronjob)
+    sc_(command, shell=True)
 
 
 def cron_list(e):

@@ -191,13 +191,13 @@ class Client:
     def get_images(self):
         return self._images
 
-    def get_image(self, ImageName):
+    def get_image(self, image_name):
         ret = None
         for img in self._images:
-            if img.get_name() == ImageName:
+            if img.get_name() == image_name:
                 ret = img
         if ret is None:
-            raise Exception('no image ' + ImageName + ' found')
+            self._env.msgerr('There is no {} image found in this manifest'.format(image_name))
         return ret
 
     def get_name(self, pad=0):
