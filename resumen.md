@@ -9,11 +9,9 @@ dejar el SO en otro volumen. Se cambia el disco de máquina y sale andando.
 Permite coexistir varias versiones de odoo y varios clientes en la misma 
 máquina, compartiendo todos los servicios de postgres y aeroo.
 
-
-
       odoo
       ├─ postgresql
-      ├──odoov-8.0
+      ├──odoo-8.0
       │  ├──[clientname]
       │  │   ├──config
       │  │   │  └──openerp-server.conf
@@ -22,7 +20,7 @@ máquina, compartiendo todos los servicios de postgres y aeroo.
       │  │   └──log
       │  │      └──odoo.log
       │  └──sources
-      └──odoov-9.0
+      └──odoo-9.0
          ├──[clientname]
          │   ├──config
          │   │  └──openerp-server.conf
@@ -32,10 +30,10 @@ máquina, compartiendo todos los servicios de postgres y aeroo.
          │      └──odoo.log
          └──sources
 
-
 Repositorio de utilidades
 -------------------------
-En este repo se encuentran todas las utilidades que se usan para el desarrollo, en este resumen se detallarán solo dos, sd y odooenv.py
+En este repo se encuentran todas las utilidades que se usan para el desarrollo, 
+en este resumen se detallarán solo dos, sd y odooenv.py
 
     https://github.com/jobiols/dev-scripts.git
 
@@ -98,7 +96,10 @@ Para mover estos archivos a otro lugar hay que mover los dos y restarurarlos
 juntos. Los archivos están en /odoo/odoo-8.0/esmeralda/backup
 
 **Hacer un backup**
-Para hacer un backup manual, el script lanza una imagen docker con las herramientas de backup, se conecta a la instancia  odoo y mapea el directorio donde está la bd, el filestore y el postgress. Hace el backup, empaqueta el filestore y luego se destruye la imagen.
+Para hacer un backup manual, el script lanza una imagen docker con las 
+herramientas de backup, se conecta a la instancia  odoo y mapea el directorio 
+donde está la bd, el filestore y el postgress. Hace el backup, empaqueta el 
+filestore y luego se destruye la imagen.
 
     $ odooenv.py --backup -d esmeralda_prod -c esmeralda
 
@@ -148,18 +149,31 @@ juntos pero son dos contenedores separados
     
 Donde estan mis cosas
 ---------------------
-Repositorios
+**Repositorios**
+Los repositorios están en 
 
-Archivo de configuración odoo
+    /odoo/odoo-8.0/sources
 
-Archivo de log odoo
+**Archivo de configuración odoo**
 
-Filestore
+    /odoo/odoo-8.0/esmeralda/config/openerp-server.conf
+
+**Archivo de log odoo**
+
+    /odoo/odoo-8.0/esmeralda/log/odoo.log
+
+**Filestore**
+El filestore es un directorio donde odoo guarda ciertos archivos de datos
+como ser imágenes y también las sesiones.
+
+    /odoo/odoo-8.0/esmeralda/data
 
 Sobre las bases de datos
 ------------------------
-
-Cuidado con los nombres, dbfilter !
+Las bases de datos siempre deben empezar con "NOMBRECLIENTE_" en este
+caso nombres validos son esmeralda_prod, esmeralda_test, etc.
+El sistema cuenta con una opcion dbfilter que oculta todas las bases
+de dato que no tengan este prefijo para permitir multiples clientes.
 
 Cómo agregar / quitar un repositorio
 ------------------------------------
@@ -169,19 +183,20 @@ hacer y porque quiere poner o sacar un repo.
 1- Modificar el manifiesto que hay en _~/dev-scripts/classes/client_data.py_ 
 y agregarle o quitarle el o los repos necesarios.
 
-2- Actualizar los repos y reescribir el openerp-server.conf, para esto hacer:
+2- Ejecutar el comando
 
     $ odooenv.py -i -c esmeralda
-    
-Esto bajará los repos que falten, no tocará los que ya existan o sobren 
-y actualizará el openerp-server.conf para que odoo vea los repos que 
-queremos que vea. O sea los que están en el manifiesto.
+
+Esto bajará los repos que falten, hará un pull a los que ya existan y no
+tocará los que sobren. Por último actualizará el openerp-server.conf 
+para que odoo vea los repos que queremos que vea. O sea los que pusimos 
+en el manifiesto.
 
 3- Reiniciar odoo para que tome los cambios en el odooenv-server.conf
 
     $ odooenv.py -s -r -c esmeralda
     
-Ahora es necesario actualizar los modelos en la bd, esto como medida precautoria.
+4- Actualizar los XML de los modelos en la bd.
 
     $ odooenv.py -u -m all -d esmeralda_prod -c esmeralda
      
@@ -192,5 +207,40 @@ Ahora es necesario actualizar los modelos en la bd, esto como medida precautoria
         -c esmeralda  		el cliente que actualizaremos
 
 Cómo actualizar imágenes y repos
+--------------------------------
+Para actualizar las imágenes y repostiorios se puede hacer:
+
+    $ odooenv.py -p -c esmeralda
 
 Como instalar desde cero
+------------------------
+Para instalar nuevamente el sistema:
+
+**Requerimientos**
+- git
+- docker
+- python2.7
+    
+**Instalación**
+    $ cd 
+    $ git clone https://github.com/jobiols/dev-scripts.git
+    $ cd dev-scripts
+    $ ./install-scripts
+    $ odooenv.py -p -i -c esmeralda
+    $ odooenv.py -R -r -c esmeralda
+    
+**Terminar la instalación**
+La master password es admin, cambiarla 
+Restaurar la base de datos desde la interfase web
+
+**Instalar baclup automático**
+
+    $ odooenv.py -j -d esmeralda_prod -c esmeralda
+    
+Verificar que la tarea quedo instalada con
+ 
+    $ odooenv.py --cron-list
+
+
+    
+    

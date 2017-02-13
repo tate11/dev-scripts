@@ -710,7 +710,8 @@ def cron_jobs(e):
 
 def cron_list(e):
     e.msginf('List of cron backup jobs on this server')
-    sc_('sudo crontab -l | grep "#Added by odooenv.py"')
+    if sc_('sudo crontab -l | grep "#Added by odooenv.py"', shell=True):
+        e.msgerr('No crontab jobs found!')
 
 
 def tag_repos(e):
