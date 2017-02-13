@@ -5,9 +5,9 @@ Estructura de directorios de la instalación
 -------------------------------------------
 Esta es la estructura de directorios de una instalación de Odoo creada 
 por odooenv.py, se diseñó así porque permite poner todo en un disco y 
-dejar el SO en otro volumen. Se cambia el disco de máquina y sale andando.
+dejar el SO en otro volumen. 
 Permite coexistir varias versiones de odoo y varios clientes en la misma 
-máquina, compartiendo todos los servicios de postgres y aeroo.
+máquina, compartiendo los servicios de postgres y aeroo.
 
       odoo
       ├─ postgresql
@@ -32,8 +32,8 @@ máquina, compartiendo todos los servicios de postgres y aeroo.
 
 Repositorio de utilidades
 -------------------------
-En este repo se encuentran todas las utilidades que se usan para el desarrollo, 
-en este resumen se detallarán solo dos, sd y odooenv.py
+En este repo se encuentran todas las utilidades que se usan para el 
+desarrollo, en este resumen se detallarán solo dos, sd y odooenv.py
 
     https://github.com/jobiols/dev-scripts.git
 
@@ -42,7 +42,7 @@ Está clonado en *~/dev-scripts* para actualizarlo hacer
     $ cd ~/dev_scripts
     $ ./install_scripts 
 
-Esto baja el repositorio y copia dos scripts a */usr/bin*
+Esto hace un pull del repositorio y copia dos scripts a _/usr/bin_
 
 _odooenv.py_ - para el mantenimiento de la infraestructura
 _sd_         - short para sudo docker, y algunas cositas más.
@@ -149,24 +149,15 @@ juntos pero son dos contenedores separados
     
 Donde estan mis cosas
 ---------------------
-**Repositorios**
-Los repositorios están en 
 
-    /odoo/odoo-8.0/sources
+-- | --
+Repositorios                | /odoo/odoo-8.0/sources
+Archivo de configuracion    | /odoo/odoo-8.0/esmeralda/config/openerp-server.conf
+Archivo de log              | /odoo/odoo-8.0/esmeralda/log/odoo.log
+Filestore *                 | /odoo/odoo-8.0/esmeralda/data
 
-**Archivo de configuración odoo**
-
-    /odoo/odoo-8.0/esmeralda/config/openerp-server.conf
-
-**Archivo de log odoo**
-
-    /odoo/odoo-8.0/esmeralda/log/odoo.log
-
-**Filestore**
-El filestore es un directorio donde odoo guarda ciertos archivos de datos
+(*) El filestore es un directorio donde odoo guarda ciertos archivos de datos
 como ser imágenes y también las sesiones.
-
-    /odoo/odoo-8.0/esmeralda/data
 
 Sobre las bases de datos
 ------------------------
@@ -200,11 +191,11 @@ en el manifiesto.
 
     $ odooenv.py -u -m all -d esmeralda_prod -c esmeralda
      
-    Esto significa:
-        -u Update 
-        -m all 			    del módulo all (todos los módulos)
-        -d esmeralda_prod  	la base de datos que actualizaremos
-        -c esmeralda  		el cliente que actualizaremos
+    significado de los comandos.
+        -u                  Que vamos a hacer update 
+        -m all 			    modulo a actualizar, all son todos.
+        -d esmeralda_prod  	base de datos a actualizar
+        -c esmeralda  		cliente
 
 Cómo actualizar imágenes y repos
 --------------------------------
