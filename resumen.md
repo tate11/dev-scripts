@@ -150,12 +150,14 @@ juntos pero son dos contenedores separados
 Donde estan mis cosas
 ---------------------
 
-Fecurso | Ubicacion
--- | --
+
+Recurso | Ubicacion
+------- | ---------
 Repositorios                | /odoo/odoo-8.0/sources
 Archivo de configuracion    | /odoo/odoo-8.0/esmeralda/config/openerp-server.conf
 Archivo de log              | /odoo/odoo-8.0/esmeralda/log/odoo.log
 Filestore *                 | /odoo/odoo-8.0/esmeralda/data
+
 
 (*) El filestore es un directorio donde odoo guarda ciertos archivos de datos
 como ser imágenes y también las sesiones.
