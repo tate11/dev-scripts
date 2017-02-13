@@ -231,8 +231,8 @@ Para instalar nuevamente el sistema:
     $ odooenv.py -R -r -c esmeralda
     
 **Terminar la instalación**
-La master password es admin, cambiarla 
-Restaurar la base de datos desde la interfase web
+- La master password es admin, cambiarla 
+- Restaurar la base de datos desde la interfase web
 
 **Instalar baclup automático**
 
