@@ -150,6 +150,7 @@ juntos pero son dos contenedores separados
 Donde estan mis cosas
 ---------------------
 
+Fecurso | Ubicacion
 -- | --
 Repositorios                | /odoo/odoo-8.0/sources
 Archivo de configuracion    | /odoo/odoo-8.0/esmeralda/config/openerp-server.conf
