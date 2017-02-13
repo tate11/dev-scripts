@@ -37,14 +37,14 @@ Repositorio de utilidades
 -------------------------
 En este repo se encuentran todas las utilidades que se usan para el desarrollo, en este resumen se detallarán solo dos, sd y odooenv.py
 
-https://github.com/jobiols/dev-scripts.git
+    https://github.com/jobiols/dev-scripts.git
 
-Está clonado en ~/dev-scripts para actualizarlo hacer
+Está clonado en *~/dev-scripts* para actualizarlo hacer
 
-$ cd ~/dev_scripts
-$ ./install_scripts 
+    $ cd ~/dev_scripts
+    $ ./install_scripts 
 
-Esto baja el repositorio y copia dos scripts a /usr/bin
+Esto baja el repositorio y copia dos scripts a */usr/bin*
 
 odooenv.py - para el mantenimiento de la infraestructura
 sd               - short para sudo docker, y algunas cositas más.
