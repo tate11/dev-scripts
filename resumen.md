@@ -222,6 +222,7 @@ Para instalar nuevamente el sistema:
 - python2.7
     
 **Instalación**
+
     $ cd 
     $ git clone https://github.com/jobiols/dev-scripts.git
     $ cd dev-scripts
