@@ -157,6 +157,8 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'margin-analysis', 'branch': '8.0'},
+
          # repos para temas ecommerce
 #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
 #         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
@@ -166,9 +168,9 @@ _clients = [
 #          'branch': 'master'},
 #         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
          # repos para mario
-         {'usr': 'jobiols', 'repo': 'commission', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'commission', 'branch': '8.0'},
          # repos de estilos web
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
 
      ],
      'images': [

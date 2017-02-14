@@ -2,6 +2,15 @@
   "repos": [
     {
       "usr": "oca",
+      "repo": "margin-analysis",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
       "repo": "manufacture",
       "branch": [
         "8.0",

@@ -170,43 +170,49 @@ de dato que no tengan este prefijo para permitir multiples clientes.
 Cómo agregar / quitar un repositorio
 ------------------------------------
 Como primera medida se supone que uno tiene muy claro lo que quiere 
-hacer y porque quiere poner o sacar un repo.
+hacer y porqué quiere poner o sacar un repo. Se recomienda enfáticamente
+que no se agreguen módulos en la base de producción a menos que se esté
+seguro de lo que quermos hacer. Para pruebas usar bases de test.
+**La desinstalación de los módulos no siempre deja las cosas como estaban.**
 
-1- Modificar el manifiesto que hay en _~/dev-scripts/classes/client_data.py_ 
+1. Modificar el manifiesto que hay en _~/dev-scripts/classes/client_data.py_ 
 y agregarle o quitarle el o los repos necesarios.
 
-2- Ejecutar el comando
+2. Reinstalar con el nuevo manifiesto
 
     $ odooenv.py -i -c esmeralda
 
-Esto bajará los repos que falten, hará un pull a los que ya existan y no
-tocará los que sobren. Por último actualizará el openerp-server.conf 
-para que odoo vea los repos que queremos que vea. O sea los que pusimos 
-en el manifiesto.
+    Esto bajará los repos que falten, hará un pull a los que ya existan y no
+    tocará los que sobren. Por último actualizará el openerp-server.conf 
+    para que odoo vea los repos que queremos que vea. O sea los que pusimos 
+    en el manifiesto.
 
-3- Reiniciar odoo para que tome los cambios en el odooenv-server.conf
+3. Reiniciar odoo para que tome los cambios en el odooenv-server.conf
 
     $ odooenv.py -s -r -c esmeralda
     
-4- Actualizar los XML de los modelos en la bd.
+4. Actualizar los XML de los modelos en la bd.
 
     $ odooenv.py -u -m all -d esmeralda_prod -c esmeralda
      
-    significado de los comandos.
-        -u                  Que vamos a hacer update 
-        -m all 			    modulo a actualizar, all son todos.
-        -d esmeralda_prod  	base de datos a actualizar
-        -c esmeralda  		cliente
+5. Por último entrar como administrador y en configuración hacer 
+"Actualizar la lista de módulos", de esta forma leerá nuevamente la lista 
+de módulos que le pusimos en el config y mostrará los módulos de los nuevos
+repositorios para que puedan ser instalados.
 
-Cómo actualizar imágenes y repos
---------------------------------
-Para actualizar las imágenes y repostiorios se puede hacer:
+Nota:
+Conviene hacer además un pull para actualizar las imágenes, la de postgress
+tiene parches frecuentemente es el punto siguiente. 
+
+Cómo hacer pull para actualizar imágenes y repos
+------------------------------------------------
+Para actualizar las imágenes y repositorios hacer:
 
     $ odooenv.py -p -c esmeralda
 
 Como instalar desde cero
 ------------------------
-Para instalar nuevamente el sistema:
+Para instalar nuevamente el sistema en un SO fresco:
 
 **Requerimientos**
 - git
