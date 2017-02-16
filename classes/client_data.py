@@ -47,8 +47,6 @@ NOTES:
 
 _clients = [
 
-
-
     #######################################################################
     #
     # ODOO V7
@@ -101,12 +99,12 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
-         {'usr': 'oca'    , 'repo': 'commission', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
-         {'usr': 'oca'    , 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
-         {'usr': 'oca'    , 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'ingadhoc','repo': 'website', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'crm', 'branch': '8.0'},
      ],
@@ -130,7 +128,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
-        # testeando stock report
+         # testeando stock report
          {'usr': 'oca', 'repo': 'stock-logistics-reporting', 'branch': '8.0'},
 
          # repos para impresora fiscal
@@ -148,29 +146,37 @@ _clients = [
     #######################################################################1
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'margin-analysis', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         # lo sacaron de la oca lo necesito por el recalculate_prices
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
+         # lo pide por un modulo lote lock o algo parecido al instalar base vacia
+         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
 
          # repos para temas ecommerce
-#         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
-#         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
+         #         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          # repos para impresora fiscal
-#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-#         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
-#          'branch': 'master'},
-#         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
+         #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+         #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos',
+         #          'branch': 'master'},
+         #         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
          # repos para mario
-#         {'usr': 'jobiols', 'repo': 'commission', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'commission', 'branch': '8.0'},
          # repos de estilos web
-#         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
 
      ],
      'images': [
@@ -518,8 +524,6 @@ _clients = [
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
-
-
 
 ]
 
