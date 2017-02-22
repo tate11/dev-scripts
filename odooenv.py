@@ -802,7 +802,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v4.1.3 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v4.1.4 by jeo Software <jorge.obiols@gmail.com>
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
