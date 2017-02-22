@@ -233,9 +233,12 @@ class Repo:
         ret = 'b ' + self._dict['branch'].ljust(7) + ' ' + self._get_repo().ljust(30)
         return ret
 
-    def getPathDir(self):
+    def get_path_dir(self):
+        """
+            Devuelve el directorio path al repo relativo /sources/ es donde está el .git
+        """
         try:
-            ret = self._dict['instdir']
+            ret = self._dict['instdir'] + '/' + self._dict['repo']
         except:
             try:
                 ret = self._dict['repo'] + '/' + self._dict['innerdir']
@@ -245,36 +248,36 @@ class Repo:
         return ret
 
     def get_addons_dir(self):
+        """
+            Devuelve el directorio al repositorio, es lo que va en config, generalmente es
+            igual al get_path_dir salvo que el repo no sea standard
+            :return:
+        """
         try:
-            ret = self._dict['instdir'] + '/' + self._dict['repo']
+            ret = self._dict['instdir']
         except:
             ret = self._dict['repo']
         return ret
 
     def get_inst_dir(self):
         """
-        Devuelve el directorio de instalación del repo
-
-        :return:
+            Devuelve el directorio de instalación del repo, (donde esta el .git)
         """
         return '{}sources/{}'.format(
                 self._cli.get_home_dir(),
-                self.get_addons_dir())
+                self.get_path_dir())
 
     def do_pull_repo(self):
         """
-        Comando para hacer pull a un repo ya existente
-
-        :return: comando
+            Comando para hacer pull a un repo ya existente
         """
         return 'git -C {} pull'.format(self.get_inst_dir())
 
     def do_clone_repo(self, e):
         """
-        Devuelve un comando que clona el repo localmente
+            Devuelve un comando que clona el repo localmente
 
-        :param e: Environment
-        :return: comando
+            :param e: Environment
         """
         if not e.debug_mode():
             depth = ' --depth 1 '
@@ -289,10 +292,10 @@ class Repo:
 
     def do_checkout(self, version):
         """
-        Hace checkout de la version
+            Hace checkout de la version
 
-        :param version:
-        :return: devuelve el comando
+            :param version:
+            :return: devuelve el comando
         """
         return 'git -C {} checkout {}'.format(
                 self.get_inst_dir(),
@@ -301,10 +304,10 @@ class Repo:
 
     def do_checkout_tag(self, tag):
         """
-        Hace checkout del tag
+            Hace checkout del tag
 
-        :param tag:
-        :return: devuelve el comando
+            :param tag:
+            :return: devuelve el comando
         """
         return 'git -C {} checkout tags/{}'.format(
                 self.get_inst_dir(),
@@ -312,11 +315,11 @@ class Repo:
 
     def do_tag_repo(self, tag):
         """
-        tags the origin repo with two commands
+            tags the origin repo with two commands
             tag the repo
             push the tag to origin
 
-        :param tag:
+            :param tag:
         """
         return [
             'git -C {} tag {}'.format(

@@ -210,6 +210,13 @@
       ]
     },
     {
+      "usr": "ctmil",
+      "repo": "meli_oerp",
+      "branch": [
+        "master"
+      ]
+    },
+    {
       "usr": "csrocha",
       "repo": "fpoc-chrome",
       "branch": [

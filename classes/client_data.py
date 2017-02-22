@@ -146,11 +146,13 @@ _clients = [
     #######################################################################1
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
@@ -164,6 +166,8 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+         # mercadolibre
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
 
          # repos para temas ecommerce
          #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
@@ -448,6 +452,8 @@ _clients = [
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'report-print-send', 'branch': '9.0'},
+         # mercadolibre
+         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
