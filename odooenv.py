@@ -149,37 +149,39 @@ def update_images_from_list(e, images):
 
 
 def update_repos_from_list(e, repos):
-    # check if /odoo exists
-    if not os.path.isdir(e.get_base_dir()):
-        sc_('sudo mkdir {}'.format(e.get_base_dir()))
-        username = pwd.getpwuid(os.getuid()).pw_name
-        # change ownership to current user
-        sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
+    # do nothing if no_repos option is true
+    if not e.no_repos():
+        # check if /odoo exists
+        if not os.path.isdir(e.get_base_dir()):
+            sc_('sudo mkdir {}'.format(e.get_base_dir()))
+            username = pwd.getpwuid(os.getuid()).pw_name
+            # change ownership to current user
+            sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
 
-    # avoid repo duplicates
-    tst_list = []
-    unique_repos = []
-    for repo in repos:
-        if repo.get_formatted_repo() not in tst_list:
-            tst_list.append(repo.get_formatted_repo())
-            unique_repos.append(repo)
+        # avoid repo duplicates
+        tst_list = []
+        unique_repos = []
+        for repo in repos:
+            if repo.get_formatted_repo() not in tst_list:
+                tst_list.append(repo.get_formatted_repo())
+                unique_repos.append(repo)
 
-    for repo in unique_repos:
-        # Check if repo exists
-        if os.path.isdir(repo.get_inst_dir()):
-            e.msginf('pull  ' + repo.get_formatted_repo())
-            params = repo.do_pull_repo()
-        else:
-            e.msginf('clone ' + repo.get_formatted_repo())
-            params = repo.do_clone_repo(e)
+        for repo in unique_repos:
+            # Check if repo exists
+            if os.path.isdir(repo.get_inst_dir()):
+                e.msginf('pull  ' + repo.get_formatted_repo())
+                params = repo.do_pull_repo()
+            else:
+                e.msginf('clone ' + repo.get_formatted_repo())
+                params = repo.do_clone_repo(e)
 
-        if sc_(params):
-            e.msgerr('Fail installing environment, uninstall and try again.')
-
-        # if tag checkout this repo to a known tag
-        if e.get_tag():
-            if sc_(repo.do_checkout_tag(e.get_tag())):
+            if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
+
+            # if tag checkout this repo to a known tag
+            if e.get_tag():
+                if sc_(repo.do_checkout_tag(e.get_tag())):
+                    e.msgerr('Fail installing environment, uninstall and try again.')
 
 
 def install_client(e):
@@ -802,7 +804,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v4.1.4 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v4.2.0 by jeo Software <jorge.obiols@gmail.com>
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
@@ -884,6 +886,10 @@ if __name__ == '__main__':
                         action='store_true',
                         help='Eliminates dbfilter: The client can see any database. '
                              'Without this, the client can only see databases starting with clientname_')
+
+    parser.add_argument('--no-repos',
+                        action='store_true',
+                        help='Does not clone or pull repos used with -i or -p')
 
     parser.add_argument('-H', '--server-help',
                         action='store_true',

@@ -2,6 +2,33 @@
   "repos": [
     {
       "usr": "oca",
+      "repo": "sale-workflow",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "connector",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
+      "repo": "connector-ecommerce",
+      "branch": [
+        "8.0",
+        "9.0",
+        "10.0"
+      ]
+    },
+    {
+      "usr": "oca",
       "repo": "margin-analysis",
       "branch": [
         "8.0",

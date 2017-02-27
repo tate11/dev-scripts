@@ -166,6 +166,13 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+         # connector
+         {'usr': 'jobiols', 'repo': 'connector', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'connector-ecommerce', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'connector-interfaces', 'branch': '8.0'},
+         {'usr': 'Tecnativa', 'repo': 'connector-prestashop', 'branch': '8.0-catalog-minimal-exporter'},
          # mercadolibre
          {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
 
@@ -185,7 +192,7 @@ _clients = [
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.ecommerce'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]

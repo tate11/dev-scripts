@@ -57,6 +57,9 @@ class Environment:
     def no_dbfilter(self):
         return self._args.no_dbfilter
 
+    def no_repos(self):
+        return self._args.no_repos
+
     def get_modules_from_params(self):
         if self._args.module is None:
             self.msgerr('need -m option (module name or all for all modules)')
