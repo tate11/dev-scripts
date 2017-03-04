@@ -4,7 +4,7 @@
 # Crea un directorio vacio dist-packages 
 # entra en la imagen mapeando ese directorio, 
 # una vez dentro de la imagen ejecutar esto:
-# cp -r /usr/local/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
+# cp -r /usr/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
 # después salir de la imagen, inicializar git y agregar archivos al repo
 
 sudo rm -r /odoo/odoo-8.0/sources/dist-packages
