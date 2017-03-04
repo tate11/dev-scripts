@@ -204,11 +204,14 @@ def install_client(e):
             # change ownership to current user
             sc_('sudo chown {}:{} {}'.format(username, username, cli.get_base_dir()))
 
-        sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
-        sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
-        sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
-        sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
-        sc_('sudo chmod 757 -R {}'.format(cli.get_home_dir()))
+        if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),cli.get_name())):
+            sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
+            sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
+            sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
+
+        if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
+            sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
+            sc_('sudo chmod 757 -R {}'.format(cli.get_home_dir()))
 
         # if not exist postgresql create it
         if not os.path.isdir(e.get_psql_dir()):
@@ -369,7 +372,7 @@ def run_client(e):
             if clientName == 'ou':
                 sources_image = 'upgrade'
 
-            params += '-v {}sources/{}:/usr/lib/python2.7/dist-packages/{} '.format(
+            params += '-v {}sources/dist-packages:/usr/lib/python2.7/dist-packages '.format(
                     cli.get_home_dir(), sources_image, sources_host)
 
         params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
