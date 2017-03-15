@@ -204,20 +204,21 @@ def install_client(e):
             # change ownership to current user
             sc_('sudo chown {}:{} {}'.format(username, username, cli.get_base_dir()))
 
+        # Creating client's directories
         if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),cli.get_name())):
             sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
 
+        # Creating sources directory
         if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
             sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
-            sc_('sudo chmod 757 -R {}'.format(cli.get_home_dir()))
 
-        # if not exist postgresql create it
+        # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
             sc_('mkdir {}'.format(e.get_psql_dir()))
 
-        # if not exist odooenv log create it
+        # Creating log directory
         if not os.path.isfile(LOG_FILENAME):
             sc_('sudo mkdir -p {}'.format(os.path.dirname(LOG_FILENAME)))
             sc_('sudo touch {}'.format(LOG_FILENAME))
