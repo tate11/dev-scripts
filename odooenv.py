@@ -207,9 +207,11 @@ def install_client(e):
         # Creating client's directories
         if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),cli.get_name())):
             sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
+            sc_('sudo chmod o+w {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo chmod o+w {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
+            sc_('sudo chmod o+w {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
 
         # Creating sources directory
         if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
