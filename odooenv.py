@@ -208,11 +208,14 @@ def install_client(e):
         if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),cli.get_name())):
             sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
+            sc_('sudo chmod o+w {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
 
         # Creating sources directory
         if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
             sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
+            sc_('sudo chmod o+w {}sources'.format(cli.get_home_dir()))
+
 
         # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
