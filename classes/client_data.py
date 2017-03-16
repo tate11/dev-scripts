@@ -80,6 +80,8 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
+
 
      ],
      'images': [
