@@ -84,7 +84,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
-
+         {'usr': 'adhoc-dev', 'repo': 'odoo-addons', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
