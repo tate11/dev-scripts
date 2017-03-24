@@ -218,7 +218,6 @@ def install_client(e):
             sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
             sc_('sudo chmod o+w {}sources'.format(cli.get_home_dir()))
 
-
         # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
             sc_('mkdir {}'.format(e.get_psql_dir()))
@@ -228,8 +227,6 @@ def install_client(e):
             sc_('sudo mkdir -p {}'.format(os.path.dirname(LOG_FILENAME)))
             sc_('sudo touch {}'.format(LOG_FILENAME))
             sc_('sudo chmod 666 {}'.format(LOG_FILENAME))
-
-        # sc_('chmod 777 -R {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
 
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())

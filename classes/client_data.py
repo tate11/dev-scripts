@@ -210,7 +210,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
@@ -223,7 +223,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
 
-#         {'usr': 'oca', 'repo': 'product-variant', 'branch': '8.0'},
+         #         {'usr': 'oca', 'repo': 'product-variant', 'branch': '8.0'},
          # connector
          {'usr': 'jobiols', 'repo': 'connector', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'connector-ecommerce', 'branch': '8.0'},
@@ -232,15 +232,13 @@ _clients = [
          # cosas como m2mcategory
          {'usr': 'oca', 'repo': 'product-attribute', 'branch': '8.0'},
 
-
-
-#         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
-#         {'usr': 'oca', 'repo': 'connector-interfaces', 'branch': '8.0'}, # interfce con odbc
-#         {'usr': 'Tecnativa', 'repo': 'connector-prestashop', 'branch': '8.0-catalog-minimal-exporter'},
-#         {'usr': 'Tecnativa', 'repo': 'connector-prestashop', 'branch': '8.0-connector_prestashop'},
-#         {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'connector-woocommerce', 'branch': '8.0'},
+         #         {'usr': 'oca', 'repo': 'connector-interfaces', 'branch': '8.0'}, # interfce con odbc
+         #         {'usr': 'Tecnativa', 'repo': 'connector-prestashop', 'branch': '8.0-catalog-minimal-exporter'},
+         #         {'usr': 'Tecnativa', 'repo': 'connector-prestashop', 'branch': '8.0-connector_prestashop'},
+         #         {'usr': 'oca', 'repo': 'connector-prestashop', 'branch': '8.0'},
          # mercadolibre
-#         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
+         #         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
 
          # repos para temas ecommerce
          #         {'usr': 'jobiols', 'repo': 'website-themes', 'branch': '8.0'},
@@ -265,7 +263,47 @@ _clients = [
      },
 
     #######################################################################1
-    {'name': 'makeover', 'port': '8000', 'odoover': '8.0',
+    {'name': 'maketest', 'port': '8000', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         # lo sacaron de la oca lo necesito por el recalculate_prices
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
+         # lo pide por un modulo lote lock o algo parecido al instalar base vacia
+         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+
+         # prestashop
+         #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},
+         #         {'usr': 'OCA', 'repo': 'connector-ecommerce', 'branch': '8.0'},
+         #         {'usr': 'OCA', 'repo': 'product-attribute', 'branch': '8.0'},
+         #         {'usr': 'OCA', 'repo': 'product-variant', 'branch': '8.0'},
+         #         {'usr': 'OCA', 'repo': 'e-commerce', 'branch': '8.0'},
+         #         {'usr': 'OCA', 'repo': 'sale-workflow', 'branch': '8.0'},
+         #         {'usr': 'Tecnativa', 'repo': 'connector-prestashop','branch': '8.0-connector_prestashop'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################1
+    {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -487,6 +525,17 @@ _clients = [
     # ODOO V9
     #
     #######################################################################
+    {'name': 'gustavo', 'port': '8001', 'odoover': '9.0',
+     'repos': [
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+    #######################################################################
     {'name': 'makeover9', 'port': '8069', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina -- 19/12/17
@@ -526,7 +575,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'report-print-send', 'branch': '9.0'},
          # mercadolibre
-         {'usr': 'jobiols', 'instdir':'ml', 'repo': 'meli_oerp', 'branch': 'master'},
+         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'meli_oerp', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
