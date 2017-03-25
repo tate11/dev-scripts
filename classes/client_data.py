@@ -88,7 +88,7 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'crm', 'branch': '8.0'},
-         {'usr': 'marionumza', 'repo': 'account-financial-tools-oca', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'marionumza', 'repo': 'account-financial-tools-ingadhoc', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'product', 'branch': '8.0'},
          {'usr': 'marionumza', 'repo': 'pos', 'branch': '8.0'},
