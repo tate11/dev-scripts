@@ -1,16 +1,16 @@
 #!/bin/bash
 ##############################################################
 # Extract odoo sources to host
-# va a borrar y crear un directorio /odoo/odoo-10.0/sources/odoo
-# esto es para la imagen oficial odoo:10.0
-# dentro de la imagen correr cp -r /usr/lib/python2.7/dist-packages/odoo/* /mnt/extra-addons/odoo
 
-sudo rm -r /odoo/odoo-10.0/sources/odoo
-sudo mkdir /odoo/odoo-10.0/sources/odoo
-sudo chmod -R o+w /odoo/odoo-10.0/sources/odoo
-sudo chown jorge.jorge /odoo/odoo-10.0/sources/odoo
+# cuando entra en la imagen correr esto:
+# cp -r /usr/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
+
+sudo rm -r /odoo/odoo-10.0/sources/dist-packages
+sudo mkdir /odoo/odoo-10.0/sources/dist-packages
+sudo chmod -R o+w /odoo/odoo-10.0/sources/dist-packages
+sudo chown jorge.jorge /odoo/odoo-10.0/sources/dist-packages
 
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
-	-v /odoo/odoo-10.0/sources/odoo/:/mnt/extra-addons/odoo \
+	-v /odoo/odoo-10.0/sources/dist-packages/:/mnt/extra-addons/dist-packages \
         odoo:10.0 $*

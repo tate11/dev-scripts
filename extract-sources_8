@@ -1,16 +1,18 @@
 #!/bin/bash
 ##############################################################
 # Extract odoo sources to host
-# dentro de la imagen correr /extract-sources
+
+# cuando entra en la imagen correr esto:
+# cp -r /usr/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
 
 # crea e inicializa un directorio
-sudo rm -r /odoo/odoo-8.0/sources/openerp
-sudo mkdir /odoo/odoo-8.0/sources/openerp
-sudo chmod -R o+w /odoo/odoo-8.0/sources/openerp
-sudo chown jorge.jorge /odoo/odoo-8.0/sources/openerp
+sudo rm -r /odoo/odoo-8.0/sources/dist-packages
+sudo mkdir /odoo/odoo-8.0/sources/dist-packages
+sudo chmod -R o+w /odoo/odoo-8.0/sources/dist-packages
+sudo chown jorge.jorge /odoo/odoo-8.0/sources/dist-packages
 
 # entra en la imagen mapeando el directorio creado
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
-	-v /odoo/odoo-8.0/sources/openerp/:/mnt/extra-addons/openerp \
+	-v /odoo/odoo-8.0/sources/dist-packages/:/mnt/extra-addons/dist-packages \
         jobiols/odoo-jeo:8.0 $*
