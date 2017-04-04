@@ -138,6 +138,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -159,6 +160,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
