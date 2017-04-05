@@ -346,7 +346,8 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
-         # lo sacaron de la oca lo necesito por el recalculate_prices
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+     # lo sacaron de la oca lo necesito por el recalculate_prices
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
          # lo pide por un modulo lote lock o algo parecido al instalar base vacia
