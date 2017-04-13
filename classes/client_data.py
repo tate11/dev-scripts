@@ -311,6 +311,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
 #        {'usr': 'Trust-Code', 'repo': 'trust-addons', 'branch': '8.0'},
 #        {'usr': 'Trust-Code', 'repo': 'l10n-brazil', 'branch': '8.0'},
 
@@ -681,7 +682,20 @@ _clients = [
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
-
+    #######################################################################
+    #
+    # ODOO V10 Enterprise
+    #
+    #######################################################################
+    {'name': 'agt', 'port': '8000', 'odoover': '10.0+e',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo', 'ver': '10.0e'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
 ]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

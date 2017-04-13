@@ -1,0 +1,18 @@
+#!/bin/bash
+##############################################################
+# Extract odoo sources to host
+
+# cuando entra en la imagen correr esto:
+# cp -r /usr/lib/python2.7/dist-packages/* /mnt/extra-addons/dist-packages/
+
+# crea e inicializa un directorio
+sudo rm -r /odoo/odoo-10.0+e/sources/dist-packages
+sudo mkdir /odoo/odoo-10.0+e/sources/dist-packages
+sudo chmod -R o+w /odoo/odoo-10.0+e/sources/dist-packages
+sudo chown jorge.jorge /odoo/odoo-10.0+e/sources/dist-packages
+
+# entra en la imagen mapeando el directorio creado
+sudo docker run -it --rm \
+	--entrypoint=/bin/bash \
+	-v /odoo/odoo-10.0+e/sources/dist-packages/:/mnt/extra-addons/dist-packages \
+        jobiols/odoo:10.0e $*

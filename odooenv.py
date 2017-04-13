@@ -368,7 +368,7 @@ def run_client(e):
         params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
         if e.debug_mode():
             # a partir de la version 10 cambia a odoo el nombre de los fuentes
-            sources_image = 'odoo' if float(cli.get_ver()) > float('9.0') else 'openerp'
+            sources_image = 'odoo' if cli.get_ver().split('.')[0] >= '10' else 'openerp'
             sources_host = sources_image
 
             # si es openupgrade el sources_image es upgrade

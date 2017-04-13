@@ -278,18 +278,24 @@ class Repo:
 
     def do_clone_repo(self, e):
         """
-            Devuelve un comando que clona el repo localmente
+            Devuelve un comando que clona el repo localmente,
+            soporta github y bitbucket
 
             :param e: Environment
         """
-        if not e.debug_mode():
-            depth = ' --depth 1 '
-        else:
-            depth = ''
 
-        return 'git clone {} -b {} http://github.com/{} {}'.format(
+        # si estoy en debug bajar el historial completo
+        depth = '' if e.debug_mode() else ' --depth 1 '
+
+        if self._dict.get('service', 'github') == 'bitbucket':
+            srv = '{}@bitbucket.org'.format(self._dict.get('usr'))
+        else:
+            srv = 'github.com'
+
+        return 'git clone {} -b {} http://{}/{} {}'.format(
                 depth,
                 self._dict['branch'],
+                srv,
                 self._get_repo(),
                 self.get_inst_dir())
 
