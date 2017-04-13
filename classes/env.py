@@ -287,7 +287,7 @@ class Repo:
         # si estoy en debug bajar el historial completo
         depth = '' if e.debug_mode() else ' --depth 1 '
 
-        if self._dict.get('service', 'github') == 'bitbucket':
+        if self._dict.get('host', 'github') == 'bitbucket':
             srv = '{}@bitbucket.org'.format(self._dict.get('usr'))
         else:
             srv = 'github.com'
