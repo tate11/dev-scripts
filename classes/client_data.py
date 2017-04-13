@@ -675,7 +675,7 @@ _clients = [
     #######################################################################
     {'name': 'test10', 'port': '8000', 'odoover': '10.0',
      'repos': [
-
+         {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
