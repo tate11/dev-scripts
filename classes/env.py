@@ -46,7 +46,7 @@ class Environment:
         return self._home_dir
 
     def get_tag(self):
-        return self._args.checkout_tag
+        return self._args.checkout_tag[0]
 
     def debug_mode(self):
         return self._args.debug
@@ -157,6 +157,9 @@ class Environment:
     def msginf(self, msg):
         print self.yellow_light(msg)
 
+    def msgwarn(self, msg):
+        print self.red(msg)
+
 
 class Client:
     def __init__(self, env, dic):
@@ -246,7 +249,7 @@ class Repo:
 
     def get_path_dir(self):
         """
-            Devuelve el directorio path al repo relativo /sources/ es donde está el .git
+            Devuelve el directorio path al repo relativo al /sources/ es donde está el .git
         """
         try:
             ret = self._dict['instdir'] + '/' + self._dict['repo']

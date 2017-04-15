@@ -160,6 +160,12 @@ def update_repos_from_list(e, repos):
             sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
 
         for repo in repos:
+            # if get_tag, delete the repo to force clone.
+            if e.get_tag():
+                params = 'sudo rm -r {}'.format(repo.get_inst_dir())
+                if sc_(params):
+                    e.msgerr('Fail deleting repo '+repo.get_name())
+
             # Check if repo exists
             if os.path.isdir(repo.get_inst_dir()):
                 e.msginf('pull  ' + repo.get_formatted_repo())
@@ -171,10 +177,10 @@ def update_repos_from_list(e, repos):
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
 
-            # if get_tag is true checkout this repo to a known tag
-            if e.get_tag():
-                if sc_(repo.do_checkout_tag(e.get_tag())):
-                    e.msgerr('Fail installing environment, uninstall and try again.')
+#            # if get_tag is true checkout this repo to a known tag
+#            if e.get_tag():
+#                if sc_(repo.do_checkout_tag(e.get_tag())):
+#                    e.msginf('Checkout, the repo does not have this tag')
 
 
 def install_client(e):
@@ -755,7 +761,7 @@ def checkout_tag(e):
     for repo in cli.get_repos():
         e.msginf('checking out >> {}'.format(repo.get_formatted_repo()))
         if sc_(repo.do_checkout_tag(tag)):
-            e.msginf('there is no such tag in this repo')
+            e.msgwarn('there is no such tag in this repo!!')
 
     e.msgdone('All repos with this tag were checked out')
 
