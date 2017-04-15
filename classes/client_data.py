@@ -211,7 +211,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
          # testeando stock report
-         {'usr': 'oca', 'repo': 'stock-logistics-reporting', 'branch': '8.0'},
+#         {'usr': 'oca', 'repo': 'stock-logistics-reporting', 'branch': '8.0'},
 
          # repos para impresora fiscal
          #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},

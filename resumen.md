@@ -240,6 +240,58 @@ Verificar que la tarea quedo instalada con
  
     $ odooenv.py --cron-list
 
+Tags y versiones de repositorios
+--------------------------------
 
-    
-    
+Es un hecho que los repositorios públicos están cambiando constantemente, 
+eso es una característica del open source. Por lo tanto para mantener 
+la estabilidad de las instalaciones, hay forks de cada repositorio que se 
+usa en https://github.com/jobiols/
+ Sin embargo estos también cambian y alguna instalación de cliente se
+queda atrás. Para poder volver al estado de una instalación de cliente
+se usan los comandos
+
+    -T --tag-repos        Tag all repos used by a client with a tag consisting
+                          of client name and a timestamp. Need -c option
+    --checkout-tag CHECKOUT_TAG
+                          checkouts a tag from all the repos belonging to a
+                          client needs -c option. If some repo does not have the
+                          tag, reports theerror and continues with next repo.The
+                          tag was previously setted with -T option. To revert this
+                          situation issue a --revert-checkout
+    --revert-checkout     checkouts the normal branch (i.e. odoo version) for
+                          all the repos belonging to the client. Needs -c
+                          option. This revers the --checkout-tags to the normal
+                          state. Warning: if there is any local change in a
+                          repo, the checkout will fail.
+ 
+**Comando -T**
+Cuando terminamos una instalación de cliente y sabemos (con razonable
+seguridad) que no se le van a agregar más repositorios, se hace un 
+
+    odooenv.py -T -c NOMBRE-DE-CLIENTE
+
+Este comando taggea todos los repos que están en https://github.com/jobiols/ 
+y que son usados por este cliente, con un tag de la forma 
+AAAA-MM-DD-HH-MM-SS-NOMBRE-DE-CLIENTE
+para que en algun futuro se pueda reconstruir esta instalación a pesar 
+de que los repositorios evolucionen con nuevos commits.
+
+**Comando --checkout-tag CHECKOUT_TAG**
+
+Usado para reconstruir una versión anterior de un conjunto de repositorios
+Lo primero es ir a la instalación del cliente y en uno de los repositorios
+hacer un _git tag_ para obtener el último tag, todos los repos van a 
+mostrar el mismo ultimo tag.
+
+Luego en desarrollo se crea una instalación de la siguiente forma
+
+    odooenv.py -i -c NOMBRE-DE-CLIENTE --checkout-tag EL-TAG
+     
+_Atención_: esto no tiene en cuenta posibles modificaciones en la imagen
+
+Esto clonea o actualiza los repos según sea necesario y como es habitual
+con el comando -i y al terminar hace un checkout del tag.
+
+
+**Comando --revert-checkout**

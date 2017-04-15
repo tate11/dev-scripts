@@ -1,16 +1,18 @@
 # dev-scripts
-###Docker based  infrastructure management *for* _Odoo_ 
+###Docker based  infrastructure management for _Odoo_ 
+
 This proyect support [semver](http://semver.org/) 
     
-    usage: odooenv.py [-h] [-p] [-i] [-R] [-S] [-r] [-s] [-l] [-v] [-n] [-u]
-                      [-d DATABASE] [-w NEW_DATABASE] [-m MODULE] [-c CLIENT]
-                      [--debug] [--no-dbfilter] [-H] [--backup] [--backup-list]
-                      [--restore] [-t TIMESTAMP] [-Q repo test_file] [-j]
-                      [--cron-list] [--translate] [--issues REPO] [-T--tag-repos]
-                      [--checkout-tag CHECKOUT_TAG] [--revert-checkout]
-    
+usage: odooenv.py [-h] [-p] [-i] [-R] [-S] [-r] [-s] [-l] [-v] [-n] [-u]
+                  [-d DATABASE] [-w NEW_DATABASE] [-m MODULE] [-c CLIENT]
+                  [--debug] [--no-dbfilter] [--no-repos] [-H] [--backup]
+                  [--backup-list] [--restore] [-t TIMESTAMP]
+                  [-Q repo test_file] [-j] [--cron-list] [--translate]
+                  [--issues REPO] [-T--tag-repos]
+                  [--checkout-tag CHECKOUT_TAG] [--undo-checkout-tag]
+
     ==========================================================================
-    Odoo environment setup v4.0.0 by jeo Software <jorge.obiols@gmail.com>
+    Odoo environment setup v4.2.1 by jeo Software <jorge.obiols@gmail.com>
     ==========================================================================
     
     optional arguments:
@@ -43,6 +45,7 @@ This proyect support [semver](http://semver.org/)
       --no-dbfilter         Eliminates dbfilter: The client can see any database.
                             Without this, the client can only see databases
                             starting with clientname_
+      --no-repos            Does not clone or pull repos used with -i or -p
       -H, --server-help     List server help requires -c option (because needs to
                             run a image)
       --backup              Lauch backup. requires -d and -c options.
@@ -71,11 +74,11 @@ This proyect support [semver](http://semver.org/)
       --checkout-tag CHECKOUT_TAG
                             checkouts a tag from all the repos belonging to a
                             client needs -c option. If some repo does not have the
-                            tag, reports theerror and continues with next repo.The
-                            tag was previously setted with -T optionTo revert this
-                            situation issue a --revert-checkout
-      --revert-checkout     checkouts the normal branch (i.e. odoo version) for
+                            tag, reports the error and continues with next
+                            repo.The tag was previously setted with -T option. To
+                            undo this situation issue a --undo-checkout-tag
+      --undo-checkout-tag   checkouts the normal branch (i.e. odoo version) for
                             all the repos belonging to the client. Needs -c
-                            option. This revers the --checkout-tags to the normal
-                            state. Warning: if there is any local change in a
-                            repo, the checkout will fail.
+                            option. This revers the the repos modifyed for a
+                            --checkout-tag to its normal state. Warning: if there
+                            is any local change in a repo, the checkout will fail.

@@ -161,20 +161,28 @@ class Environment:
 class Client:
     def __init__(self, env, dic):
         self._env = env
-        self._name = dic['name']
-        self._port = dic['port']
-        self._ver = dic['odoover']
-        self._repos = []
-        for rep in dic['repos']:
-            self._repos.append(Repo(self, rep))
-        self._images = []
-        for img in dic['images']:
-            self._images.append(Image(self, img))
 
-        try:
-            self._install = dic['install']
-        except:
-            self._install = None
+        self._name = dic['name']
+
+        self._port = dic['port']
+
+        self._ver = dic['odoover']
+
+        self._repos = []
+        unique_repos = []
+        for rep in dic['repos']:
+            if rep not in unique_repos:
+                unique_repos.append(rep)
+        for rep in unique_repos:
+            self._repos.append(Repo(self, rep))
+
+        self._images = []
+        unique_images = []
+        for img in dic['images']:
+            if img not in unique_images:
+                unique_images.append(img)
+        for img in unique_images:
+            self._images.append(Image(self, img))
 
     def get_base_dir(self):
         return self._env.get_base_dir()
@@ -284,8 +292,8 @@ class Repo:
             :param e: Environment
         """
 
-        # si estoy en debug bajar el historial completo
-        depth = '' if e.debug_mode() else ' --depth 1 '
+        # si estoy en debug o haciendo checkout tag, bajar el historial completo
+        depth = '' if e.debug_mode() or e.get_tag else ' --depth 1 '
 
         if self._dict.get('host', 'github') == 'bitbucket':
             srv = '{}@bitbucket.org'.format(self._dict.get('usr'))
@@ -299,16 +307,16 @@ class Repo:
                 self._get_repo(),
                 self.get_inst_dir())
 
-    def do_checkout(self, version):
+    def do_checkout(self, branch):
         """
-            Hace checkout de la version
+            Hace checkout de un branch
 
-            :param version:
+            :param branch:
             :return: devuelve el comando
         """
         return 'git -C {} checkout {}'.format(
                 self.get_inst_dir(),
-                version
+                branch
         )
 
     def do_checkout_tag(self, tag):

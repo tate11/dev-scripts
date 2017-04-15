@@ -22,6 +22,7 @@
 # Directory structure
 #
 #   ├──odoo
+#      ├─ nginx
 #      ├─ postgresql
 #      ├──odoov-8.0
 #      │  ├──[clientname]
@@ -158,15 +159,7 @@ def update_repos_from_list(e, repos):
             # change ownership to current user
             sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
 
-        # avoid repo duplicates
-        tst_list = []
-        unique_repos = []
         for repo in repos:
-            if repo.get_formatted_repo() not in tst_list:
-                tst_list.append(repo.get_formatted_repo())
-                unique_repos.append(repo)
-
-        for repo in unique_repos:
             # Check if repo exists
             if os.path.isdir(repo.get_inst_dir()):
                 e.msginf('pull  ' + repo.get_formatted_repo())
@@ -178,7 +171,7 @@ def update_repos_from_list(e, repos):
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
 
-            # if tag checkout this repo to a known tag
+            # if get_tag is true checkout this repo to a known tag
             if e.get_tag():
                 if sc_(repo.do_checkout_tag(e.get_tag())):
                     e.msgerr('Fail installing environment, uninstall and try again.')
@@ -771,7 +764,7 @@ def issues(e):
     pass
 
 
-def revert_checkout(e):
+def undo_checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     cli = e.get_client(client_name)
 
@@ -810,7 +803,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v4.2.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v4.2.1 by jeo Software <jorge.obiols@gmail.com>
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
@@ -960,25 +953,25 @@ if __name__ == '__main__':
                         dest='tag_repos',
                         action='store_true',
                         help="Tag all repos used by a client with a tag consisting of "
-                             "client name and a timestamp. Need -c option")
+                             "client name and a timestamp. Need -c option"
+                        )
 
     parser.add_argument('--checkout-tag',
                         action='store',
                         nargs=1,
                         help='checkouts a tag from all the repos belonging to a client '
-                             'needs -c option. If some repo does not have the tag, reports the'
+                             'needs -c option. If some repo does not have the tag, reports the '
                              'error and continues with next repo.'
-                             'The tag was previously setted with -T option'
-
-                             'To revert this situation issue a --revert-checkout'
+                             'The tag was previously setted with -T option. '
+                             'To undo this situation issue a --undo-checkout-tag'
                         )
 
-    parser.add_argument('--revert-checkout',
+    parser.add_argument('--undo-checkout-tag',
                         action='store_true',
                         help='checkouts the normal branch (i.e. odoo version) for all the repos belonging '
                              'to the client. Needs -c option. '
-                             'This revers the --checkout-tags to the normal state. Warning: if there is any '
-                             'local change in a repo, the checkout will fail.'
+                             'This revers the the repos modifyed for a --checkout-tag to its normal state. '
+                             'Warning: if there is any local change in a repo, the checkout will fail.'
                         )
 
     args = parser.parse_args()
@@ -1020,5 +1013,5 @@ if __name__ == '__main__':
         tag_repos(environment)
     if args.checkout_tag:
         checkout_tag(environment)
-    if args.revert_checkout:
-        revert_checkout(environment)
+    if args.undo_checkout_tag:
+        undo_checkout_tag(environment)
