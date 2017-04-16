@@ -46,7 +46,10 @@ class Environment:
         return self._home_dir
 
     def get_tag(self):
-        return self._args.checkout_tag[0]
+        if self._args.checkout_tag:
+            return self._args.checkout_tag[0]
+        else:
+            return False
 
     def debug_mode(self):
         return self._args.debug

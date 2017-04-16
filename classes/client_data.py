@@ -529,6 +529,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          # customizacion
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
          # oca tools
