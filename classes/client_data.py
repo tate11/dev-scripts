@@ -310,6 +310,8 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
+
 #        {'usr': 'Trust-Code', 'repo': 'trust-addons', 'branch': '8.0'},
 #        {'usr': 'Trust-Code', 'repo': 'l10n-brazil', 'branch': '8.0'},
 
@@ -330,7 +332,7 @@ _clients = [
      ]
      },
     #######################################################################1
-    {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
+    {'name': 'makeover', 'port': '8068', 'odoover': '8.0.Prod',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -353,6 +355,8 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
+
 
          # prestashop
          #         {'usr': 'OCA', 'repo': 'connector', 'branch': '8.0'},

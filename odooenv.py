@@ -306,7 +306,7 @@ def server_help(e):
 def quality_test(e):
     """
     Corre un test especifico, los parametros necesarios son:
-    -T repositorio test_file.py -d database -c cliente -m modulo
+    -Q repositorio test_file.py -d database -c cliente -m modulo
     """
     cli = e.get_client(e.get_clients_from_params('one'))
     repo_name, test_file = e.get_qt_args_from_params()
@@ -328,10 +328,17 @@ def quality_test(e):
     params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
     params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
     params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
-    #    params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
-    #        cli.get_home_dir())
-    #    params += '-v {}sources/image-sources:/usr/local/lib/python2.7/dist-packages '.format(
-    #        cli.get_home_dir())
+    if e.debug_mode():
+        # a partir de la version 10 cambia a odoo el nombre de los fuentes
+        sources_image = 'odoo' if cli.get_ver().split('.')[0] >= '10' else 'openerp'
+        sources_host = sources_image
+
+        # si es openupgrade el sources_image es upgrade
+        if cli == 'ou':
+            sources_image = 'upgrade'
+
+        params += '-v {}sources/dist-packages:/usr/lib/python2.7/dist-packages '.format(
+                cli.get_home_dir(), sources_image, sources_host)
     params += '--link postgres:db '
     params += '{} -- '.format(cli.get_image('odoo').get_image())
     params += '--stop-after-init '
