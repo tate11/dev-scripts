@@ -295,3 +295,88 @@ con el comando -i y al terminar hace un checkout del tag.
 
 
 **Comando --revert-checkout**
+
+
+
+Nombre del módulo | Nombre técnico | Autor | Última Versión 
+----------------- | ---------------|-------|---------------
+Red Social|mail|OpenERP SA|8.0.1.0
+Facturación en línea|account_voucher|OpenERP SA|8.0.1.0
+Contabilidad y finanzas|account_accountant|OpenERP SA|8.0.1.1
+Encuesta|survey|OpenERP SA|8.0.2.0
+Account Check Management|account_check|OpenERP Team de Localizacion Argentina|8.0.2.11.0
+Clean Cancelled Invoice Number|account_clean_cancelled_invoice_number|ADHOC SA|8.0.1.0.0
+Account Journal Transfer|account_transfer|ADHOC SA|8.0.1.2.1
+Argentinian Account Check Integration|l10n_ar_account_check|ADHOC SA|8.0.1.0.1
+Argentinian VAT Ledger Management|l10n_ar_account_vat_ledger|ADHOC SA|8.0.1.2.0
+Argentinian CITI Reports|l10n_ar_account_vat_ledger_city|ADHOC SA|8.0.1.2.0
+Aregentinian Receipts and Payment Orders|l10n_ar_account_voucher|ADHOC SA|8.0.1.3.2
+Base Module For Argentinian Like Aeroo Reports|l10n_ar_aeroo_base|ADHOC SA|8.0.1.0.0
+Argentinian Like Electronic Invoice Aeroo Report|l10n_ar_aeroo_einvoice|ADHOC SA|8.0.1.0.0
+Argentinian Like Invoice Aeroo Report|l10n_ar_aeroo_invoice|ADHOC SA|8.0.1.0.1
+Argentinian Like Purchase Order Aeroo Report|l10n_ar_aeroo_purchase|ADHOC SA|8.0.1.0.0
+Argentinian Like Sale Order Aeroo Report|l10n_ar_aeroo_sale|ADHOC SA|8.0.1.0.0
+Argentinian Like Stock Picking Aeroo Report|l10n_ar_aeroo_stock|ADHOC SA|8.0.1.0.0
+Argentinian Like Voucher Aeroo Report|l10n_ar_aeroo_voucher|ADHOC SA|8.0.1.0.1
+Argentina - Base para los Web Services del AFIP|l10n_ar_afipws|ADHOC SA|8.0.1.1.2
+Argentina - Web Services de Factura Electrónica del AFIP|l10n_ar_afipws_fe|ADHOC SA|8.0.1.6.0
+Integration between electronic invoice and account cancel|l10n_ar_afipws_fe_cancel|ADHOC SA|8.0.0.1.0
+CBU Banks|l10n_ar_bank_cbu|ADHOC SA|8.0.1.0.0
+Argentinian Localization|l10n_ar_base|ADHOC SA|8.0.1.2.0
+Retenciones para Plan Contable General Argentino|l10n_ar_chart_generic_withholding|ADHOC SA|8.0.1.0.0
+Hider Purchase/Sale Receipts Menus|l10n_ar_hide_receipts|ADHOC SA|8.0.1.0.0
+Argentina - Facturación y documentos AFIP|l10n_ar_invoice|ADHOC SA|8.0.0.27.0
+Argentinian Sale Total Fields|l10n_ar_invoice_sale|ADHOC SA|8.0.1.0.1
+Argentinian Like Sale Order Integration With Portal Sale|portal_sale_l10n_ar_aeroo_sale|ADHOC SA|8.0.1.0.0
+Report Aeroo Portal Fix|report_aeroo_portal_fix|ADHOC SA|8.0.1.0.0
+Report Configurator|report_extended|ADHOC SA|8.0.1.0.0
+Report Configurator - Account|report_extended_account|ADHOC SA|8.0.1.1.0
+Report Configurator - Purchase|report_extended_purchase|ADHOC SA|8.0.1.2.0
+Report Configurator - Sale|report_extended_sale|ADHOC SA|8.0.1.3.2
+Report Configurator - Stock|report_extended_stock|ADHOC SA|8.0.1.2.1
+Report Configurator - Account Voucher|report_extended_voucher|ADHOC SA|8.0.2.3.0
+Administración de Ventas|sale|OpenERP SA|8.0.1.0
+Stock Voucher|stock_voucher|ADHOC SA|8.0.1.4.0
+Gestión de Almacenes|stock|OpenERP SA|8.0.1.1
+Contabilidad del SGA -WMS-|stock_account|OpenERP SA|8.0.1.1
+Gestión de compras|purchase|OpenERP SA|8.0.1.1
+Directorio de empleados|hr|OpenERP SA|8.0.1.1
+Control de gastos|hr_expense|OpenERP SA|8.0.1.0
+Facturación electrónica|account|OpenERP SA|8.0.1.1
+Cancelar asientos|account_cancel|OpenERP SA|8.0.1.1
+Account Invoice Tax Wizard|account_invoice_tax_wizard|ADHOC SA|8.0.1.2.0
+Journal Payment Subtype|account_journal_payment_subtype|Eska Yazılım ve Danışmanlık A.Ş.|8.0.1.0
+Account Voucher Payline|account_voucher_payline|ADHOC SA|8.0.1.4.0
+Voucher Voucher Withholding|account_voucher_withholding|ADHOC SA|8.0.1.11.0
+Contabilidad analítica|analytic|OpenERP SA|8.0.1.1
+Encriptación de la contraseña|auth_crypt|"['OpenERP SA'| 'FS3']"|8.0.2.0
+Registrarse|auth_signup|OpenERP SA|8.0.1.0
+Base|base|OpenERP SA|8.0.1.3
+Reglas de Acción Automáticas|base_action_rule|OpenERP SA|8.0.1.0
+Herramientas de Configuración Inicial|base_setup|OpenERP SA|8.0.1.0
+Validación del NIF|base_vat|OpenERP SA|8.0.1.0
+Base VAT Unique - To check Unique VAT number|base_vat_unique|"Cubic ERP| jeo Software"|8.0.1.0
+Tableros|board|OpenERP SA|8.0.1.0
+Calendario|calendar|OpenERP SA|8.0.1.0
+Database cleanup|database_cleanup|"Therp BV|Odoo Community Association (OCA)"|8.0.0.1.0
+Configuración de la precisión decimal|decimal_precision|OpenERP SA|8.0.0.1
+Gastos de envío|delivery|OpenERP SA|8.0.1.0
+Gestión documental|document|OpenERP SA|8.0.2.1
+Intercambio Electrónico de Datos (EDI)|edi|OpenERP SA|8.0.1.0
+Plantillas de E-mail|email_template|OpenERP SA|8.0.1.1
+Puerta de enlace de correo electrónico|fetchmail|OpenERP SA|8.0.1.0
+Gamificación|gamification|OpenERP SA|8.0.1.0
+Gamificación en RRHH|hr_gamification|OpenERP SA|8.0.1.0
+Sistema de gestión del conocimiento|knowledge|OpenERP SA|8.0.1.0
+Banks of Argentina|l10n_ar_bank|OpenERP - Team de Localización Argentina|8.0.2.7.2
+VAT Localization Argentina|l10n_ar_base_vat|OpenERP - Team de Localización Argentina|8.0.2.7.2
+Argentina - Plan Contable General|l10n_ar_chart_generic|OpenERP - Team de Localización Argentina|8.0.2.2.0
+Padron AFIP Argentino|l10n_ar_padron_afip|ADHOC SA|8.0.0.3.0
+Argentina - Nombre y títulos de personas físicas o no.|l10n_ar_partner_title|OpenERP - Team de Localización Argentina|8.0.2.7.2
+Argentina - Listado de Provincias.|l10n_ar_states|OpenERP - Team de Localización Argentina|8.0.2.7.2
+Plan de cuentas multi lenguaje|l10n_multilang|OpenERP SA|8.0.1.1
+Marketing|marketing|OpenERP SA|8.0.1.1
+Método de pago|payment|OpenERP SA|8.0.1.0
+Método de pago de transferencia|payment_transfer|OpenERP SA|8.0.1.0
+Portal|portal|OpenERP SA|8.0.1.0
+Gamificación en el portal|portal_gamification|OpenERP SA|8.0.1
