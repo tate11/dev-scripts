@@ -345,7 +345,7 @@ def quality_test(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '--log-level=test '
-    params += '--test-enable '
+#    params += '--test-enable '  lo sacamos porque en v10 no funciona
     #    params += '-u {} '.format(repo_name)
     params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
             repo_name, module_name, test_file)

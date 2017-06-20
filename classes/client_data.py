@@ -69,6 +69,18 @@ _clients = [
     # ODOO V8
     #
     #######################################################################
+    {'name': 'agro', 'port': '8000', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'farm', 'branch': '8.0'},
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
+    #######################################################################
     {'name': 'marco', 'port': '8003', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -311,6 +323,7 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '8.0'},
 
 #        {'usr': 'Trust-Code', 'repo': 'trust-addons', 'branch': '8.0'},
 #        {'usr': 'Trust-Code', 'repo': 'l10n-brazil', 'branch': '8.0'},
@@ -584,6 +597,7 @@ _clients = [
     {'name': 'test10', 'port': '8000', 'odoover': '10.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
+         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
@@ -598,6 +612,8 @@ _clients = [
     {'name': 'agt', 'port': '8000', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
+         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo', 'ver': '10.0e'},

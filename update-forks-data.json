@@ -179,7 +179,6 @@
         "9.0"
       ]
     },
-
     {
       "usr": "serviciosbaeza",
       "repo": "serviciosbaeza-odoo-addons",
@@ -432,6 +431,13 @@
       "branch": [
         "8.0",
         "9.0"
+      ]
+    },
+    {
+      "usr": "JayVora-SerpentCS",
+      "repo": "SerpentCS_Contributions",
+      "branch": [
+        "10.0"
       ]
     }
   ]
