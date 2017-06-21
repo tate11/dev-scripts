@@ -606,12 +606,12 @@ _clients = [
          {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ],
 
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
     #######################################################################
