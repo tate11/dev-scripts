@@ -635,10 +635,10 @@ _clients = [
     # ODOO V10 Enterprise
     #
     #######################################################################
-    {'name': 'agt', 'port': '8000', 'odoover': '10.0+e',
+    {'name': 'agt', 'port': '8069', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+#         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
      ],
      'images': [
