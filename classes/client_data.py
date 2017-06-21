@@ -590,6 +590,31 @@ _clients = [
      ]
      },
     #######################################################################
+    {'name': 'cochera', 'port': '8069', 'odoover': '9.0',
+     'repos': [
+         # requeridos por la localizacion argentina -- 19/12/17
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
+         # customizacion
+#         {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
+         # oca tools
+         {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ],
+
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+    #######################################################################
     #
     # ODOO V10
     #
