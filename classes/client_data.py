@@ -432,9 +432,10 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'valente', 'port': '8091', 'odoover': '8.0',
+    {'name': 'valente', 'port': '8091', 'odoover': '8.0.valente',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -536,7 +537,7 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'jeo9', 'port': '8091', 'odoover': '9.0',
+    {'name': 'jeo9', 'port': '8010', 'odoover': '9.0',
      'repos': [
          # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
@@ -642,7 +643,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
      ],
      'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo', 'ver': '10.0e'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': 'latest'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
