@@ -239,7 +239,8 @@ def install_client(e):
         param += '--name {}_tmp '.format(cli.get_name())
         param += '{} '.format(cli.get_image('odoo').get_image())
         param += '-- --stop-after-init -s '
-        param += '--db-filter={}_.* '.format(cli.get_name())
+        if not e.no_dbfilter():
+            param += '--db-filter={}_.* '.format(cli.get_name())
 
         # patch for openupgrade image
         ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
