@@ -643,7 +643,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
      ],
      'images': [
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': 'latest'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': '10.0+e-20170616'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
