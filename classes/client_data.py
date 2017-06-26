@@ -628,6 +628,7 @@ _clients = [
      'images': [
          {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
     #######################################################################
