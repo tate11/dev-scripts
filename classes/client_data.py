@@ -345,7 +345,7 @@ _clients = [
      ]
      },
     #######################################################################1
-    {'name': 'makeover', 'port': '8068', 'odoover': '8.0.Prod',
+    {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -621,10 +621,9 @@ _clients = [
     # ODOO V10
     #
     #######################################################################
-    {'name': 'test10', 'port': '8000', 'odoover': '10.0',
+    {'name': 'varazdin', 'port': '8069', 'odoover': '10.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+         {'usr': 'jobiols', 'repo': 'varazdin', 'branch': '10.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
@@ -639,7 +638,7 @@ _clients = [
     {'name': 'agt', 'port': '8069', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-#         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+#        {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
      ],
      'images': [
