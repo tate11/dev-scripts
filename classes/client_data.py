@@ -624,9 +624,10 @@ _clients = [
     {'name': 'varazdin', 'port': '8069', 'odoover': '10.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'varazdin', 'branch': '10.0'},
+         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
      ],
      'images': [
-         {'name': 'odoo', 'usr': 'odoo', 'img': '', 'ver': '10.0'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
