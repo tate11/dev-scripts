@@ -221,7 +221,9 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
 
          # repos para impresora fiscal
          #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
