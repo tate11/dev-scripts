@@ -216,18 +216,14 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
-
-         # repos para impresora fiscal
-         #         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-         #         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -512,25 +508,28 @@ _clients = [
     # ODOO V9
     #
     #######################################################################
-    {'name': 'test9', 'port': '8001', 'odoover': '9.0',
+    {'name': 'suelos', 'port': '8001', 'odoover': '9.0',
      'repos': [
-         # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'reves', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '9.0'},
+
+         # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
-         # customizacion
-         {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
-         # oca tools
-         {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'report-print-send', 'branch': '9.0'},
-         # mercadolibre
-         {'usr': 'jobiols', 'instdir': 'ml', 'repo': 'meli_oerp', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
