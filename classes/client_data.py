@@ -223,7 +223,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
