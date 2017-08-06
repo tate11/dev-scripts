@@ -224,6 +224,10 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
+         # repos para la impresora fiscal
+         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos', 'branch': 'master'},
+         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
