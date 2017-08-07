@@ -224,10 +224,12 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
+
          # repos para la impresora fiscal
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-         {'usr': 'ctmil', 'instdir': 'ctmil', 'repo': 'l10n_ar_fpoc_pos', 'branch': 'master'},
-         {'usr': 'ctmil', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
+         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'ra_fpoc', 'branch': 'master'},
+         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
+         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'odoo_fpoc', 'branch': 'master'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -647,6 +649,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
 #        {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
+         {'usr': 'oca', 'repo': 'web', 'branch': '10.0'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': '10.0e-20170616'},
