@@ -227,7 +227,7 @@ class Client:
         return self._env.get_template_dir() + self._ver + '/'
 
     def get_addons_path(self):
-        # path to addons inside image
+        """ path to addons inside image, arma el addons para poner en el config de odoo """
         path = '/mnt/extra-addons/'
         paths = []
         for repo in self.get_repos():
@@ -254,35 +254,42 @@ class Repo:
         """
             Devuelve el directorio path al repo relativo al /sources/ es donde está el .git
         """
-        try:
+        if 'instdir' in self._dict:
             ret = self._dict['instdir'] + '/' + self._dict['repo']
-        except:
-            try:
-                ret = self._dict['repo'] + '/' + self._dict['innerdir']
-            except:
-                ret = self._dict['repo']
+            return ret
 
+        if 'innerdir' in self._dict:
+            ret = self._dict['repo']
+            return ret
+
+        ret = self._dict['repo']
         return ret
 
     def get_addons_dir(self):
         """
-            Devuelve el directorio al repositorio, es lo que va en config, generalmente es
-            igual al get_path_dir salvo que el repo no sea standard
+            Devuelve el directorio al relativo repositorio, es lo que va en config,
+            generalmente es igual al get_path_dir salvo que el repo no sea standard
             :return:
         """
-        try:
+        if 'instdir' in self._dict:
             ret = self._dict['instdir']
-        except:
-            ret = self._dict['repo']
+            return ret
+
+        if 'innerdir' in self._dict:
+            ret = self._dict['repo'] +'/'+ self._dict['innerdir']
+            return ret
+
+        ret = self._dict['repo']
         return ret
 
     def get_inst_dir(self):
         """
             Devuelve el directorio de instalación del repo, (donde esta el .git)
         """
-        return '{}sources/{}'.format(
+        ret = '{}sources/{}'.format(
                 self._cli.get_home_dir(),
                 self.get_path_dir())
+        return ret
 
     def do_pull_repo(self):
         """

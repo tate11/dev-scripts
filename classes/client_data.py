@@ -212,6 +212,7 @@ _clients = [
     #######################################################################
     {'name': 'reves', 'port': '8069', 'odoover': '8.0',
      'repos': [
+
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
@@ -228,7 +229,7 @@ _clients = [
          # repos para la impresora fiscal
          {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'ra_fpoc', 'branch': 'master'},
          {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'odoo_fpoc', 'branch': 'master'},
+         {'usr': 'jobiols-reves', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
 
      ],
      'images': [
