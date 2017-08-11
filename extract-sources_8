@@ -17,8 +17,8 @@ sudo mkdir /odoo/odoo-8.0/sources/dist-local-packages
 sudo chmod -R o+w /odoo/odoo-8.0/sources/dist-packages
 sudo chmod -R o+w /odoo/odoo-8.0/sources/dist-local-packages
 
-sudo chown jorge.jorge /odoo/odoo-8.0/sources/dist-packages
-sudo chown jorge.jorge /odoo/odoo-8.0/sources/dist-local-packages
+sudo chown jobiols.jobiols /odoo/odoo-8.0/sources/dist-packages
+sudo chown jobiols.jobiols /odoo/odoo-8.0/sources/dist-local-packages
 
 # entra en la imagen mapeando el directorio creado
 sudo docker run -it --rm \

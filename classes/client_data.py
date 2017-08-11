@@ -240,6 +240,31 @@ _clients = [
      ]
      },
 
+    #######################################################################
+    {'name': 'suelos', 'port': '8070', 'odoover': '8.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'suelos', 'branch': '8.0'},
+
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+     ]
+     },
     #######################################################################1
     {'name': 'test', 'port': '8001', 'odoover': '8.0',
      'repos': [
@@ -515,8 +540,10 @@ _clients = [
     # ODOO V9
     #
     #######################################################################
-    {'name': 'suelos', 'port': '8001', 'odoover': '9.0',
+    {'name': 'suelos9', 'port': '8001', 'odoover': '9.0',
      'repos': [
+         {'usr': 'jobiols', 'repo': 'suelos', 'branch': '9.0'},
+
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
@@ -525,7 +552,6 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'reves', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '9.0'},
