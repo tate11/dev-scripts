@@ -466,7 +466,7 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'valente', 'port': '8091', 'odoover': '8.0.valente',
+    {'name': 'valente', 'port': '8091', 'odoover': '8.0',
      'repos': [
 #         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},

@@ -368,6 +368,9 @@ def run_client(e):
         else:
             params = 'sudo docker run -d '
         params += '--link aeroo:aeroo '
+        # open port for wdb
+        if e.debug_mode():
+            params += '-p 1984:1984 '
         params += '-p {}:8069 '.format(cli.get_port())
         params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(),
@@ -392,7 +395,12 @@ def run_client(e):
             params += '--restart=always '
 
         params += '--name {} '.format(cli.get_name())
-        params += '{} '.format(cli.get_image('odoo').get_image())
+
+        # si estamos en modo debug agregarlo al nombre de la imagen
+        if e.debug_mode():
+            params += '{}.debug '.format(cli.get_image('odoo').get_image())
+        else:
+            params += '{} '.format(cli.get_image('odoo').get_image())
 
         if not e.no_dbfilter():
             params += '-- --db-filter={}_.* '.format(cli.get_name())
@@ -817,7 +825,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v4.2.1 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v5.0.0 by jeo Software <jorge.obiols@gmail.com>
+        With wdb support (https://github.com/Kozea/wdb)
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
