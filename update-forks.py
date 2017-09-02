@@ -31,7 +31,7 @@ GREEN = "\033[1;32m"
 YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
-REPOS_DIR = '/home/jorge/git-repos/'
+REPOS_DIR = '/home/jobiols/git-repos/'
 
 
 def sc__(params):

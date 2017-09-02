@@ -182,36 +182,9 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'demo', 'port': '8001', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'multi-store', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'commission', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'serviciosbaeza-odoo-addons', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'crm', 'branch': '8.0'},
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################
     {'name': 'reves', 'port': '8069', 'odoover': '8.0',
      'repos': [
+         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
 
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
@@ -222,13 +195,12 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
 
          # repos para la impresora fiscal
-         {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': 'master'},
 
 #         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'ra_fpoc', 'branch': 'master'},
 #         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
@@ -253,13 +225,13 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
 
      ],
      'images': [
@@ -670,6 +642,20 @@ _clients = [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
+
+    {'name': 'testarg', 'port': '8069', 'odoover': '10.0',
+     'repos': [
+         {'usr': 'odoo-arg', 'repo': 'odoo_l10n_ar', 'branch': 'master'},
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0.arg'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+     ]
+     },
+
+
+
     #######################################################################
     #
     # ODOO V10 Enterprise
