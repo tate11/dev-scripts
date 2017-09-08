@@ -642,6 +642,7 @@ _clients = [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
+    #######################################################################
 
     {'name': 'testarg', 'port': '8069', 'odoover': '10.0',
      'repos': [
@@ -650,11 +651,8 @@ _clients = [
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0.arg'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
-
-
 
     #######################################################################
     #

@@ -9,7 +9,7 @@
 sudo rm -r /odoo/odoo-10.0/sources/dist-packages
 sudo mkdir /odoo/odoo-10.0/sources/dist-packages
 sudo chmod -R o+w /odoo/odoo-10.0/sources/dist-packages
-sudo chown jorge.jorge /odoo/odoo-10.0/sources/dist-packages
+sudo chown jobiols.jobiols /odoo/odoo-10.0/sources/dist-packages
 
 # entra en la imagen mapeando el directorio creado
 sudo docker run -it --rm \

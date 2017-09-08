@@ -196,6 +196,9 @@ class Client:
     def get_ver(self):
         return self._ver
 
+    def get_numeric_ver(self):
+        return float(self._ver[0:2])
+
     def get_backup_dir(self):
         return self.get_home_dir() + self._name + '/backup/'
 

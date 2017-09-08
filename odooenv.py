@@ -276,13 +276,14 @@ def run_environment(e):
     params += image.get_image()
     err += sc_(params)
 
-    image = cli.get_image('aeroo')
-    params = 'sudo docker run -d '
-    params += '-p 127.0.0.1:8989:8989 '
-    params += '--name={} '.format(image.get_name())
-    params += '--restart=always '
-    params += image.get_image()
-    err += sc_(params)
+    if cli.get_numeric_ver() < 10:
+        image = cli.get_image('aeroo')
+        params = 'sudo docker run -d '
+        params += '-p 127.0.0.1:8989:8989 '
+        params += '--name={} '.format(image.get_name())
+        params += '--restart=always '
+        params += image.get_image()
+        err += sc_(params)
 
     if err:
         e.msgerr('Fail running some images.')
@@ -367,7 +368,11 @@ def run_client(e):
             params = 'sudo docker run --rm -it '
         else:
             params = 'sudo docker run -d '
-        params += '--link aeroo:aeroo '
+
+        # a partir de la 10 no se usa aeroo
+        if cli.get_numeric_ver < 10:
+            params += '--link aeroo:aeroo '
+
         # open port for wdb
         if e.debug_mode():
             params += '-p 1984:1984 '
@@ -378,7 +383,7 @@ def run_client(e):
         params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
         if e.debug_mode():
             # a partir de la version 10 cambia a odoo el nombre de los fuentes
-            sources_image = 'odoo' if cli.get_ver().split('.')[0] >= '10' else 'openerp'
+            sources_image = 'odoo' if cli.get_numeric_ver > 9 else 'openerp'
             sources_host = sources_image
 
             # si es openupgrade el sources_image es upgrade
@@ -447,14 +452,10 @@ def stop_client(e):
 def stop_environment(e):
     images_to_stop = ['postgres', 'aeroo']
     e.msgrun('Stopping images ' + ', '.join(images_to_stop))
-    err = 0
     for name in images_to_stop:
         e.msgrun('Stopping image ' + name)
-        err += sc_('sudo docker stop ' + name)
-        err += sc_('sudo docker rm ' + name)
-
-    if err:
-        e.msgerr("errors stopping images")
+        sc_('sudo docker stop ' + name)
+        sc_('sudo docker rm ' + name)
 
     e.msgdone('Images stopped')
     return True
@@ -825,7 +826,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v5.0.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v5.1.0 by jeo Software <jorge.obiols@gmail.com>
         With wdb support (https://github.com/Kozea/wdb)
         ==========================================================================
     """)
