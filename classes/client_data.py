@@ -198,6 +198,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
 
          # repos para la impresora fiscal
          {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': 'master'},
@@ -232,6 +233,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
 
      ],
      'images': [

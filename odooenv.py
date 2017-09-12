@@ -370,7 +370,7 @@ def run_client(e):
             params = 'sudo docker run -d '
 
         # a partir de la 10 no se usa aeroo
-        if cli.get_numeric_ver < 10:
+        if cli.get_numeric_ver() < 10:
             params += '--link aeroo:aeroo '
 
         # open port for wdb
