@@ -535,6 +535,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'crm', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
 
      ],
      'images': [
