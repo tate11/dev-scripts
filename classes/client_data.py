@@ -520,6 +520,8 @@ _clients = [
     #######################################################################
     {'name': 'sams9', 'port': '8069', 'odoover': '9.0',
      'repos': [
+         {'usr': 'jobiols', 'repo': 'cl-sams', 'branch': '9.0', 'host': 'bitbucket'},
+
          # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
