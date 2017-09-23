@@ -51,6 +51,12 @@ class Environment:
         else:
             return False
 
+    def server_mode(self):
+        if self._args.server_mode:
+            return self._args.server_mode[0]
+        else:
+            return False
+
     def debug_mode(self):
         return self._args.debug
 

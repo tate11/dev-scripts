@@ -254,6 +254,18 @@ def install_client(e):
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
+
+        # TODO no puedo escribir en este archivo. Revisarlo
+        # adding server_mode to config file
+        if e.server_mode():
+            config_name = 'openerp-server.conf' if cli.get_numeric_ver() < 10 else 'odoo.conf'
+            config_file = '{}{}/config/{}'.format(cli.get_home_dir(), cli.get_name(), config_name)
+
+            param = "echo '{}' >{}".format('server_mode = {}'.format(e.server_mode()), config_file)
+            print '>>>>>', param
+            if sc_(param):
+                e.msgerr('failing to append server mode')
+
     e.msgdone('Installing done')
 
 
@@ -347,8 +359,6 @@ def quality_test(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '--log-level=test '
-#    params += '--test-enable '  lo sacamos porque en v10 no funciona
-    #    params += '-u {} '.format(repo_name)
     params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
             repo_name, module_name, test_file)
     sc_(params)
@@ -890,6 +900,11 @@ if __name__ == '__main__':
                         dest='module',
                         help="Module to update or all for updating all the reegistered "
                              "modules, you can specify multiple -m options.")
+
+    parser.add_argument('--server-mode',
+                        action='append',
+                        dest='server_mode',
+                        help="Appends option server_mode = 'mode' to config file when installing with -i option ")
 
     parser.add_argument('-c',
                         action='append',
