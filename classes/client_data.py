@@ -534,24 +534,9 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-
-
-
-#         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-crm', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-partner', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'crm', 'branch': '9.0'},
-#         {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
-#         {'usr': 'ingadhoc', 'repo': 'miscellaneous', 'branch': '9.0'},
-#         {'usr': 'ingadhoc', 'repo': 'odoo-upgrade', 'branch': '9.0'},
-
+         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
