@@ -180,6 +180,13 @@
       ]
     },
     {
+      "usr": "odoomrp",
+      "repo": "odoomrp-wip",
+      "branch": [
+        "8.0"
+      ]
+    },
+    {
       "usr": "serviciosbaeza",
       "repo": "serviciosbaeza-odoo-addons",
       "branch": [
@@ -254,14 +261,6 @@
       "repo": "odoo_fpoc",
       "branch": [
         "master"
-      ]
-    },
-    {
-      "usr": "ingadhoc",
-      "repo": "docker-odoo-adhoc",
-      "branch": [
-        "8.0",
-        "9.0"
       ]
     },
     {
