@@ -200,15 +200,11 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
 
 
          # repos para la impresora fiscal
          {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': '8.0'},
-
-#         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'ra_fpoc', 'branch': 'master'},
-#         {'usr': 'jobiols-reves', 'instdir': 'fiscal', 'repo': 'l10n_ar_fpoc', 'branch': 'master'},
-#         {'usr': 'jobiols-reves', 'innerdir': 'addons', 'repo': 'odoo_fpoc', 'branch': 'master'},
-
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -236,6 +232,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
 
      ],
      'images': [
