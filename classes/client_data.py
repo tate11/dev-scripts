@@ -503,6 +503,8 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
