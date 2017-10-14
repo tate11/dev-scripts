@@ -474,6 +474,8 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'crm', 'branch': '9.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
