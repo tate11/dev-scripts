@@ -889,8 +889,8 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v5.1.0 by jeo Software <jorge.obiols@gmail.com>
-        With wdb support (https://github.com/Kozea/wdb)
+        Odoo environment setup v5.2.0 by jeo Software <jorge.obiols@gmail.com>
+        With wdb support (https://github.com/Kozea/wdb) and Nginx (experimental)
         ==========================================================================
     """)
     parser.add_argument('-p', '--pull-all',
@@ -985,7 +985,9 @@ if __name__ == '__main__':
     parser.add_argument('--nginx',
                         action='store_true',
                         help='add nginx to installation, with -i creates nginx dir w/ sample config file '
-                             'and certificates. with -r starts an nginx container linked to odoo')
+                             'and certificates. with -r starts an nginx container linked to odoo'
+                             'you must change certificates and review nginx.conf file.'
+                             'WARNING: for now the -i option will overwrite nginx.conf')
 
     parser.add_argument('-H', '--server-help',
                         action='store_true',
