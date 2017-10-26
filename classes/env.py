@@ -40,7 +40,11 @@ class Environment:
         self._home_dir = '/odoo/'
         self._home_template = self._home_dir + 'odoo-'
         self._psql = self._home_dir + 'postgresql/'
+        self._nginx = 'nginx/'
         self._args = args
+
+    def get_nginx_dir(self):
+        return self.get_base_dir() + self._nginx
 
     def get_base_dir(self):
         return self._home_dir
@@ -68,6 +72,9 @@ class Environment:
 
     def no_repos(self):
         return self._args.no_repos
+
+    def nginx(self):
+        return self._args.nginx
 
     def get_modules_from_params(self):
         if self._args.module is None:
@@ -198,6 +205,9 @@ class Client:
 
     def get_base_dir(self):
         return self._env.get_base_dir()
+
+    def get_nginx_dir(self):
+        return self._env.get_nginx_dir()
 
     def get_ver(self):
         return self._ver

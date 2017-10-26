@@ -21,8 +21,16 @@
 # -----------------------------------------------------------------------------------
 # Directory structure
 #
-#   ├──odoo
+#   /──odoo
 #      ├─ nginx
+#      │  ├─cert
+#      │  │ └──misitio.pem
+#      │  ├─log
+#      │  │ ├──access.log
+#      │  │ └──error.log
+#      │  └─conf
+#      │    ├──access.log
+#      │    └──nginx.conf
 #      ├─ postgresql
 #      ├──odoov-8.0
 #      │  ├──[clientname]
@@ -53,6 +61,7 @@ import pwd
 import subprocess
 import time
 from datetime import datetime
+import sys
 
 from classes import Environment
 from classes.client_data import _clients
@@ -161,7 +170,7 @@ def update_repos_from_list(e, repos):
             if e.get_tag():
                 params = 'sudo rm -r {}'.format(repo.get_inst_dir())
                 if sc_(params):
-                    e.msgerr('Fail deleting repo '+repo.get_name())
+                    e.msgerr('Fail deleting repo ' + repo.get_name())
 
             # Check if repo exists
             if os.path.isdir(repo.get_inst_dir()):
@@ -174,13 +183,17 @@ def update_repos_from_list(e, repos):
             if sc_(params):
                 e.msgerr('Fail installing environment, uninstall and try again.')
 
-#            # if get_tag is true checkout this repo to a known tag
+
+# # if get_tag is true checkout this repo to a known tag
 #            if e.get_tag():
 #                if sc_(repo.do_checkout_tag(e.get_tag())):
 #                    e.msginf('Checkout, the repo does not have this tag')
 
 
 def install_client(e):
+    """ Instalacion de cliente, si no hay nada instalado tambien instala los
+        directorios /odoo/postgressql con los permisos adecuados.
+    """
     # get clients to install from params
     clients = e.get_clients_from_params()
     if len(clients) > 1:
@@ -200,8 +213,23 @@ def install_client(e):
             # change ownership to current user
             sc_('sudo chown {}:{} {}'.format(username, username, cli.get_base_dir()))
 
+        # creating nginx directory if needed and does not exist
+        if e.nginx() and not os.path.isdir(cli.get_nginx_dir()):
+            sc_('sudo mkdir -p {}/cert'.format(cli.get_nginx_dir()))
+            sc_('sudo chmod o+w {}/cert'.format(cli.get_nginx_dir()))
+            sc_('sudo mkdir -p {}/log'.format(cli.get_nginx_dir()))
+            sc_('sudo chmod o+w {}/log'.format(cli.get_nginx_dir()))
+            sc_('sudo mkdir -p {}/conf'.format(cli.get_nginx_dir()))
+            sc_('sudo chmod o+w {}/conf'.format(cli.get_nginx_dir()))
+
+            # obtener el pahth al repo original donde esta el nginx.conf
+            source_path = os.path.dirname(sys.argv[0])
+            sc_('sudo cp {}/nginx.conf {}/conf'.format(source_path, cli.get_nginx_dir()))
+            sc_('sudo cp {}/nginx.crt {}/cert'.format(source_path, cli.get_nginx_dir()))
+            sc_('sudo cp {}/nginx.key {}/cert'.format(source_path, cli.get_nginx_dir()))
+
         # Creating client's directories
-        if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),cli.get_name())):
+        if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(), cli.get_name())):
             sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo chmod o+w {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
             sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
@@ -251,7 +279,6 @@ def install_client(e):
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
-
         # TODO no puedo escribir en este archivo. Revisarlo
         # adding server_mode to config file
         if e.server_mode():
@@ -288,7 +315,6 @@ def run_environment(e):
     if cli.get_numeric_ver() < 10:
         image = cli.get_image('aeroo')
         params = 'sudo docker run -d '
-        params += '-p 127.0.0.1:8989:8989 '
         params += '--name={} '.format(image.get_name())
         params += '--restart=always '
         params += image.get_image()
@@ -366,9 +392,12 @@ def run_client(e):
     for clientName in clients:
         cli = e.get_client(clientName)
 
-        txt = 'Running image for client {}'.format(clientName)
+        txt = 'Running image for client {} '.format(clientName)
+        if e.nginx():
+            txt += 'with nginx proxy '
+
         if e.debug_mode():
-            txt += ' with debug mode on port {}'.format(cli.get_port())
+            txt += 'debug mode enabled on port {}'.format(cli.get_port())
 
         e.msgrun(txt)
         if e.debug_mode():
@@ -383,7 +412,10 @@ def run_client(e):
         # open port for wdb
         if e.debug_mode():
             params += '-p 1984:1984 '
-        params += '-p {}:8069 '.format(cli.get_port())
+
+        # exponer el puerto solo si no tenemos nginx
+        if not e.nginx():
+            params += '-p {}:8069 '.format(cli.get_port())
         params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
         params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(),
                                                            cli.get_name())
@@ -431,10 +463,27 @@ def run_client(e):
         if sc_(params):
             e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
                     cli.get_name(), cli.get_name()))
-
         else:
-            e.msgdone(
-                    'Client ' + clientName + ' up and running on port ' + cli.get_port())
+            e.msgdone('Client {} up and running on port {}'.format(
+                    clientName,
+                    cli.get_port()))
+
+        # start nginx in needed
+        if e.nginx():
+            params = 'sudo docker run -d '
+            params += '--name=nginx '
+            params += '--restart=always '
+            params += '--link {}:odoo '.format(cli.get_name())
+            params += '-v {}conf:/etc/nginx/conf.d:ro '.format(cli.get_nginx_dir())
+            params += '-v {}cert:/etc/letsencrypt/live/certificadositio '.format(cli.get_nginx_dir())
+            params += '-v {}log:/var/log/nginx/ '.format(cli.get_nginx_dir())
+            params += '-p 80:80 '
+            params += '-p 443:443 '
+            params += 'nginx'
+            if sc_(params):
+                e.msgerr("Can't run nginx")
+            else:
+                e.msgdone('Nginx proxy up and running on port 80/443')
 
     return True
 
@@ -450,6 +499,13 @@ def stop_client(e):
 
         if sc_('sudo docker rm ' + clientName):
             e.msgerr('cannot remove client ' + clientName)
+
+    if e.nginx():
+        e.msginf('stopping nginx ')
+        if sc_('sudo docker stop nginx'):
+            e.msgerr('cannot stop nginx ')
+
+
 
     e.msgdone('all clients stopped')
 
@@ -925,6 +981,11 @@ if __name__ == '__main__':
     parser.add_argument('--no-repos',
                         action='store_true',
                         help='Does not clone or pull repos used with -i or -p')
+
+    parser.add_argument('--nginx',
+                        action='store_true',
+                        help='add nginx to installation, with -i creates nginx dir w/ sample config file '
+                             'and certificates. with -r starts an nginx container linked to odoo')
 
     parser.add_argument('-H', '--server-help',
                         action='store_true',

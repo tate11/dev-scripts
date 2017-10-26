@@ -202,7 +202,6 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
 
-
          # repos para la impresora fiscal
          {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': '8.0'},
      ],
@@ -335,7 +334,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
-     # lo sacaron de la oca lo necesito por el recalculate_prices
+         # lo sacaron de la oca lo necesito por el recalculate_prices
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
          # lo pide por un modulo lote lock o algo parecido al instalar base vacia
@@ -399,7 +398,7 @@ _clients = [
     #######################################################################
     {'name': 'valente', 'port': '8091', 'odoover': '8.0',
      'repos': [
-#         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+         #         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
@@ -512,6 +511,7 @@ _clients = [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
      ]
      },
 
@@ -531,7 +531,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca',     'repo': 'reporting-engine', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
          {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
          {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
 
@@ -542,7 +542,7 @@ _clients = [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-#         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+         #         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
 
@@ -641,7 +641,7 @@ _clients = [
     {'name': 'agt', 'port': '8069', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-#        {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+         #        {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
          {'usr': 'oca', 'repo': 'web', 'branch': '10.0'},
      ],
