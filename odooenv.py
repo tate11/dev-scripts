@@ -494,15 +494,12 @@ def stop_client(e):
 
     for clientName in clients:
         e.msginf('stopping image for client ' + clientName)
-        if sc_('sudo docker stop ' + clientName):
+        if sc_('sudo docker rm -f ' + clientName):
             e.msgerr('cannot stop client ' + clientName)
-
-        if sc_('sudo docker rm ' + clientName):
-            e.msgerr('cannot remove client ' + clientName)
 
     if e.nginx():
         e.msginf('stopping nginx ')
-        if sc_('sudo docker stop nginx'):
+        if sc_('sudo docker rm -f nginx'):
             e.msgerr('cannot stop nginx ')
 
 

@@ -27,6 +27,19 @@ def process_input(params):
         except Exception as ex:
             params = []
 
+    # pseudo sintaxis
+    # TODO intentando un comando para que con sd rma borre todas las imagenes en memoria
+    if params[2] == 'rma':
+        try:
+            print 'removing all images'
+            aa = subprocess.call(['sudo', 'docker', 'ps', '-a', '-q'])
+            print aa
+#            params[2:3] = ['rm', '-f', '$','(','sudo', 'docker', 'ps', '-a', '-q',')']
+        except Exception as ex:
+            print ex
+            params = []
+        exit()
+
     return params
 
 
