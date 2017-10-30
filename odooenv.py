@@ -502,8 +502,6 @@ def stop_client(e):
         if sc_('sudo docker rm -f nginx'):
             e.msgerr('cannot stop nginx ')
 
-
-
     e.msgdone('all clients stopped')
 
     return True

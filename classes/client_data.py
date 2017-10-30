@@ -284,40 +284,6 @@ _clients = [
      },
 
     #######################################################################1
-    {'name': 'maketest', 'port': '8000', 'odoover': '8.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'cursos', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'knowledge', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'bank-statement-import', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
-         # lo sacaron de la oca lo necesito por el recalculate_prices
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'social', 'branch': '8.0'},
-         # lo pide por un modulo lote lock o algo parecido al instalar base vacia
-         {'usr': 'oca', 'repo': 'stock-logistics-warehouse', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '8.0'},
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
-     ]
-     },
-    #######################################################################1
     {'name': 'makeover', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
@@ -619,6 +585,14 @@ _clients = [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+     ]
+     },
+    {'name': 'test10', 'port': '8069', 'odoover': '10.0',
+     'repos': [
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
      ]
      },
     #######################################################################
