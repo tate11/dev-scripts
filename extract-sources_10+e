@@ -15,5 +15,5 @@ sudo chown jobiols.jobiols /odoo/odoo-10.0+e/sources/dist-packages
 sudo docker run -it --rm \
 	--entrypoint=/bin/bash \
 	-v /odoo/odoo-10.0+e/sources/dist-packages/:/mnt/extra-addons/dist-packages \
-        jobiols/odoo-e:10.0e-20170616 $*
+        jobiols/odoo-e:10.0e-20170616.debug $*
 
