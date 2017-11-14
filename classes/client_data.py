@@ -374,11 +374,26 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-
-         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+
+
+#         {'usr': 'jobiols', 'repo': 'valente', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+
+#         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
 
      ],
      'images': [
