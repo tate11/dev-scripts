@@ -242,6 +242,19 @@ def install_client(e):
             sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
             sc_('sudo chmod o+w {}sources'.format(cli.get_home_dir()))
 
+        # Extracting odoo sources from image if debug enabled
+        if e.debug_mode() and \
+                not os.path.isdir('{}sources/dist-packages'.format(cli.get_home_dir())):
+            sc_('sudo mkdir -p {}sources/dist-packages'.format(cli.get_home_dir()))
+            sc_('sudo chmod o+w {}sources/dist-packages'.format(cli.get_home_dir()))
+            param = 'sudo docker run -it --rm '
+            param += '--entrypoint=/extract_sources.sh '
+            param += '-v {}/sources/dist-packages/:/mnt/extra-addons/dist-packages '.format(cli.get_home_dir())
+            param += '{} '.format(cli.get_image('odoo').get_image())
+            e.msginf('Extracting sources from image {}'.format(cli.get_image('odoo').get_image()))
+            sc_(param)
+            sc_('sudo chmod o-w {}sources/dist-packages'.format(cli.get_home_dir()))
+
         # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
             sc_('mkdir {}'.format(e.get_psql_dir()))

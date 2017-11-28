@@ -435,6 +435,38 @@ _clients = [
     # ODOO V9
     #
     #######################################################################
+    {'name': 'iomaq', 'port': '8069', 'odoover': '9.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'cl-iomaq', 'branch': '9.0', 'host': 'bitbucket'},
+         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
+
+         # requeridos por la localizacion argentina -- 19/12/17
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
+         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
+
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+#         {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
+     ]
+     },
+
     {'name': 'mario', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'mario', 'branch': '9.0'},
@@ -456,8 +488,8 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'crm', 'branch': '9.0'},
-
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -613,8 +645,11 @@ _clients = [
      ]
      },
     #######################################################################
-
-    {'name': 'testarg', 'port': '8069', 'odoover': '10.0',
+    #
+    # ODOO V10 ARG
+    #
+    #######################################################################
+    {'name': 'testarg', 'port': '8069', 'odoover': '10.0.arg',
      'repos': [
          {'usr': 'odoo-arg', 'repo': 'odoo_l10n_ar', 'branch': 'master'},
      ],
