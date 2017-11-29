@@ -250,7 +250,7 @@ def install_client(e):
             param = 'sudo docker run -it --rm '
             param += '--entrypoint=/extract_sources.sh '
             param += '-v {}/sources/dist-packages/:/mnt/extra-addons/dist-packages '.format(cli.get_home_dir())
-            param += '{} '.format(cli.get_image('odoo').get_image())
+            param += '{}.debug '.format(cli.get_image('odoo').get_image())
             e.msginf('Extracting sources from image {}'.format(cli.get_image('odoo').get_image()))
             sc_(param)
             sc_('sudo chmod o-w {}sources/dist-packages'.format(cli.get_home_dir()))
