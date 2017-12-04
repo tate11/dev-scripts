@@ -65,7 +65,6 @@ import sys
 
 from classes import Environment
 from classes.client_data import _clients
-from classes.git_issues import Issues
 
 # el archivo a ejecutar después de hacer backup
 POST_BACKUP_ACTION = 'upload-backup'
@@ -400,8 +399,9 @@ def quality_test(e):
 
         params += '-v {}sources/dist-packages:/usr/lib/python2.7/dist-packages '.format(
                 cli.get_home_dir(), sources_image, sources_host)
+        params += '-p 1984:1984 '
     params += '--link postgres:db '
-    params += '{} -- '.format(cli.get_image('odoo').get_image())
+    params += '{}.debug -- '.format(cli.get_image('odoo').get_image())
     params += '--stop-after-init '
     params += '--logfile=false '
     params += '-d {} '.format(db)
@@ -865,10 +865,6 @@ def checkout_tag(e):
     e.msgdone('All repos with this tag were checked out')
 
 
-def issues(e):
-    pass
-
-
 def undo_checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     cli = e.get_client(client_name)
@@ -1056,16 +1052,6 @@ if __name__ == '__main__':
                         action='store_true',
                         help="Generate a po file for a module to translate, need a -r "
                              "and -m option")
-
-    parser.add_argument('--issues',
-                        dest='repo',
-                        nargs=1,
-                        action='store',
-                        help="list formatted and priorized issues from github, "
-                             "used with -l this option supports github API v3 "
-                             "priority is the number between brackets in issue title"
-                             "THIS COMMAND IS DEPRECATED IN FAVOR OF GITHUB PROJECTS"
-                        )
 
     parser.add_argument('-T' '--tag-repos',
                         dest='tag_repos',

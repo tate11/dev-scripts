@@ -243,7 +243,7 @@ _clients = [
      ]
      },
     #######################################################################1
-    {'name': 'test', 'port': '8001', 'odoover': '8.0',
+    {'name': 'test', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
@@ -266,7 +266,7 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
 
-         #         {'usr': 'oca', 'repo': 'product-variant', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
          # connector
          {'usr': 'jobiols', 'repo': 'connector', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'connector-ecommerce', 'branch': '8.0'},
@@ -274,13 +274,14 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'sale-workflow', 'branch': '8.0'},
          # cosas como m2mcategory
          {'usr': 'oca', 'repo': 'product-attribute', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
+         {'usr': 'JayVora-SerpentCS', 'repo': 'SerpentCS_Contributions', 'branch': '8.0'},
 
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0.tienda_nube'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
 
@@ -606,6 +607,8 @@ _clients = [
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+#         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -689,9 +692,10 @@ _clients = [
     {'name': 'agt', 'port': '8069', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-         #        {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
+         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
          {'usr': 'oca', 'repo': 'web', 'branch': '10.0'},
+
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': '10.0e-20170616'},
