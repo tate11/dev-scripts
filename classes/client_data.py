@@ -310,6 +310,8 @@ _clients = [
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'website', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'pos', 'branch': '8.0'},
+         {'usr': 'oca', 'repo': 'product-attribute', 'branch': '8.0'},
+
 
      ],
      'images': [
@@ -472,13 +474,13 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'reporting-engine', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-argentina-sale', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '9.0'},
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
+#         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
 
      ],
      'images': [
@@ -692,9 +694,9 @@ _clients = [
     {'name': 'agt', 'port': '8069', 'odoover': '10.0+e',
      'repos': [
          {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
-         {'usr': 'jobiols', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '10.0'},
          {'usr': 'oca', 'repo': 'web', 'branch': '10.0'},
+         {'usr': 'JayVora-SerpentCS', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
 
      ],
      'images': [
