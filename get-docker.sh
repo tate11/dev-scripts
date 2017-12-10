@@ -16,14 +16,14 @@ set -e
 #
 # Git commit from https://github.com/docker/docker-install when
 # the script was uploaded (Should only be modified by upload job):
-SCRIPT_COMMIT_SHA=49ee7c1
+SCRIPT_COMMIT_SHA=UNKNOWN
 
 
 # This value will automatically get changed for:
 #   * edge
 #   * test
 #   * experimental
-DEFAULT_CHANNEL_VALUE="edge"
+DEFAULT_CHANNEL_VALUE="test"
 if [ -z "$CHANNEL" ]; then
 	CHANNEL=$DEFAULT_CHANNEL_VALUE
 fi
@@ -35,9 +35,11 @@ x86_64-centos-7
 x86_64-fedora-24
 x86_64-fedora-25
 x86_64-fedora-26
+x86_64-fedora-27
 x86_64-debian-wheezy
 x86_64-debian-jessie
 x86_64-debian-stretch
+x86_64-debian-buster
 x86_64-ubuntu-trusty
 x86_64-ubuntu-xenial
 x86_64-ubuntu-zesty
@@ -55,6 +57,7 @@ armv6l-raspbian-stretch
 armv7l-raspbian-stretch
 armv7l-debian-jessie
 armv7l-debian-stretch
+armv7l-debian-buster
 armv7l-ubuntu-trusty
 armv7l-ubuntu-xenial
 armv7l-ubuntu-zesty
@@ -348,21 +351,11 @@ do_install() {
 		ubuntu|debian|raspbian)
 			pre_reqs="apt-transport-https ca-certificates curl"
 			if [ "$lsb_dist" = "debian" ] && [ "$dist_version" = "wheezy" ]; then
-				pre_reqs="$pre_reqs python-software-properties"
 				backports="deb http://ftp.debian.org/debian wheezy-backports main"
 				if ! grep -Fxq "$backports" /etc/apt/sources.list; then
 					(set -x; $sh_c "echo \"$backports\" >> /etc/apt/sources.list")
 				fi
-			else
-				pre_reqs="$pre_reqs software-properties-common"
 			fi
-
-			# TODO: DELETE HERE
-			if [ "$lsb_dist" = "ubuntu" ] && [ "$dist_version" = "artful" ]; then
-				dist_version="zesty"
-			fi
-			# TODO: DELETE HERE
-
 			if ! command -v gpg > /dev/null; then
 				pre_reqs="$pre_reqs gnupg"
 			fi
@@ -414,6 +407,24 @@ do_install() {
 				fi
 				$sh_c "$pkg_manager install -y -q $pre_reqs"
 				$sh_c "$config_manager --add-repo $yum_repo"
+
+				# DELETE FROM HERE
+				if [ "$dist_version" -eq "27" ]; then
+					$sh_c "sed -i 's/\\\$releasever/26/g' /etc/yum.repos.d/docker-ce.repo"
+					set +x
+					echo "=================================================================================="
+					echo
+					echo "WARNING: Hardcoding repository to use Fedora 26 repositories"
+					echo "         You will need to update your repositories after the release of 17.12.0-ce"
+					echo
+					echo "         See: https://github.com/docker/for-linux/issues/164#issuecomment-345034887"
+					echo
+					echo "=================================================================================="
+					sleep 10
+					set -x
+				fi
+				# DELETE TO HERE
+
 				if [ "$CHANNEL" != "stable" ]; then
 					$sh_c "$config_manager $enable_channel_flag docker-ce-$CHANNEL"
 				fi
