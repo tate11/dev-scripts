@@ -565,18 +565,6 @@ def pull_all(e):
 
 
 def list_data(e):
-    # if --issues option get issues from github
-    if args.repo:
-        iss = Issues(args.repo[0])
-        try:
-            for issue in iss.get_issues():
-                for line in issue.lines():
-                    e.msginf(line)
-        except Exception as EX:
-            e.msgerr(str(EX))
-
-        exit(0)
-
     # if no -c option get all clients else get -c clients
     if args.client is None:
         clients = e.get_clients_form_dict()
