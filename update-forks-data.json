@@ -455,6 +455,14 @@
         "8.0",
         "9.0"
       ]
+    },
+    {
+      "usr": "oca",
+      "repo": "stock-logistics-workflow",
+      "branch": [
+        "8.0",
+        "9.0"
+      ]
     }
 
   ]
