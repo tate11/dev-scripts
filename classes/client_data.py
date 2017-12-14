@@ -69,15 +69,32 @@ _clients = [
     # ODOO V8
     #
     #######################################################################
-    {'name': 'agro', 'port': '8000', 'odoover': '8.0',
+    {'name': 'aramis', 'port': '8069', 'odoover': '8.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'farm', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'cl-aramis', 'branch': '8.0', 'host': 'bitbucket'},
+
+         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
+#         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-odoo-support', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'account-financial-reporting', 'branch': '8.0'},
+
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
     #######################################################################
@@ -480,6 +497,7 @@ _clients = [
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-product', 'branch': '9.0'},
 #         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
 
      ],
