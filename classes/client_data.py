@@ -478,7 +478,7 @@ _clients = [
     {'name': 'iomaq', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'cl-iomaq', 'branch': '9.0', 'host': 'bitbucket'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-odoo-support', 'branch': '9.0'},
 
          # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
@@ -544,7 +544,7 @@ _clients = [
     {'name': 'glinsar', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'cl-glinsar', 'branch': '9.0', 'host': 'bitbucket'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-odoo-support', 'branch': '9.0'},
 
          # requeridos por la localizacion argentina -- 19/12/17
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
@@ -557,9 +557,9 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'reporting-engine', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-argentina-sale', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '9.0'},
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
