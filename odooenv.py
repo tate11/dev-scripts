@@ -69,6 +69,15 @@ from classes.client_data import _clients
 # el archivo a ejecutar después de hacer backup
 POST_BACKUP_ACTION = 'upload-backup'
 
+SOURCES_DP = 'sources/dist-packages'
+SOURCES_DLP = 'sources/dist-local-packages'
+SOURCES_EA = 'sources/extra-addons'
+
+IN_CONFIG = '/opt/odoo/etc/'
+IN_DATA = '/var/lib/odoo'
+IN_LOG = '/var/log/odoo'
+IN_CUSTOM_ADDONS = '/opt/odoo/custom-addons'
+
 
 def sc_(params, shell=False):
     """ Run command or command list with arguments.  Wait for commands to complete
@@ -119,19 +128,21 @@ def update_db(e):
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
-    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
-    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
+    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
+    params += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
+
+    # if performing update in debug mode use host sources
     if e.debug_mode():
-        params += '-v {}sources/openerp:/usr/lib/python2.7/dist-packages/openerp '.format(
-                cli.get_home_dir())
+        params += add_debug_mountings(cli)
+
     params += '--link postgres:db '
     params += '{} -- '.format(cli.get_image('odoo').get_image())
     params += '--stop-after-init '
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '-u {} '.format(', '.join(mods))
-    params += '--log-level=warn '
+    #    params += '--log-level=warn '
 
     if e.debug_mode():
         params += '--debug '
@@ -183,10 +194,19 @@ def update_repos_from_list(e, repos):
                 e.msgerr('Fail installing environment, uninstall and try again.')
 
 
-# # if get_tag is true checkout this repo to a known tag
-#            if e.get_tag():
-#                if sc_(repo.do_checkout_tag(e.get_tag())):
-#                    e.msginf('Checkout, the repo does not have this tag')
+def extract_source_to_host(e, cli, module):
+    sc_('sudo mkdir -p {}sources/{}'.format(cli.get_home_dir(), module))
+    sc_('sudo chmod o+w {}sources/{}'.format(cli.get_home_dir(), module))
+    param = 'sudo docker run -it --rm '
+    param += '--entrypoint=/extract_{}.sh '.format(module)
+    param += '-v {}sources/{}/:/mnt/{} '.format(cli.get_home_dir(), module, module)
+    param += '{}.debug '.format(cli.get_image('odoo').get_image())
+    e.msginf('Extracting {} from image {}'.format(module, cli.get_image('odoo').get_image()))
+    sc_(param)
+    # TODO agregar un .gitignore para evitar los pyc y ver que pasa con el commit que no anda
+    # e.msginf('Creating repo')
+    # sc_('git -C {}sources/{} init'.format(cli.get_home_dir(), module))
+    # sc_('git -C {}sources/{} add . '.format(cli.get_home_dir(), module))
 
 
 def install_client(e):
@@ -241,29 +261,16 @@ def install_client(e):
             sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
             sc_('sudo chmod o+w {}sources'.format(cli.get_home_dir()))
 
-        # Extracting odoo sources from image if debug enabled
+        # Extracting odoo sources from image if sources enabled
         if e.debug_mode():
-            if not os.path.isdir('{}sources/dist-packages'.format(cli.get_home_dir())):
-                sc_('sudo mkdir -p {}sources/dist-packages'.format(cli.get_home_dir()))
-                sc_('sudo chmod o+w {}sources/dist-packages'.format(cli.get_home_dir()))
-                param = 'sudo docker run -it --rm '
-                param += '--entrypoint=/extract_packages.sh '
-                param += '-v {}/sources/dist-packages/:/mnt/extra-addons/dist-packages '.format(cli.get_home_dir())
-                param += '{}.debug '.format(cli.get_image('odoo').get_image())
-                e.msginf('Extracting packages from image {}'.format(cli.get_image('odoo').get_image()))
-                sc_(param)
-                sc_('sudo chmod o-w {}sources/dist-packages'.format(cli.get_home_dir()))
+            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_DP)):
+                extract_source_to_host(e, cli, 'dist-packages')
 
-            if not os.path.isdir('{}sources/dist-local-packages'.format(cli.get_home_dir())):
-                sc_('sudo mkdir -p {}sources/dist-local-packages'.format(cli.get_home_dir()))
-                sc_('sudo chmod o+w {}sources/dist-local-packages'.format(cli.get_home_dir()))
-                param = 'sudo docker run -it --rm '
-                param += '--entrypoint=/extract_local_packages.sh '
-                param += '-v {}/sources/dist-local-packages/:/mnt/extra-addons/dist-local-packages '.format(cli.get_home_dir())
-                param += '{}.debug '.format(cli.get_image('odoo').get_image())
-                e.msginf('Extracting local packages from image {}'.format(cli.get_image('odoo').get_image()))
-                sc_(param)
-                sc_('sudo chmod o-w {}sources/dist-local-packages'.format(cli.get_home_dir()))
+            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_DLP)):
+                extract_source_to_host(e, cli, 'dist-local-packages')
+
+            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
+                extract_source_to_host(e, cli, 'extra-addons')
 
         # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
@@ -278,27 +285,39 @@ def install_client(e):
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())
 
-        # creating config file for client
+        # creating config file for client el config se crea dinamicamente
         param = 'sudo docker run --rm '
-        param += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
-        param += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
-        param += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
-        param += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
+        param += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
+        param += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
+        param += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(), IN_LOG)
+        # no le pongo custom addons porque sino levanta toods los directorios y los pone en el config
+        #        param += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
+        param += '--link postgres:db '
         param += '--name {}_tmp '.format(cli.get_name())
         param += '{} '.format(cli.get_image('odoo').get_image())
         param += '-- --stop-after-init -s '
-        if not e.no_dbfilter():
-            param += '--db-filter={}_.* '.format(cli.get_name())
 
         # patch for openupgrade image
         ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
 
-        if cli.get_addons_path():
-            param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
-        param += '--logfile=/var/log/odoo/odoo.log '
-        param += '--logrotate '
+        #        if cli.get_addons_path():
+        #            param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
+        # param += '--logfile=/var/log/odoo/odoo.log '
+        # param += '--logrotate '
 
         e.msginf('creating config file')
+        if sc_(param):
+            e.msgerr('failing to write config file. Aborting')
+
+        # agrego los repos que faltan en forma controlada.
+        e.msginf('patching config file')
+        param = 'sudo docker run --rm '
+        param += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
+        param += '--name {}_tmp '.format(cli.get_name())
+        param += '--entrypoint=/patch_config.py '
+        param += '{}.debug '.format(cli.get_image('odoo').get_image())
+        param += cli.get_addons_path()
+
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
@@ -307,7 +326,6 @@ def install_client(e):
         if e.server_mode():
             config_name = 'openerp-server.conf' if cli.get_numeric_ver() < 10 else 'odoo.conf'
             config_file = '{}{}/config/{}'.format(cli.get_home_dir(), cli.get_name(), config_name)
-
             param = "echo '{}' >{}".format('server_mode = {}'.format(e.server_mode()), config_file)
             print '>>>>>', param
             if sc_(param):
@@ -355,6 +373,7 @@ def server_help(e):
     cli = e.get_client(client)
 
     params = 'sudo docker run --rm -it '
+    params += '--link postgres:db '
     params += cli.get_image('odoo').get_image() + ' '
     params += '-- '
     params += '--help '
@@ -381,12 +400,12 @@ def quality_test(e):
         e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(), repo_name))
 
     msg = 'Performing test {} on repo {} for client {} and database {}'.format(
-            test_file, repo_name, cli.get_name(), db)
+          test_file, repo_name, cli.get_name(), db)
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
-    params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(), cli.get_name())
+    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
+    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
     params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
     if e.debug_mode():
         # a partir de la version 10 cambia a odoo el nombre de los fuentes
@@ -397,8 +416,8 @@ def quality_test(e):
         if cli == 'ou':
             sources_image = 'upgrade'
 
-        params += '-v {}sources/dist-packages:/usr/lib/python2.7/dist-packages '.format(
-                cli.get_home_dir(), sources_image, sources_host)
+        params += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
+              cli.get_home_dir(), SOURCES_DP, sources_image, sources_host)
         params += '-p 1984:1984 '
     params += '--link postgres:db '
     params += '{}.debug -- '.format(cli.get_image('odoo').get_image())
@@ -407,9 +426,16 @@ def quality_test(e):
     params += '-d {} '.format(db)
     params += '--log-level=test '
     params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
-            repo_name, module_name, test_file)
+          repo_name, module_name, test_file)
     sc_(params)
 
+
+def add_debug_mountings(cli):
+#    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
+#    ret += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DP)
+#    ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
+    ret = ''
+    return ret
 
 def run_client(e):
     clients = e.get_clients_from_params()
@@ -440,23 +466,14 @@ def run_client(e):
         # exponer el puerto solo si no tenemos nginx
         if not e.nginx():
             params += '-p {}:8069 '.format(cli.get_port())
-        params += '-v {}{}/config:/etc/odoo '.format(cli.get_home_dir(), cli.get_name())
-        params += '-v {}{}/data_dir:/var/lib/odoo '.format(cli.get_home_dir(),
-                                                           cli.get_name())
-        params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
+
+        params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
+        params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
+        params += '-v {}sources:{} '.format(cli.get_home_dir(), IN_CUSTOM_ADDONS)
         if e.debug_mode():
-            # a partir de la version 10 cambia a odoo el nombre de los fuentes
-            sources_image = 'odoo' if cli.get_numeric_ver > 9 else 'openerp'
-            sources_host = sources_image
+            params += add_debug_mountings(cli)
 
-            # si es openupgrade el sources_image es upgrade
-            if clientName == 'ou':
-                sources_image = 'upgrade'
-
-            params += '-v {}sources/dist-packages:/usr/lib/python2.7/dist-packages '.format(
-                    cli.get_home_dir(), sources_image, sources_host)
-
-        params += '-v {}{}/log:/var/log/odoo '.format(cli.get_home_dir(), cli.get_name())
+        params += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(), IN_LOG)
         params += '--link postgres:db '
 
         if not e.debug_mode():
@@ -474,23 +491,23 @@ def run_client(e):
             params += '-- --db-filter={}_.* '.format(cli.get_name())
 
         if not e.debug_mode():
-            params += '--logfile=/var/log/odoo/odoo.log '
+            params += '--logfile={}/odoo.log '.format(IN_LOG)
         else:
             params += '--logfile=False '
 
         if e.get_args().translate:
-            params += '--language=es --i18n-export=/etc/odoo/es.po --update ' \
+            params += '--language=es --i18n-export=/opt/odoo/etc//es.po --update ' \
                       '--i18n-overwrite --modules={} --stop-after-init ' \
                       '-d {}'.format(e.get_modules_from_params()[0],
                                      e.get_database_from_params())
 
         if sc_(params):
             e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
-                    cli.get_name(), cli.get_name()))
+                  cli.get_name(), cli.get_name()))
         else:
             e.msgdone('Client {} up and running on port {}'.format(
-                    clientName,
-                    cli.get_port()))
+                  clientName,
+                  cli.get_port()))
 
         # start nginx in needed
         if e.nginx():
@@ -685,7 +702,7 @@ def restore(e):
         e.msgerr('new dbname should be different from old dbname')
 
     e.msgrun(
-            'Restoring database ' + dbname + ' of client ' + client_name + ' onto database ' + new_dbname)
+          'Restoring database ' + dbname + ' of client ' + client_name + ' onto database ' + new_dbname)
 
     client = e.get_client(client_name)
     img = client.get_image('backup')
@@ -793,7 +810,7 @@ def cron_jobs(e):
     # el comando que cron tiene que lanzar. Suponiendo que nadie lo edita, al lanzar nuevamente
     # este proceso se elimina y se vuelve a crear permitiendo modificar el cronjob.
     croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py DO NOT EDIT MANUALLY'.format(
-            dbname, client)
+          dbname, client)
 
     # la linea que agregaremos a cron sería en que momento backupear + el croncmd
     cronjob = '0 0,12 * * * {}'.format(croncmd)
@@ -840,8 +857,8 @@ def checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     tag = e.get_args().checkout_tag[0]
     e.msginf('Checking out tag {} for all repos belonging to client {}'.format(
-            tag,
-            client_name
+          tag,
+          client_name
     ))
 
     cli = e.get_client(client_name)
@@ -858,8 +875,8 @@ def undo_checkout_tag(e):
     cli = e.get_client(client_name)
 
     e.msginf('Checking out branch {} for all repos belonging to client {}'.format(
-            cli.get_ver(),
-            client_name
+          cli.get_ver(),
+          client_name
     ))
 
     for repo in cli.get_repos():
@@ -879,7 +896,7 @@ if __name__ == '__main__':
 
         # Add the log message handler to the logger
         handler = logging.handlers.RotatingFileHandler(
-                LOG_FILENAME, maxBytes=2000000, backupCount=5)
+              LOG_FILENAME, maxBytes=2000000, backupCount=5)
 
         # formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
@@ -892,7 +909,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v5.2.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v5.3.0 by jeo Software <jorge.obiols@gmail.com>
         With wdb support (https://github.com/Kozea/wdb) and Nginx (experimental)
         ==========================================================================
     """)
@@ -937,7 +954,8 @@ if __name__ == '__main__':
 
     parser.add_argument('-u', '--update-db',
                         action='store_true',
-                        help="Update database requires -d -c and -m options.")
+                        help="Update database requires -d -c and -m options. "
+                             "Use --debug to force update with host sources")
 
     parser.add_argument('-d',
                         action='store',
