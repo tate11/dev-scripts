@@ -10,3 +10,4 @@ git:
 
 script:
   - python test.py
+  - python classes/test_client.py
