@@ -1,6 +1,8 @@
 # dev-scripts
 ###Docker based  infrastructure management for _Odoo_ 
 
+[![Build Status](https://travis-ci.org/jobiols/dev-scripts.svg?branch=adhoc-odoo-ar)](https://travis-ci.org/jobiols/dev-scripts)
+
 This proyect support [semver](http://semver.org/) 
     
 usage: odooenv.py [-h] [-p] [-i] [-R] [-S] [-r] [-s] [-l] [-v] [-n] [-u]
