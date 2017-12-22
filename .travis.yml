@@ -9,4 +9,4 @@ git:
   depth: 1
 
 script:
-  - test.py
+  - python test.py
