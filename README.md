@@ -1,6 +1,6 @@
 # dev-scripts
-###Docker based  infrastructure management for _Odoo_ 
-
+Docker based  infrastructure management for *Odoo* 
+==================================================
 [![Build Status](https://travis-ci.org/jobiols/dev-scripts.svg?branch=adhoc-odoo-ar)](https://travis-ci.org/jobiols/dev-scripts)
 [![Maintainability](https://api.codeclimate.com/v1/badges/63019dc321be8ecf4722/maintainability)](https://codeclimate.com/github/jobiols/dev-scripts/maintainability)
 
