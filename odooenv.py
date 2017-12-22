@@ -74,7 +74,7 @@ SOURCES_DLP = 'sources/dist-local-packages'
 SOURCES_EA = 'sources/extra-addons'
 
 IN_CONFIG = '/opt/odoo/etc/'
-IN_DATA = '/var/lib/odoo'
+IN_DATA = '/opt/odoo/data'
 IN_LOG = '/var/log/odoo'
 IN_CUSTOM_ADDONS = '/opt/odoo/custom-addons'
 
@@ -431,10 +431,10 @@ def quality_test(e):
 
 
 def add_debug_mountings(cli):
-#    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
-#    ret += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DP)
-#    ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
-    ret = ''
+    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
+    ret += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DP)
+    #ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
+
     return ret
 
 def run_client(e):
@@ -494,6 +494,36 @@ def run_client(e):
             params += '--logfile={}/odoo.log '.format(IN_LOG)
         else:
             params += '--logfile=False '
+
+        # You should use 2 worker threads + 1 cron thread per available CPU,
+        # and 1 CPU per 10 concurent users. Make sure you tune the memory limits
+        # and cpu limits in your configuration file.
+        params += '--workers 2 '
+
+        # Number of requests a worker will process before being recycled and restarted. Defaults to 8196
+        params += '--limit-request 8196 '
+
+        # Maximum allowed virtual memory per worker. If the limit is exceeded, the worker is killed
+        # and recycled at the end of the current request. Defaults to 640MB
+        params += '--limit-memory-soft 2147483648 '
+
+        # Hard limit on virtual memory, any worker exceeding the limit will be immediately
+        # killed without waiting for the end of the current request processing. Defaults to 768MB.
+        params += '--limit-memory-hard 2684354560 '
+
+        # Prevents the worker from using more than CPU seconds for each request.
+        # If the limit is exceeded, the worker is killed. Defaults to 60.
+        params += '--limit-time-cpu 1600 '
+
+        # Prevents the worker from taking longer than seconds to process a request.
+        # If the limit is exceeded, the worker is killed. Defaults to 120.
+        # Differs from --limit-time-cpu in that this is a "wall time" limit including e.g. SQL queries.
+        params += '--limit-time-real 3200 '
+
+        # number of workers dedicated to cron jobs. Defaults to 2. The workers are threads
+        # in multithreading mode and processes in multiprocessing mode.
+        params += '--max-cron-threads 1 '
+
 
         if e.get_args().translate:
             params += '--language=es --i18n-export=/opt/odoo/etc//es.po --update ' \

@@ -32,6 +32,7 @@ CLEAR = "\033[0;m"
 
 HOME_DIR = '/odoo_ar/'
 
+
 class Environment:
     def __init__(self, args=None, clients=[]):
         self._clients = []
