@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-
-sd run -it \
-    -v $HOME/.s3cfg:/root/ \
-    -v $HOME:/home/$USER \
-    threadx/s3cmd $* 
