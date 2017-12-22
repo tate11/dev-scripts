@@ -30,6 +30,7 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+HOME_DIR = '/odoo_ar/'
 
 class Environment:
     def __init__(self, args=None, clients=[]):
@@ -37,7 +38,7 @@ class Environment:
         for cli in clients:
             self._clients.append(Client(self, cli))
 
-        self._home_dir = '/odoo/'
+        self._home_dir = HOME_DIR
         self._home_template = self._home_dir + 'odoo-'
         self._psql = self._home_dir + 'postgresql/'
         self._nginx = 'nginx/'

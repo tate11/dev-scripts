@@ -549,7 +549,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
          {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
      ]
      },
