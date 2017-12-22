@@ -11,3 +11,6 @@ git:
 script:
   - python test.py --with-coverage
   - python classes/test_client.py --with-coverage
+
+after_success
+- codecov
