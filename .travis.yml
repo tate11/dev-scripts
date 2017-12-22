@@ -9,5 +9,5 @@ git:
   depth: 1
 
 script:
-  - python test.py
-  - python classes/test_client.py
+  - python test.py --with-coverage
+  - python classes/test_client.py --with-coverage
