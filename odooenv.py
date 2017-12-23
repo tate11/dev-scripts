@@ -933,7 +933,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="""
         ==========================================================================
-        Odoo environment setup v5.3.0 by jeo Software <jorge.obiols@gmail.com>
+        Odoo environment setup v6.0.0 by jeo Software <jorge.obiols@gmail.com>
         With wdb support (https://github.com/Kozea/wdb) and Nginx (experimental)
         ==========================================================================
     """)
