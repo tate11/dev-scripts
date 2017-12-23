@@ -300,7 +300,7 @@ def install_client(e):
         # patch for openupgrade image
         ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
 
-        #        if cli.get_addons_path():
+        #  if cli.get_addons_path():
         #            param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
         # param += '--logfile=/var/log/odoo/odoo.log '
         # param += '--logrotate '
@@ -320,16 +320,6 @@ def install_client(e):
 
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
-
-        # TODO no puedo escribir en este archivo. Revisarlo
-        # adding server_mode to config file
-        if e.server_mode():
-            config_name = 'openerp-server.conf' if cli.get_numeric_ver() < 10 else 'odoo.conf'
-            config_file = '{}{}/config/{}'.format(cli.get_home_dir(), cli.get_name(), config_name)
-            param = "echo '{}' >{}".format('server_mode = {}'.format(e.server_mode()), config_file)
-            print '>>>>>', param
-            if sc_(param):
-                e.msgerr('failing to append server mode')
 
     e.msgdone('Installing done')
 
@@ -479,6 +469,11 @@ def run_client(e):
         if not e.debug_mode():
             params += '--restart=always '
 
+        if e.debug_mode():
+            params += '-e SERVER_MODE= '
+        else:
+            params += '-e SERVER_MODE=debug '
+
         params += '--name {} '.format(cli.get_name())
 
         # si estamos en modo debug agregarlo al nombre de la imagen
@@ -523,7 +518,6 @@ def run_client(e):
         # number of workers dedicated to cron jobs. Defaults to 2. The workers are threads
         # in multithreading mode and processes in multiprocessing mode.
         params += '--max-cron-threads 1 '
-
 
         if e.get_args().translate:
             params += '--language=es --i18n-export=/opt/odoo/etc//es.po --update ' \
