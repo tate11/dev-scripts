@@ -456,6 +456,8 @@ def run_client(e):
         # exponer el puerto solo si no tenemos nginx
         if not e.nginx():
             params += '-p {}:8069 '.format(cli.get_port())
+            # exponer puerto para longpolling
+            params += '-p 8072:8072 '
 
         params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
         params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
@@ -493,7 +495,11 @@ def run_client(e):
         # You should use 2 worker threads + 1 cron thread per available CPU,
         # and 1 CPU per 10 concurent users. Make sure you tune the memory limits
         # and cpu limits in your configuration file.
-        params += '--workers 2 '
+        params += '--workers 0 '
+
+        # number of workers dedicated to cron jobs. Defaults to 2. The workers are threads
+        # in multithreading mode and processes in multiprocessing mode.
+        params += '--max-cron-threads 1 '
 
         # Number of requests a worker will process before being recycled and restarted. Defaults to 8196
         params += '--limit-request 8196 '
@@ -514,10 +520,6 @@ def run_client(e):
         # If the limit is exceeded, the worker is killed. Defaults to 120.
         # Differs from --limit-time-cpu in that this is a "wall time" limit including e.g. SQL queries.
         params += '--limit-time-real 3200 '
-
-        # number of workers dedicated to cron jobs. Defaults to 2. The workers are threads
-        # in multithreading mode and processes in multiprocessing mode.
-        params += '--max-cron-threads 1 '
 
         if e.get_args().translate:
             params += '--language=es --i18n-export=/opt/odoo/etc//es.po --update ' \
