@@ -543,7 +543,7 @@ _clients = [
 
     {'name': 'glinsar', 'port': '8069', 'odoover': '9.0',
      'repos': [
-         {'usr': 'jobiols', 'repo': 'cl-glinsar', 'branch': '9.0', 'host': 'bitbucket'},
+         {'usr': 'jobiols', 'repo': 'cl-glinsar', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
      ],
      'images': [
