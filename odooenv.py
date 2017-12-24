@@ -427,6 +427,7 @@ def add_debug_mountings(cli):
 
     return ret
 
+
 def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
@@ -472,9 +473,9 @@ def run_client(e):
             params += '--restart=always '
 
         if e.debug_mode():
-            params += '-e SERVER_MODE= '
-        else:
             params += '-e SERVER_MODE=debug '
+        else:
+            params += '-e SERVER_MODE= '
 
         params += '--name {} '.format(cli.get_name())
 
