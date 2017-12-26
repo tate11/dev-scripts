@@ -473,7 +473,7 @@ def run_client(e):
             params += '--restart=always '
 
         if e.debug_mode():
-            params += '-e SERVER_MODE=debug '
+            params += '-e SERVER_MODE=test '
         else:
             params += '-e SERVER_MODE= '
 

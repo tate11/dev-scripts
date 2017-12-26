@@ -501,6 +501,21 @@ _clients = [
      ]
      },
     #######################################################################
+    {'name': 'bulonfer', 'port': '8069', 'odoover': '9.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'cl-bulonfer', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'connector', 'branch': '9.0'},
+
+     ],
+     'images': [
+         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
+     ]
+     },
+    #######################################################################
     {'name': 'mario', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'mario', 'branch': '9.0'},
@@ -586,7 +601,7 @@ _clients = [
 
          {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
-#         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
+#        {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
 
      ],
      'images': [
