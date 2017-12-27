@@ -716,7 +716,7 @@ _clients = [
          {'usr': 'JayVora-SerpentCS', 'repo': 'SerpentCS_Contributions', 'branch': '10.0'},
          {'usr': 'Vauxoo', 'repo': 'mexico', 'branch': '10.0'},
          {'usr': 'Vauxoo', 'repo': 'enterprise', 'branch': '10.0'},
-#         {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
+         {'usr': 'jobiols', 'repo': 'agt', 'branch': '10.0e', 'host': 'bitbucket'},
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': '10.0e-20170616'},
