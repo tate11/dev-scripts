@@ -457,6 +457,8 @@ def run_client(e):
         # exponer el puerto solo si no tenemos nginx
         if not e.nginx():
             params += '-p {}:8069 '.format(cli.get_port())
+
+        if not e.debug_mode():
             # exponer puerto para longpolling
             params += '-p 8072:8072 '
 
