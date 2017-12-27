@@ -30,7 +30,7 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-HOME_DIR = '/odoo_ar/'
+HOME_DIR = '/odoo/'
 
 
 class Environment:
