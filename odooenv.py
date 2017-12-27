@@ -269,8 +269,8 @@ def install_client(e):
             if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_DLP)):
                 extract_source_to_host(e, cli, 'dist-local-packages')
 
-#            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
-#                extract_source_to_host(e, cli, 'extra-addons')
+                #            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
+                #                extract_source_to_host(e, cli, 'extra-addons')
 
         # Creating postgresql directory
         if not os.path.isdir(e.get_psql_dir()):
@@ -396,16 +396,10 @@ def quality_test(e):
     params = 'sudo docker run --rm -it '
     params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
     params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
-#    params += '-v {}sources:/mnt/extra-addons '.format(cli.get_home_dir())
     if e.debug_mode():
         # a partir de la version 10 cambia a odoo el nombre de los fuentes
         sources_image = 'odoo' if cli.get_ver().split('.')[0] >= '10' else 'openerp'
         sources_host = sources_image
-
-        # si es openupgrade el sources_image es upgrade
-        if cli == 'ou':
-            sources_image = 'upgrade'
-
         params += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
               cli.get_home_dir(), SOURCES_DP, sources_image, sources_host)
         params += '-p 1984:1984 '
@@ -415,15 +409,15 @@ def quality_test(e):
     params += '--logfile=false '
     params += '-d {} '.format(db)
     params += '--log-level=test '
-    params += '--test-file=/mnt/extra-addons/{}/{}/tests/{} '.format(
-          repo_name, module_name, test_file)
+    params += '--test-file={}/{}/{}/tests/{} '.format(
+          IN_CUSTOM_ADDONS, repo_name, module_name, test_file)
     sc_(params)
 
 
 def add_debug_mountings(cli):
-#    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
+    #    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
     ret = '-v {}{}:/usr/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DP)
-    #ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
+    # ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
 
     return ret
 
