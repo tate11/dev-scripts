@@ -31,7 +31,7 @@ YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
 HOME_DIR = '/odoo/'
-
+POSTGRESQL_DIR = 'postgresql_9.6'
 
 class Environment:
     def __init__(self, args=None, clients=[]):
@@ -41,7 +41,7 @@ class Environment:
 
         self._home_dir = HOME_DIR
         self._home_template = self._home_dir + 'odoo-'
-        self._psql = self._home_dir + 'postgresql/'
+        self._psql = self._home_dir + '{}'.format(POSTGRESQL_DIR)
         self._nginx = 'nginx/'
         self._args = args
 

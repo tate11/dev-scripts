@@ -400,22 +400,6 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
 
-
-#         {'usr': 'jobiols', 'repo': 'valente', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'aeroo_reports', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'adhoc-stock', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'web', 'branch': '8.0'},
-
-#         {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
-#         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
@@ -455,24 +439,6 @@ _clients = [
     #
     # ODOO V9
     #
-    #######################################################################
-
-    {'name': 'metalfer', 'port': '8068', 'odoover': '9.0',
-     'repos': [
-         {'usr': 'jobiols', 'repo': 'cl-metalfer', 'branch': '9.0', 'host': 'bitbucket'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
-
-         {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
-
-     ],
-     'images': [
-         {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
-         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
-     ]
-     },
     #######################################################################
     {'name': 'glinsar', 'port': '8069', 'odoover': '9.0',
      'repos': [
@@ -519,96 +485,36 @@ _clients = [
     {'name': 'mario', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'mario', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
-
-         # requeridos por la localizacion argentina -- 19/12/17
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
-
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'crm', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
      ]
      },
-
+    #######################################################################
     {'name': 'sams9', 'port': '8069', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'cl-sams', 'branch': '9.0', 'host': 'bitbucket'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
-
-         # requeridos por la localizacion argentina -- 19/12/17
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
-
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         #         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
      ]
      },
-
     #######################################################################
     {'name': 'jeo9', 'port': '8010', 'odoover': '9.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'customer', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
-
-         # requeridos por la localizacion argentina -- 19/12/17
-         {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-payment', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-aeroo_reports', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'adhoc-account-invoicing', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'partner-contact', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '9.0'},
-         {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'stock', 'branch': '9.0'},
-
-         {'usr': 'jobiols', 'repo': 'web', 'branch': '9.0'},
-         {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
-#        {'usr': 'oca', 'repo': 'connector', 'branch': '9.0'},
 
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
-         {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
      ]
      },
     #######################################################################

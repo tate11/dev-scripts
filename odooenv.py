@@ -31,7 +31,7 @@
 #      │  └─conf
 #      │    ├──access.log
 #      │    └──nginx.conf
-#      ├─ postgresql
+#      ├─ postgresql_9.6
 #      ├──odoov-8.0
 #      │  ├──[clientname]
 #      │  │   ├──config
