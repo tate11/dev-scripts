@@ -472,6 +472,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'cl-bulonfer', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'connector', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'connector-odoo2odoo', 'branch': '9.0'},
 
      ],
      'images': [
@@ -543,6 +544,18 @@ _clients = [
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
          {'name': 'postgres', 'usr': 'postgres', 'ver': '9.4'},
+     ]
+     },
+    #######################################################################
+    {'name': 'test', 'port': '8069', 'odoover': '9.0',
+     'repos': [
+         {'usr': 'jobiols', 'repo': 'connector', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'connector-odoo2odoo', 'branch': '9.0'},
+
+     ],
+     'images': [
+         {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
      ]
      },
     #######################################################################
