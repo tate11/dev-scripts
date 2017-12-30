@@ -473,7 +473,9 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'connector', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'connector-odoo2odoo', 'branch': '9.0'},
-
+         {'usr': 'jobiols', 'repo': 'connector-prestashop', 'branch': '9.0'},
+         {'usr': 'jobiols', 'repo': 'connector-ecommerce', 'branch': '9.0'},
+         {'usr': 'oca', 'repo': 'bank-payment', 'branch': '9.0'},
      ],
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
