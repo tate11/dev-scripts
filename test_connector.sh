@@ -6,14 +6,14 @@ sudo docker run --rm -it \
     --link postgres:db \
     jobiols/odoo-jeo:9.0.debug -- \
     --addons-path=/opt/odoo/custom-addons/connector-odoo2odoo,/opt/odoo/custom-addons/connector,/opt/odoo/extra-addons/ingadhoc-odoo-support,/opt/odoo/extra-addons/ingadhoc-aeroo_reports,/opt/odoo/extra-addons/ingadhoc-odoo-argentina \
-    --no-xmlrpc \
     --stop-after-init \
-    --logfile=false \
+    --no-xmlrpc \
+    --test-enable \
     -d bulonfer_test \
-    --log-level=test \
     --test-file=/opt/odoo/custom-addons/connector-odoo2odoo/odoo2odoo/tests/test_01.py
 
-
+#    --log-level=test \
+#    --logfile=false \
 #sudo docker run --rm 
 #    -v /odoo/odoo-9.0/bulonfer/config:/opt/odoo/etc/ \
 #    -v /odoo/odoo-9.0/bulonfer/data_dir:/opt/odoo/data \
