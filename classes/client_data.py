@@ -214,7 +214,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'jeo', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'server-tools', 'branch': '8.0'},
          {'usr': 'oca', 'repo': 'stock-logistics-workflow', 'branch': '8.0'},
-         {'usr': 'jobiols', 'repo': 'journal-constraint', 'branch': '8.0'},
+         {'usr': 'jobiols', 'repo': 'adhoc-multi-store', 'branch': '8.0'},
          {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
