@@ -290,18 +290,18 @@ def install_client(e):
         param += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
         param += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
         param += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(), IN_LOG)
-        # no le pongo custom addons porque sino levanta toods los directorios y los pone en el config
-        #        param += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
+        param += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
         param += '--link postgres:db '
         param += '--name {}_tmp '.format(cli.get_name())
         param += '{} '.format(cli.get_image('odoo').get_image())
         param += '-- --stop-after-init -s '
 
-        # patch for openupgrade image
-        ou = '/opt/openerp/addons,' if client_name == 'ou' else ''
+        inside_paths = '/opt/odoo/extra-addons/ingadhoc-odoo-support/,'
 
-        #  if cli.get_addons_path():
-        #            param += '--addons-path={}{} '.format(ou, cli.get_addons_path())
+        if cli.get_addons_path():
+            param += '--addons-path={}{} '.format(inside_paths,
+                                                  cli.get_addons_path())
+
         # param += '--logfile=/var/log/odoo/odoo.log '
         # param += '--logrotate '
 
@@ -309,6 +309,7 @@ def install_client(e):
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
+        """
         # agrego los repos que faltan en forma controlada.
         e.msginf('patching config file')
         param = 'sudo docker run --rm '
@@ -320,7 +321,7 @@ def install_client(e):
 
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
-
+        """
     e.msgdone('Installing done')
 
 
@@ -490,32 +491,38 @@ def run_client(e):
             params += '--logfile=False '
 
         # You should use 2 worker threads + 1 cron thread per available CPU,
-        # and 1 CPU per 10 concurent users. Make sure you tune the memory limits
-        # and cpu limits in your configuration file.
+        # and 1 CPU per 10 concurent users. Make sure you tune the memory
+        # limits and cpu limits in your configuration file.
         params += '--workers 0 '
 
-        # number of workers dedicated to cron jobs. Defaults to 2. The workers are threads
-        # in multithreading mode and processes in multiprocessing mode.
+        # number of workers dedicated to cron jobs. Defaults to 2. The workers
+        # are threads in multithreading mode and processes in multiprocessing
+        # mode.
         params += '--max-cron-threads 1 '
 
-        # Number of requests a worker will process before being recycled and restarted. Defaults to 8196
+        # Number of requests a worker will process before being recycled and
+        # restarted. Defaults to 8196
         params += '--limit-request 8196 '
 
-        # Maximum allowed virtual memory per worker. If the limit is exceeded, the worker is killed
-        # and recycled at the end of the current request. Defaults to 640MB
+        # Maximum allowed virtual memory per worker. If the limit is exceeded,
+        # the worker is killed and recycled at the end of the current request.
+        # Defaults to 640MB
         params += '--limit-memory-soft 2147483648 '
 
-        # Hard limit on virtual memory, any worker exceeding the limit will be immediately
-        # killed without waiting for the end of the current request processing. Defaults to 768MB.
+        # Hard limit on virtual memory, any worker exceeding the limit will be
+        # immediately killed without waiting for the end of the current request
+        # processing. Defaults to 768MB.
         params += '--limit-memory-hard 2684354560 '
 
-        # Prevents the worker from using more than CPU seconds for each request.
-        # If the limit is exceeded, the worker is killed. Defaults to 60.
+        # Prevents the worker from using more than CPU seconds for each
+        # request. If the limit is exceeded, the worker is killed. Defaults
+        # to 60.
         params += '--limit-time-cpu 1600 '
 
-        # Prevents the worker from taking longer than seconds to process a request.
-        # If the limit is exceeded, the worker is killed. Defaults to 120.
-        # Differs from --limit-time-cpu in that this is a "wall time" limit including e.g. SQL queries.
+        # Prevents the worker from taking longer than seconds to process a
+        # request. If the limit is exceeded, the worker is killed. Defaults to
+        # 120. Differs from --limit-time-cpu in that this is a "wall time"
+        # limit including e.g. SQL queries.
         params += '--limit-time-real 3200 '
 
         if e.get_args().translate:

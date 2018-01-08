@@ -248,7 +248,9 @@ class Client:
         return self._env.get_template_dir() + self._ver + '/'
 
     def get_addons_path(self):
-        """ path to addons inside image, arma el addons para poner en el config de odoo """
+        """ path to addons inside image, arma el addons para poner en el
+            config de odoo
+        """
         path = '/opt/odoo/custom-addons/'
         paths = []
         for repo in self.get_repos():
@@ -325,9 +327,8 @@ class Repo:
 
             :param e: Environment
         """
-
         # si estoy en debug o haciendo checkout tag, bajar el historial completo
-        depth = '' if e.debug_mode() or e.get_tag else ' --depth 1 '
+        depth = '' if e.debug_mode() or e.get_tag() else ' --depth 1 '
 
         if self._dict.get('host', 'github') == 'bitbucket':
             srv = '{}@bitbucket.org'.format(self._dict.get('usr'))
