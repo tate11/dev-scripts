@@ -293,7 +293,13 @@ def install_client(e):
         param += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
         param += '--link postgres:db '
         param += '--name {}_tmp '.format(cli.get_name())
-        param += '{} '.format(cli.get_image('odoo').get_image())
+        if e.debug_mode():
+            param += '-e SERVER_MODE=test '
+            param += '{}.debug '.format(cli.get_image('odoo').get_image())
+        else:
+            param += '-e SERVER_MODE= '
+            param += '{} '.format(cli.get_image('odoo').get_image())
+
         param += '-- --stop-after-init -s '
 
         inside_paths = '/opt/odoo/extra-addons/ingadhoc-odoo-support/,'
@@ -309,19 +315,6 @@ def install_client(e):
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
 
-        """
-        # agrego los repos que faltan en forma controlada.
-        e.msginf('patching config file')
-        param = 'sudo docker run --rm '
-        param += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
-        param += '--name {}_tmp '.format(cli.get_name())
-        param += '--entrypoint=/patch_config.py '
-        param += '{}.debug '.format(cli.get_image('odoo').get_image())
-        param += cli.get_addons_path()
-
-        if sc_(param):
-            e.msgerr('failing to write config file. Aborting')
-        """
     e.msgdone('Installing done')
 
 
@@ -468,11 +461,6 @@ def run_client(e):
 
         if not e.debug_mode():
             params += '--restart=always '
-
-        if e.debug_mode():
-            params += '-e SERVER_MODE=test '
-        else:
-            params += '-e SERVER_MODE= '
 
         params += '--name {} '.format(cli.get_name())
 
@@ -1004,11 +992,6 @@ if __name__ == '__main__':
                         dest='module',
                         help="Module to update or all for updating all the reegistered "
                              "modules, you can specify multiple -m options.")
-
-    parser.add_argument('--server-mode',
-                        action='append',
-                        dest='server_mode',
-                        help="Appends option server_mode = 'mode' to config file when installing with -i option ")
 
     parser.add_argument('-c',
                         action='append',
