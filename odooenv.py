@@ -35,7 +35,7 @@
 #      ├──odoov-8.0
 #      │  ├──[clientname]
 #      │  │   ├──config
-#      │  │   │  └──openerp-server.conf
+#      │  │   │  └──odoo.conf
 #      │  │   ├──data_dir
 #      │  │   │  └──[filestore]
 #      │  │   └──log
@@ -44,7 +44,7 @@
 #      └──odoov-9.0
 #         ├──[clientname]
 #         │   ├──config
-#         │   │  └──openerp-server.conf
+#         │   │  └──odoo.conf
 #         │   ├──data_dir
 #         │   │  └──[filestore]
 #         │   └──log
