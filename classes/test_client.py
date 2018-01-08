@@ -55,28 +55,28 @@ class TestClient(TestCase):
         cli = self.get_cli()
         self.assertEqual(cli.get_ver(), '8.0')
 
-    def test_get_backup_dir(self):
-        cli = self.get_cli()
-        self.assertEqual(cli.get_backup_dir(), '/home/jorge/odoo-8.0/makeover/backup/')
+def test_get_backup_dir(self):
+    cli = self.get_cli()
+    self.assertEqual(cli.get_backup_dir(), '/home/jorge/odoo-8.0/makeover/backup/')
 
-    def test_get_repos(self):
-        cli = self.get_cli()
-        self.assertEqual(cli.get_repos(), '')
+def test_get_repos(self):
+    cli = self.get_cli()
+    self.assertEqual(cli.get_repos(), '')
 
-    def test_get_images(self):
-        self.fail()
+def test_get_images(self):
+    self.fail()
 
-    def test_get_image(self):
-        self.fail()
+def test_get_image(self):
+    self.fail()
 
-    def test_get_name(self):
-        self.fail()
+def test_get_name(self):
+    self.fail()
 
-    def test_get_port(self):
-        self.fail()
+def test_get_port(self):
+    self.fail()
 
-    def test_get_home_dir(self):
-        self.fail()
+def test_get_home_dir(self):
+    self.fail()
 
-    def test_get_addons_path(self):
-        self.fail()
+def test_get_addons_path(self):
+    self.fail()

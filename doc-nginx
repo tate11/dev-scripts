@@ -1,0 +1,68 @@
+Como observación, nosotros usamos nginx dockerizado, la versión oficial funciona bien. Una forma de llamarlo sería la
+siguiente (este ejemplo incluye certificado):
+
+docker run -d --name="nginx" --restart="always" --link odoo:odoo --link odoo10:odoo10 \
+-v /opt/nginx:/etc/nginx/conf.d:ro \
+-v /opt/opt:/opt \
+-v /etc/letsencrypt/live/certificadositio:/etc/letsencrypt/live/certificadositio \
+-p 80:80 \
+-p 443:443 \
+nginx
+
+En este ejemplo:
+"--link odoo:odoo" enlaza directamente con el contenedor de Odoo (no hace falta que se exponga el puerto con "-p")
+"--link odoo10:odoo10" enlaza también con otro contenedor de Odoo 10
+"-v /opt/nginx:/etc/nginx/cconf.d:ro" mapea un directorio donde van los archivos de configuración de(l) (los) host virtual(es)
+el otro mapeo (letsencrypt....) sirve para mapear el certificado del sitio.
+Ejemplo de archivo de configuración pueden verlo acá. En este caso, si hago un archivo de configuracion para cada uno de
+los hosts virtuales, cambio también el nombre del upstream. "server odoo10:8069" especifica el nombre del contenedor de
+docker sobre el que va a conectar el upstream. Más abajo, el proxy_pass tiene el nombre del upstream (en rojo):
+
+upstream odoo10{
+        server odoo10:8069;
+}
+server {
+        listen 80;
+        server_name sitioweb.com www.sitioweb.com;
+        return 301 https://$server_name$request_uri;
+}
+server{
+        listen 443 ssl;
+        server_name www.sitioweb.com;
+        location /.well-known/acme-challenge {
+            allow all;
+            alias /opt/letsencrypt/temp;
+        }
+        gzip on;
+        gzip_disable "msie6";
+        keepalive_timeout           600;
+        ssl_certificate      /etc/letsencrypt/live/certificadositio/fullchain.pem;
+        ssl_certificate_key  /etc/letsencrypt/live/certificadositio/privkey.pem;
+        client_header_timeout       600;
+        client_body_timeout         600;
+        proxy_connect_timeout       600;
+        proxy_send_timeout          600;
+        proxy_read_timeout          600;
+        send_timeout                600;
+
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+
+        proxy_buffers 16 64k;
+        proxy_buffer_size 128k;
+
+        location / {
+            client_max_body_size 200M;
+            proxy_pass  http://odoo10;
+            proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+            proxy_redirect off;
+
+            proxy_set_header    Host            $host;
+            proxy_set_header    X-Real-IP       $remote_addr;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header    X-Forwarded-Proto https;
+            proxy_set_header   X-ODOO_DBFILTER nombrebasededatosdeodoo;
+            proxy_pass_request_headers on;
+        }
+}
+

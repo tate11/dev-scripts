@@ -30,6 +30,8 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
+HOME_DIR = '/odoo/'
+POSTGRESQL_DIR = 'postgresql_9.6'
 
 class Environment:
     def __init__(self, args=None, clients=[]):
@@ -37,9 +39,9 @@ class Environment:
         for cli in clients:
             self._clients.append(Client(self, cli))
 
-        self._home_dir = '/odoo/'
+        self._home_dir = HOME_DIR
         self._home_template = self._home_dir + 'odoo-'
-        self._psql = self._home_dir + 'postgresql/'
+        self._psql = self._home_dir + '{}'.format(POSTGRESQL_DIR)
         self._nginx = 'nginx/'
         self._args = args
 
@@ -246,8 +248,10 @@ class Client:
         return self._env.get_template_dir() + self._ver + '/'
 
     def get_addons_path(self):
-        """ path to addons inside image, arma el addons para poner en el config de odoo """
-        path = '/mnt/extra-addons/'
+        """ path to addons inside image, arma el addons para poner en el
+            config de odoo
+        """
+        path = '/opt/odoo/custom-addons/'
         paths = []
         for repo in self.get_repos():
             paths.append(path + repo.get_addons_dir())
@@ -323,9 +327,8 @@ class Repo:
 
             :param e: Environment
         """
-
         # si estoy en debug o haciendo checkout tag, bajar el historial completo
-        depth = '' if e.debug_mode() or e.get_tag else ' --depth 1 '
+        depth = '' if e.debug_mode() or e.get_tag() else ' --depth 1 '
 
         if self._dict.get('host', 'github') == 'bitbucket':
             srv = '{}@bitbucket.org'.format(self._dict.get('usr'))
