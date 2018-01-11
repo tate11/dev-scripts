@@ -311,6 +311,9 @@ def install_client(e):
         # param += '--logfile=/var/log/odoo/odoo.log '
         # param += '--logrotate '
 
+        if not e.no_dbfilter():
+            param += '--db-filter={}_.* '.format(cli.get_name())
+
         e.msginf('creating config file')
         if sc_(param):
             e.msgerr('failing to write config file. Aborting')
