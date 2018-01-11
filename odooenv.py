@@ -481,7 +481,10 @@ def run_client(e):
         # You should use 2 worker threads + 1 cron thread per available CPU,
         # and 1 CPU per 10 concurent users. Make sure you tune the memory
         # limits and cpu limits in your configuration file.
-        params += '--workers 0 '
+        if e.debug_mode():
+            params += '--workers 0 '
+        else:
+            params += '--workers 3 '
 
         # number of workers dedicated to cron jobs. Defaults to 2. The workers
         # are threads in multithreading mode and processes in multiprocessing

@@ -199,7 +199,7 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'reves', 'port': '8069', 'odoover': '8.0',
+    {'name': 'reves', 'port': '8068', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
 
@@ -510,7 +510,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'adhoc-argentina-reporting', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-reporting-engine', 'branch': '9.0'},
          {'usr': 'ingadhoc', 'repo': 'argentina-sale', 'branch': '9.0'},
-         {'usr': 'ingadhoc', 'repo': 'product', 'branch': '8.0'},
+         {'usr': 'ingadhoc', 'repo': 'product', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'server-tools', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'partner-contact', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'reporting-engine', 'branch': '9.0'},
