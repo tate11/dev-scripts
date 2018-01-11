@@ -502,6 +502,7 @@ _clients = [
          {'usr': 'jobiols', 'repo': 'connector-ecommerce', 'branch': '9.0'},
          {'usr': 'oca', 'repo': 'bank-payment', 'branch': '9.0'},
 
+         {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'odoo-argentina', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-account-financial-tools', 'branch': '9.0'},
          {'usr': 'jobiols', 'repo': 'adhoc-miscellaneous', 'branch': '9.0'},

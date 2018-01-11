@@ -128,9 +128,12 @@ def update_db(e):
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
-    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
-    params += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
+    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                          IN_CONFIG)
+    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                            IN_DATA)
+    params += '-v {}sources:/opt/odoo/custom-addons '.format(
+        cli.get_home_dir())
 
     # if performing update in debug mode use host sources
     if e.debug_mode():
@@ -173,7 +176,8 @@ def update_repos_from_list(e, repos):
             sc_('sudo mkdir {}'.format(e.get_base_dir()))
             username = pwd.getpwuid(os.getuid()).pw_name
             # change ownership to current user
-            sc_('sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
+            sc_(
+                'sudo chown ' + username + ':' + username + ' ' + e.get_base_dir())
 
         for repo in repos:
             # if get_tag, delete the repo to force clone.
@@ -191,7 +195,8 @@ def update_repos_from_list(e, repos):
                 params = repo.do_clone_repo(e)
 
             if sc_(params):
-                e.msgerr('Fail installing environment, uninstall and try again.')
+                e.msgerr(
+                    'Fail installing environment, uninstall and try again.')
 
 
 def extract_source_to_host(e, cli, module):
@@ -199,9 +204,11 @@ def extract_source_to_host(e, cli, module):
     sc_('sudo chmod o+w {}sources/{}'.format(cli.get_home_dir(), module))
     param = 'sudo docker run -it --rm '
     param += '--entrypoint=/extract_{}.sh '.format(module)
-    param += '-v {}sources/{}/:/mnt/{} '.format(cli.get_home_dir(), module, module)
+    param += '-v {}sources/{}/:/mnt/{} '.format(cli.get_home_dir(), module,
+                                                module)
     param += '{}.debug '.format(cli.get_image('odoo').get_image())
-    e.msginf('Extracting {} from image {}'.format(module, cli.get_image('odoo').get_image()))
+    e.msginf('Extracting {} from image {}'.format(module, cli.get_image(
+        'odoo').get_image()))
     sc_(param)
     # TODO agregar un .gitignore para evitar los pyc y ver que pasa con el commit que no anda
     # e.msginf('Creating repo')
@@ -230,7 +237,8 @@ def install_client(e):
             sc_('sudo mkdir {}'.format(cli.get_base_dir()))
             username = pwd.getpwuid(os.getuid()).pw_name
             # change ownership to current user
-            sc_('sudo chown {}:{} {}'.format(username, username, cli.get_base_dir()))
+            sc_('sudo chown {}:{} {}'.format(username, username,
+                                             cli.get_base_dir()))
 
         # creating nginx directory if needed and does not exist
         if e.nginx() and not os.path.isdir(cli.get_nginx_dir()):
@@ -243,18 +251,28 @@ def install_client(e):
 
             # obtener el pahth al repo original donde esta el nginx.conf
             source_path = os.path.dirname(sys.argv[0])
-            sc_('sudo cp {}/nginx.conf {}/conf'.format(source_path, cli.get_nginx_dir()))
-            sc_('sudo cp {}/nginx.crt {}/cert'.format(source_path, cli.get_nginx_dir()))
-            sc_('sudo cp {}/nginx.key {}/cert'.format(source_path, cli.get_nginx_dir()))
+            sc_('sudo cp {}/nginx.conf {}/conf'.format(source_path,
+                                                       cli.get_nginx_dir()))
+            sc_('sudo cp {}/nginx.crt {}/cert'.format(source_path,
+                                                      cli.get_nginx_dir()))
+            sc_('sudo cp {}/nginx.key {}/cert'.format(source_path,
+                                                      cli.get_nginx_dir()))
 
         # Creating client's directories
-        if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(), cli.get_name())):
-            sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
-            sc_('sudo chmod o+w {}{}/config'.format(cli.get_home_dir(), cli.get_name()))
-            sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
-            sc_('sudo chmod o+w {}{}/data_dir'.format(cli.get_home_dir(), cli.get_name()))
-            sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
-            sc_('sudo chmod o+w {}{}/log'.format(cli.get_home_dir(), cli.get_name()))
+        if not os.path.isdir(
+            '{}{}/config'.format(cli.get_home_dir(), cli.get_name())):
+            sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(),
+                                                   cli.get_name()))
+            sc_('sudo chmod o+w {}{}/config'.format(cli.get_home_dir(),
+                                                    cli.get_name()))
+            sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(),
+                                                     cli.get_name()))
+            sc_('sudo chmod o+w {}{}/data_dir'.format(cli.get_home_dir(),
+                                                      cli.get_name()))
+            sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(),
+                                                cli.get_name()))
+            sc_('sudo chmod o+w {}{}/log'.format(cli.get_home_dir(),
+                                                 cli.get_name()))
 
         # Creating sources directory
         if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
@@ -263,10 +281,12 @@ def install_client(e):
 
         # Extracting odoo sources from image if sources enabled
         if e.debug_mode():
-            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_DP)):
+            if not os.path.isdir(
+                '{}{}'.format(cli.get_home_dir(), SOURCES_DP)):
                 extract_source_to_host(e, cli, 'dist-packages')
 
-            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_DLP)):
+            if not os.path.isdir(
+                '{}{}'.format(cli.get_home_dir(), SOURCES_DLP)):
                 extract_source_to_host(e, cli, 'dist-local-packages')
 
                 #            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
@@ -287,10 +307,14 @@ def install_client(e):
 
         # creating config file for client el config se crea dinamicamente
         param = 'sudo docker run --rm '
-        param += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
-        param += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
-        param += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(), IN_LOG)
-        param += '-v {}sources:/opt/odoo/custom-addons '.format(cli.get_home_dir())
+        param += '-v {}{}/config:{} '.format(cli.get_home_dir(),
+                                             cli.get_name(), IN_CONFIG)
+        param += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(),
+                                               cli.get_name(), IN_DATA)
+        param += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                          IN_LOG)
+        param += '-v {}sources:/opt/odoo/custom-addons '.format(
+            cli.get_home_dir())
         param += '--link postgres:db '
         param += '--name {}_tmp '.format(cli.get_name())
         if e.debug_mode():
@@ -302,11 +326,8 @@ def install_client(e):
 
         param += '-- --stop-after-init -s '
 
-        inside_paths = '/opt/odoo/extra-addons/ingadhoc-odoo-support/,'
-
         if cli.get_addons_path():
-            param += '--addons-path={}{} '.format(inside_paths,
-                                                  cli.get_addons_path())
+            param += '--addons-path={} '.format(cli.get_addons_path())
 
         # param += '--logfile=/var/log/odoo/odoo.log '
         # param += '--logrotate '
@@ -384,21 +405,25 @@ def quality_test(e):
     for repo in cli.get_repos():
         repos_lst.append(repo.get_name())
     if repo_name not in repos_lst:
-        e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(), repo_name))
+        e.msgerr('Client "{}" does not own "{}" repo'.format(cli.get_name(),
+                                                             repo_name))
 
     msg = 'Performing test {} on repo {} for client {} and database {}'.format(
-          test_file, repo_name, cli.get_name(), db)
+        test_file, repo_name, cli.get_name(), db)
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
-    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
+    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                          IN_CONFIG)
+    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                            IN_DATA)
     if e.debug_mode():
         # a partir de la version 10 cambia a odoo el nombre de los fuentes
-        sources_image = 'odoo' if cli.get_ver().split('.')[0] >= '10' else 'openerp'
+        sources_image = 'odoo' if cli.get_ver().split('.')[
+                                      0] >= '10' else 'openerp'
         sources_host = sources_image
         params += '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
-              cli.get_home_dir(), SOURCES_DP, sources_image, sources_host)
+            cli.get_home_dir(), SOURCES_DP, sources_image, sources_host)
         params += '-p 1984:1984 '
     params += '--link postgres:db '
     params += '{}.debug -- '.format(cli.get_image('odoo').get_image())
@@ -407,13 +432,14 @@ def quality_test(e):
     params += '-d {} '.format(db)
     params += '--log-level=test '
     params += '--test-file={}/{}/{}/tests/{} '.format(
-          IN_CUSTOM_ADDONS, repo_name, module_name, test_file)
+        IN_CUSTOM_ADDONS, repo_name, module_name, test_file)
     sc_(params)
 
 
 def add_debug_mountings(cli):
     #    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
-    ret = '-v {}{}:/usr/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DP)
+    ret = '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
+        cli.get_home_dir(), SOURCES_DP)
     # ret += '-v {}{}:/usr/local/lib/python2.7/dist-packages '.format(cli.get_home_dir(), SOURCES_DLP)
 
     return ret
@@ -453,13 +479,17 @@ def run_client(e):
             # exponer puerto para longpolling
             params += '-p 8072:8072 '
 
-        params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(), IN_CONFIG)
-        params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(), IN_DATA)
-        params += '-v {}sources:{} '.format(cli.get_home_dir(), IN_CUSTOM_ADDONS)
+        params += '-v {}{}/config:{} '.format(cli.get_home_dir(),
+                                              cli.get_name(), IN_CONFIG)
+        params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(),
+                                                cli.get_name(), IN_DATA)
+        params += '-v {}sources:{} '.format(cli.get_home_dir(),
+                                            IN_CUSTOM_ADDONS)
         if e.debug_mode():
             params += add_debug_mountings(cli)
 
-        params += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(), IN_LOG)
+        params += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(),
+                                           IN_LOG)
         params += '--link postgres:db '
 
         if not e.debug_mode():
@@ -526,12 +556,13 @@ def run_client(e):
                                      e.get_database_from_params())
 
         if sc_(params):
-            e.msgerr("Can't run client {}, Tip: run sudo docker rm -f {}".format(
-                  cli.get_name(), cli.get_name()))
+            e.msgerr(
+                "Can't run client {}, Tip: run sudo docker rm -f {}".format(
+                    cli.get_name(), cli.get_name()))
         else:
             e.msgdone('Client {} up and running on port {}'.format(
-                  clientName,
-                  cli.get_port()))
+                clientName,
+                cli.get_port()))
 
         # start nginx in needed
         if e.nginx():
@@ -539,8 +570,10 @@ def run_client(e):
             params += '--name=nginx '
             params += '--restart=always '
             params += '--link {}:odoo '.format(cli.get_name())
-            params += '-v {}conf:/etc/nginx/conf.d:ro '.format(cli.get_nginx_dir())
-            params += '-v {}cert:/etc/letsencrypt/live/certificadositio '.format(cli.get_nginx_dir())
+            params += '-v {}conf:/etc/nginx/conf.d:ro '.format(
+                cli.get_nginx_dir())
+            params += '-v {}cert:/etc/letsencrypt/live/certificadositio '.format(
+                cli.get_nginx_dir())
             params += '-v {}log:/var/log/nginx/ '.format(cli.get_nginx_dir())
             params += '-p 80:80 '
             params += '-p 443:443 '
@@ -615,7 +648,8 @@ def list_data(e):
             clients.append(e.get_client(clientName))
 
     for cli in clients:
-        e.msginf('client -- ' + cli.get_name(0) + ' -- on port ' + cli.get_port())
+        e.msginf(
+            'client -- ' + cli.get_name(0) + ' -- on port ' + cli.get_port())
 
         e.msgrun(3 * '-' +
                  ' Images ' +
@@ -726,7 +760,7 @@ def restore(e):
         e.msgerr('new dbname should be different from old dbname')
 
     e.msgrun(
-          'Restoring database ' + dbname + ' of client ' + client_name + ' onto database ' + new_dbname)
+        'Restoring database ' + dbname + ' of client ' + client_name + ' onto database ' + new_dbname)
 
     client = e.get_client(client_name)
     img = client.get_image('backup')
@@ -834,12 +868,13 @@ def cron_jobs(e):
     # el comando que cron tiene que lanzar. Suponiendo que nadie lo edita, al lanzar nuevamente
     # este proceso se elimina y se vuelve a crear permitiendo modificar el cronjob.
     croncmd = 'odooenv.py --backup -d {} -c {} > /var/log/odoo/bkp.log #Added by odooenv.py DO NOT EDIT MANUALLY'.format(
-          dbname, client)
+        dbname, client)
 
     # la linea que agregaremos a cron sería en que momento backupear + el croncmd
     cronjob = '0 0,12 * * * {}'.format(croncmd)
 
-    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(croncmd, cronjob)
+    command = '(sudo crontab -l | grep -v "{}" ; echo "{}") | sudo crontab - '.format(
+        croncmd, cronjob)
     sc_(command, shell=True)
 
 
@@ -881,8 +916,8 @@ def checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     tag = e.get_args().checkout_tag[0]
     e.msginf('Checking out tag {} for all repos belonging to client {}'.format(
-          tag,
-          client_name
+        tag,
+        client_name
     ))
 
     cli = e.get_client(client_name)
@@ -898,10 +933,11 @@ def undo_checkout_tag(e):
     client_name = e.get_clients_from_params(cant='one')
     cli = e.get_client(client_name)
 
-    e.msginf('Checking out branch {} for all repos belonging to client {}'.format(
-          cli.get_ver(),
-          client_name
-    ))
+    e.msginf(
+        'Checking out branch {} for all repos belonging to client {}'.format(
+            cli.get_ver(),
+            client_name
+        ))
 
     for repo in cli.get_repos():
         e.msginf('checking out >> {}'.format(repo.get_formatted_repo()))
@@ -920,7 +956,7 @@ if __name__ == '__main__':
 
         # Add the log message handler to the logger
         handler = logging.handlers.RotatingFileHandler(
-              LOG_FILENAME, maxBytes=2000000, backupCount=5)
+            LOG_FILENAME, maxBytes=2000000, backupCount=5)
 
         # formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         formatter = logging.Formatter("%(asctime)s %(levelname)s %(message)s")
