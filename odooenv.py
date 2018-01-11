@@ -73,9 +73,12 @@ SOURCES_DP = 'sources/dist-packages'
 SOURCES_DLP = 'sources/dist-local-packages'
 SOURCES_EA = 'sources/extra-addons'
 
-IN_CONFIG = '/opt/odoo/etc/'
-IN_DATA = '/opt/odoo/data'
-IN_LOG = '/var/log/odoo'
+IN_CONFIG9 = '/opt/odoo/etc/'
+IN_CONFIG8 = '/etc/odoo/'
+IN_DATA9 = '/opt/odoo/data'
+IN_DATA8 = '/var/lib/odoo'
+IN_LOG9 = '/var/log/odoo'
+IN_LOG8 = '/var/log/odoo'
 IN_CUSTOM_ADDONS = '/opt/odoo/custom-addons'
 
 
@@ -128,12 +131,7 @@ def update_db(e):
     e.msgrun(msg)
 
     params = 'sudo docker run --rm -it '
-    params += '-v {}{}/config:{} '.format(cli.get_home_dir(), cli.get_name(),
-                                          IN_CONFIG)
-    params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(), cli.get_name(),
-                                            IN_DATA)
-    params += '-v {}sources:/opt/odoo/custom-addons '.format(
-        cli.get_home_dir())
+    params += add_normal_mountings(cli)
 
     # if performing update in debug mode use host sources
     if e.debug_mode():
@@ -307,14 +305,9 @@ def install_client(e):
 
         # creating config file for client el config se crea dinamicamente
         param = 'sudo docker run --rm '
-        param += '-v {}{}/config:{} '.format(cli.get_home_dir(),
-                                             cli.get_name(), IN_CONFIG)
-        param += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(),
-                                               cli.get_name(), IN_DATA)
-        param += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(),
-                                          IN_LOG)
-        param += '-v {}sources:/opt/odoo/custom-addons '.format(
-            cli.get_home_dir())
+
+        param += add_normal_mountings(cli)
+
         param += '--link postgres:db '
         param += '--name {}_tmp '.format(cli.get_name())
         if e.debug_mode():
@@ -445,6 +438,29 @@ def add_debug_mountings(cli):
     return ret
 
 
+def add_normal_mountings(cli):
+    ret = '-v {}{}/config:{} '.format(
+        cli.get_home_dir(),
+        cli.get_name(),
+        IN_CONFIG8 if cli.get_numeric_ver() == '8' else IN_CONFIG9
+    )
+    ret += '-v {}{}/data_dir:{} '.format(
+        cli.get_home_dir(),
+        cli.get_name(),
+        IN_DATA8 if cli.get_numeric_ver() == '8' else IN_DATA9
+    )
+    ret += '-v {}{}/log:{} '.format(
+        cli.get_home_dir(),
+        cli.get_name(),
+        IN_LOG8 if cli.get_numeric_ver() == '8' else IN_LOG9
+    )
+    ret += '-v {}sources:{} '.format(
+        cli.get_home_dir(),
+        IN_CUSTOM_ADDONS)
+
+    return ret
+
+
 def run_client(e):
     clients = e.get_clients_from_params()
     for clientName in clients:
@@ -479,17 +495,11 @@ def run_client(e):
             # exponer puerto para longpolling
             params += '-p 8072:8072 '
 
-        params += '-v {}{}/config:{} '.format(cli.get_home_dir(),
-                                              cli.get_name(), IN_CONFIG)
-        params += '-v {}{}/data_dir:{} '.format(cli.get_home_dir(),
-                                                cli.get_name(), IN_DATA)
-        params += '-v {}sources:{} '.format(cli.get_home_dir(),
-                                            IN_CUSTOM_ADDONS)
+        params += add_normal_mountings(cli)
+
         if e.debug_mode():
             params += add_debug_mountings(cli)
 
-        params += '-v {}{}/log:{} '.format(cli.get_home_dir(), cli.get_name(),
-                                           IN_LOG)
         params += '--link postgres:db '
 
         if not e.debug_mode():
@@ -507,7 +517,9 @@ def run_client(e):
             params += '-- --db-filter={}_.* '.format(cli.get_name())
 
         if not e.debug_mode():
-            params += '--logfile={}/odoo.log '.format(IN_LOG)
+            params += '--logfile={}/odoo.log '.format(
+                IN_LOG8 if cli.get_numeric_ver() == '8' else IN_LOG9
+            )
         else:
             params += '--logfile=False '
 
