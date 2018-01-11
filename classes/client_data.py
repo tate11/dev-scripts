@@ -199,7 +199,7 @@ _clients = [
      ]
      },
     #######################################################################
-    {'name': 'reves', 'port': '8068', 'odoover': '8.0',
+    {'name': 'reves', 'port': '8069', 'odoover': '8.0',
      'repos': [
          {'usr': 'jobiols', 'repo': 'reves', 'branch': '8.0'},
 
