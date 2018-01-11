@@ -430,7 +430,6 @@ def quality_test(e):
 
 
 def add_debug_mountings(cli):
-    print '888888888888888888888888888888888888888888888888888888'
     #    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
     ret = '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
         cli.get_home_dir(), SOURCES_DP)
