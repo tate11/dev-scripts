@@ -218,7 +218,7 @@ _clients = [
          {'usr': 'ingadhoc', 'repo': 'odoo-support', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoomrp-wip', 'branch': '8.0'},
          {'usr': 'jobiols', 'repo': 'odoo-addons', 'branch': '8.0'},
-         {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
+#         {'usr': 'oca', 'repo': 'account-financial-reporting', 'branch': '8.0'},
 
          # repos para la impresora fiscal
          {'usr': 'jobiols', 'repo': 'fiscal-printer', 'branch': '8.0'},
