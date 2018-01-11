@@ -430,6 +430,7 @@ def quality_test(e):
 
 
 def add_debug_mountings(cli):
+    print '888888888888888888888888888888888888888888888888888888'
     #    ret = '-v {}{}:/opt/odoo/extra-addons '.format(cli.get_home_dir(), SOURCES_EA)
     ret = '-v {}{}:/usr/lib/python2.7/dist-packages '.format(
         cli.get_home_dir(), SOURCES_DP)
@@ -442,17 +443,17 @@ def add_normal_mountings(cli):
     ret = '-v {}{}/config:{} '.format(
         cli.get_home_dir(),
         cli.get_name(),
-        IN_CONFIG8 if cli.get_numeric_ver() == '8' else IN_CONFIG9
+        IN_CONFIG9
     )
     ret += '-v {}{}/data_dir:{} '.format(
         cli.get_home_dir(),
         cli.get_name(),
-        IN_DATA8 if cli.get_numeric_ver() == '8' else IN_DATA9
+        IN_DATA9
     )
     ret += '-v {}{}/log:{} '.format(
         cli.get_home_dir(),
         cli.get_name(),
-        IN_LOG8 if cli.get_numeric_ver() == '8' else IN_LOG9
+        IN_LOG9
     )
     ret += '-v {}sources:{} '.format(
         cli.get_home_dir(),
@@ -496,7 +497,6 @@ def run_client(e):
             params += '-p 8072:8072 '
 
         params += add_normal_mountings(cli)
-
         if e.debug_mode():
             params += add_debug_mountings(cli)
 
