@@ -24,6 +24,7 @@ sudo docker run -it --rm \
     -v /odoo/odoo-8.0/reves/data_dir:/opt/odoo/data \
     -v /odoo/odoo-8.0/reves/log:/var/log/odoo \
     -v /odoo/odoo-8.0/reves/sources:/opt/odoo/custom-addons \
+    -v /odoo/odoo-8.0/sources/dist-packages:/usr/lib/python2.7/dist-packages \
     --link postgres:db \
     --name odoo \
     adhoc/odoo-ar:8.0 -- \
@@ -35,7 +36,6 @@ sudo docker run -it --rm \
 
 
 
-#    -v /odoo/odoo-8.0/sources/dist-packages:/usr/lib/python2.7/dist-packages \
 #    -v /odoo/odoo-8.0/sources/dist-local-packages:/usr/local/lib/python2.7/dist-packages \
 #    --addons=/usr/lib/python2.7/dist-packages/openerp/addons \
 #    --stop-after-init \
