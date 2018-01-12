@@ -278,12 +278,10 @@ def install_client(e):
                                                cli.get_name()))
             sc_('chmod o+w {}{}/sources'.format(cli.get_home_dir(),
                                                 cli.get_name()))
+            sc_('mkdir {}{}/{}'.format(cli.get_home_dir(),
+                                       cli.get_name(),
+                                       e.get_psql_dir()                                       )                )
 
-            # Creating postgresql directory
-            if not os.path.isdir(e.get_psql_dir()):
-                sc_('mkdir {}'.format(e.get_psql_dir()))
-
-        exit()
 
         # Extracting odoo sources from image if sources enabled
         if e.debug_mode():

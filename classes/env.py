@@ -42,7 +42,7 @@ class Environment:
 
         self._home_dir = HOME_DIR
         self._home_template = self._home_dir + 'odoo-'
-        self._psql = self._home_dir + '{}'.format(POSTGRESQL_DIR)
+        self._psql = POSTGRESQL_DIR
         self._nginx = 'nginx/'
         self._args = args
 
