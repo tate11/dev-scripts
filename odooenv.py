@@ -253,31 +253,36 @@ def install_client(e):
             # obtener el path al repo original donde esta el nginx.conf
             source_path = os.path.dirname(sys.argv[0])
             sc_('cp {}/nginx.conf {}/conf'.format(source_path,
-                                                       cli.get_nginx_dir()))
+                                                  cli.get_nginx_dir()))
             sc_('cp {}/nginx.crt {}/cert'.format(source_path,
-                                                      cli.get_nginx_dir()))
+                                                 cli.get_nginx_dir()))
             sc_('cp {}/nginx.key {}/cert'.format(source_path,
-                                                      cli.get_nginx_dir()))
+                                                 cli.get_nginx_dir()))
 
         # Creating client's directories
         if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),
                                                   cli.get_name())):
             sc_('mkdir -p {}{}/config'.format(cli.get_home_dir(),
-                                                   cli.get_name()))
+                                              cli.get_name()))
             sc_('chmod o+w {}{}/config'.format(cli.get_home_dir(),
-                                                    cli.get_name()))
+                                               cli.get_name()))
             sc_('mkdir -p {}{}/data_dir'.format(cli.get_home_dir(),
-                                                     cli.get_name()))
-            sc_('chmod o+w {}{}/data_dir'.format(cli.get_home_dir(),
-                                                      cli.get_name()))
-            sc_('mkdir -p {}{}/log'.format(cli.get_home_dir(),
                                                 cli.get_name()))
+            sc_('chmod o+w {}{}/data_dir'.format(cli.get_home_dir(),
+                                                 cli.get_name()))
+            sc_('mkdir -p {}{}/log'.format(cli.get_home_dir(),
+                                           cli.get_name()))
             sc_('chmod o+w {}{}/log'.format(cli.get_home_dir(),
-                                                 cli.get_name()))
-            sc_('mkdir -p {}{}sources'.format(cli.get_home_dir(),
-                                                 cli.get_name()))
-            sc_('chmod o+w {}{}sources'.format(cli.get_home_dir(),
-                                                  cli.get_name()))
+                                            cli.get_name()))
+            sc_('mkdir -p {}{}/sources'.format(cli.get_home_dir(),
+                                               cli.get_name()))
+            sc_('chmod o+w {}{}/sources'.format(cli.get_home_dir(),
+                                                cli.get_name()))
+
+            # Creating postgresql directory
+            if not os.path.isdir(e.get_psql_dir()):
+                sc_('mkdir {}'.format(e.get_psql_dir()))
+
         exit()
 
         # Extracting odoo sources from image if sources enabled
@@ -293,9 +298,6 @@ def install_client(e):
                 #            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
                 #                extract_source_to_host(e, cli, 'extra-addons')
 
-        # Creating postgresql directory
-        if not os.path.isdir(e.get_psql_dir()):
-            sc_('mkdir {}'.format(e.get_psql_dir()))
 
         # Creating log directory
         if not os.path.isfile(LOG_FILENAME):
