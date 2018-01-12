@@ -18,8 +18,8 @@ sudo docker rm -f odoo
 ## Configuracion para debug
 sudo docker run -it --rm \
     --link aeroo:aeroo \
-    -p 127.0.0.1:8069:8069 \
-    -p 127.0.0.1:8072:8072 \
+    -p 8069:8069 \
+    -p 8072:8072 \
     -v /odoo/odoo-8.0/reves/config:/opt/odoo/etc \
     -v /odoo/odoo-8.0/reves/data_dir:/opt/odoo/data \
     -v /odoo/odoo-8.0/reves/log:/var/log/odoo \
