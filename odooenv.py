@@ -237,47 +237,48 @@ def install_client(e):
             sc_('sudo mkdir {}'.format(cli.get_base_dir()))
             username = pwd.getpwuid(os.getuid()).pw_name
             # change ownership to current user
-            sc_('sudo chown {}:{} {}'.format(username, username,
+            sc_('sudo chown {}:{} {}'.format(username,
+                                             username,
                                              cli.get_base_dir()))
 
         # creating nginx directory if needed and does not exist
         if e.nginx() and not os.path.isdir(cli.get_nginx_dir()):
-            sc_('sudo mkdir -p {}/cert'.format(cli.get_nginx_dir()))
-            sc_('sudo chmod o+w {}/cert'.format(cli.get_nginx_dir()))
-            sc_('sudo mkdir -p {}/log'.format(cli.get_nginx_dir()))
-            sc_('sudo chmod o+w {}/log'.format(cli.get_nginx_dir()))
-            sc_('sudo mkdir -p {}/conf'.format(cli.get_nginx_dir()))
-            sc_('sudo chmod o+w {}/conf'.format(cli.get_nginx_dir()))
+            sc_('mkdir -p {}/cert'.format(cli.get_nginx_dir()))
+            sc_('chmod o+w {}/cert'.format(cli.get_nginx_dir()))
+            sc_('mkdir -p {}/log'.format(cli.get_nginx_dir()))
+            sc_('chmod o+w {}/log'.format(cli.get_nginx_dir()))
+            sc_('mkdir -p {}/conf'.format(cli.get_nginx_dir()))
+            sc_('chmod o+w {}/conf'.format(cli.get_nginx_dir()))
 
-            # obtener el pahth al repo original donde esta el nginx.conf
+            # obtener el path al repo original donde esta el nginx.conf
             source_path = os.path.dirname(sys.argv[0])
-            sc_('sudo cp {}/nginx.conf {}/conf'.format(source_path,
+            sc_('cp {}/nginx.conf {}/conf'.format(source_path,
                                                        cli.get_nginx_dir()))
-            sc_('sudo cp {}/nginx.crt {}/cert'.format(source_path,
+            sc_('cp {}/nginx.crt {}/cert'.format(source_path,
                                                       cli.get_nginx_dir()))
-            sc_('sudo cp {}/nginx.key {}/cert'.format(source_path,
+            sc_('cp {}/nginx.key {}/cert'.format(source_path,
                                                       cli.get_nginx_dir()))
 
         # Creating client's directories
-        if not os.path.isdir(
-            '{}{}/config'.format(cli.get_home_dir(), cli.get_name())):
-            sc_('sudo mkdir -p {}{}/config'.format(cli.get_home_dir(),
+        if not os.path.isdir('{}{}/config'.format(cli.get_home_dir(),
+                                                  cli.get_name())):
+            sc_('mkdir -p {}{}/config'.format(cli.get_home_dir(),
                                                    cli.get_name()))
-            sc_('sudo chmod o+w {}{}/config'.format(cli.get_home_dir(),
+            sc_('chmod o+w {}{}/config'.format(cli.get_home_dir(),
                                                     cli.get_name()))
-            sc_('sudo mkdir -p {}{}/data_dir'.format(cli.get_home_dir(),
+            sc_('mkdir -p {}{}/data_dir'.format(cli.get_home_dir(),
                                                      cli.get_name()))
-            sc_('sudo chmod o+w {}{}/data_dir'.format(cli.get_home_dir(),
+            sc_('chmod o+w {}{}/data_dir'.format(cli.get_home_dir(),
                                                       cli.get_name()))
-            sc_('sudo mkdir -p {}{}/log'.format(cli.get_home_dir(),
+            sc_('mkdir -p {}{}/log'.format(cli.get_home_dir(),
                                                 cli.get_name()))
-            sc_('sudo chmod o+w {}{}/log'.format(cli.get_home_dir(),
+            sc_('chmod o+w {}{}/log'.format(cli.get_home_dir(),
                                                  cli.get_name()))
-
-        # Creating sources directory
-        if not os.path.isdir('{}sources'.format(cli.get_home_dir())):
-            sc_('sudo mkdir -p {}sources'.format(cli.get_home_dir()))
-            sc_('sudo chmod o+w {}sources'.format(cli.get_home_dir()))
+            sc_('mkdir -p {}{}sources'.format(cli.get_home_dir(),
+                                                 cli.get_name()))
+            sc_('chmod o+w {}{}sources'.format(cli.get_home_dir(),
+                                                  cli.get_name()))
+        exit()
 
         # Extracting odoo sources from image if sources enabled
         if e.debug_mode():

@@ -30,8 +30,9 @@ YELLOW = "\033[1;33m"
 YELLOW_LIGHT = "\033[33m"
 CLEAR = "\033[0;m"
 
-HOME_DIR = '/odoo/'
-POSTGRESQL_DIR = 'postgresql_9.6'
+HOME_DIR = '/odoo_ar/'
+POSTGRESQL_DIR = 'postgresql'
+
 
 class Environment:
     def __init__(self, args=None, clients=[]):
