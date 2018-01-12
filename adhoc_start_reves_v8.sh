@@ -26,7 +26,7 @@ sudo docker run -it --rm \
     -v /odoo/odoo-8.0/reves/sources:/opt/odoo/custom-addons \
     --link postgres:db \
     --name odoo \
-    jobiols/odoo-jeo:8.0 -- \
+    adhoc/odoo-ar:8.0 -- \
     --load=web,web_kanban,server_mode,database_tools \
     --logfile=/dev/stdout \
     --workers 2
