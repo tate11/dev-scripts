@@ -74,11 +74,13 @@ SOURCES_DLP = 'sources/dist-local-packages'
 SOURCES_EA = 'sources/extra-addons'
 
 IN_CONFIG9 = '/opt/odoo/etc/'
-IN_CONFIG8 = '/etc/odoo/'
 IN_DATA9 = '/opt/odoo/data'
-IN_DATA8 = '/var/lib/odoo'
 IN_LOG9 = '/var/log/odoo'
+
+IN_CONFIG8 = '/etc/odoo/'
+IN_DATA8 = '/var/lib/odoo'
 IN_LOG8 = '/var/log/odoo'
+
 IN_CUSTOM_ADDONS = '/opt/odoo/custom-addons'
 
 
