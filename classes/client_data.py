@@ -59,7 +59,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-adhoc', 'ver': '7.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
@@ -94,7 +94,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -125,7 +125,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -150,7 +150,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -172,7 +172,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -194,7 +194,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -228,7 +228,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -257,7 +257,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -300,7 +300,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
 
@@ -334,7 +334,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -351,7 +351,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -377,7 +377,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
 
      ],
@@ -403,7 +403,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '8.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'backup', 'usr': 'jobiols', 'img': 'backup'},
      ]
      },
@@ -437,7 +437,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
      ]
      },
@@ -467,7 +467,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
      ]
      },
@@ -505,7 +505,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          # {'name': 'nginx', 'usr': 'nginx', 'ver': 'latest'}
      ]
      },
@@ -541,7 +541,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -553,7 +553,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -581,7 +581,7 @@ _clients = [
      'images': [
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -609,7 +609,7 @@ _clients = [
 
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'docker-openupgrade', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -621,7 +621,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '9.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -636,7 +636,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
@@ -645,7 +645,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
     #######################################################################
@@ -659,7 +659,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-jeo', 'ver': '10.0.arg'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
      ]
      },
 
@@ -679,7 +679,7 @@ _clients = [
      ],
      'images': [
          {'name': 'odoo', 'usr': 'jobiols', 'img': 'odoo-e', 'ver': '10.0e-20170616'},
-         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.6'},
+         {'name': 'postgres', 'usr': 'postgres', 'ver': '9.5'},
          {'name': 'aeroo', 'usr': 'jobiols', 'img': 'aeroo-docs'},
      ]
      },
