@@ -200,19 +200,24 @@ def update_repos_from_list(e, repos):
 
 
 def extract_source_to_host(e, cli, module):
-    sc_('sudo mkdir -p {}sources/{}'.format(cli.get_home_dir(), module))
-    sc_('sudo chmod o+w {}sources/{}'.format(cli.get_home_dir(), module))
+    sc_('sudo mkdir -p {}{}'.format(cli.get_sources_dir(), module))
+    sc_('sudo chmod o+w {}{}'.format(cli.get_sources_dir(), module))
     param = 'sudo docker run -it --rm '
     param += '--entrypoint=/extract_{}.sh '.format(module)
-    param += '-v {}sources/{}/:/mnt/{} '.format(cli.get_home_dir(), module,
-                                                module)
+    param += '-v {}{}/:/mnt/{} '.format(cli.get_sources_dir(), module,module)
     param += '{}.debug '.format(cli.get_image('odoo').get_image())
-    e.msginf('Extracting {} from image {}'.format(module, cli.get_image(
+    e.msginf('Extracting {} from image {}.debug'.format(module, cli.get_image(
         'odoo').get_image()))
     sc_(param)
-    # TODO agregar un .gitignore para evitar los pyc y ver que pasa con el commit que no anda
-    # e.msginf('Creating repo')
-    # sc_('git -C {}sources/{} init'.format(cli.get_home_dir(), module))
+    gitignore_file = '{}{}/.gitignore'.format(cli.get_sources_dir(), module)
+    print gitignore_file
+
+    with open(gitignore_file, 'w') as f:
+        f.write('.idea/ \n')
+        f.write('*.pyc \n')
+
+    e.msginf('Creating repo')
+    sc_('git -C {}{} init'.format(cli.get_sources_dir(), module))
     # sc_('git -C {}sources/{} add . '.format(cli.get_home_dir(), module))
 
 
@@ -280,28 +285,28 @@ def install_client(e):
                                                 cli.get_name()))
             sc_('mkdir {}{}/{}'.format(cli.get_home_dir(),
                                        cli.get_name(),
-                                       e.get_psql_dir()                                       )                )
-
+                                       e.get_psql_dir()))
+        # Creating log directory
+        # TODO Se usa esto en algun lado ?????????????
+        if not os.path.isfile(LOG_FILENAME):
+            sc_('sudo mkdir -p {}'.format(os.path.dirname(LOG_FILENAME)))
+            sc_('sudo touch {}'.format(LOG_FILENAME))
+            sc_('sudo chmod 666 {}'.format(LOG_FILENAME))
 
         # Extracting odoo sources from image if sources enabled
         if e.debug_mode():
-            if not os.path.isdir(
-                '{}{}'.format(cli.get_home_dir(), SOURCES_DP)):
+            if not os.path.isdir('{}{}'.format(cli.get_home_dir(),
+                                               SOURCES_DP)):
                 extract_source_to_host(e, cli, 'dist-packages')
 
-            if not os.path.isdir(
-                '{}{}'.format(cli.get_home_dir(), SOURCES_DLP)):
+            if not os.path.isdir('{}{}'.format(cli.get_home_dir(),
+                                               SOURCES_DLP)):
                 extract_source_to_host(e, cli, 'dist-local-packages')
 
                 #            if not os.path.isdir('{}{}'.format(cli.get_home_dir(), SOURCES_EA)):
                 #                extract_source_to_host(e, cli, 'extra-addons')
 
-
-        # Creating log directory
-        if not os.path.isfile(LOG_FILENAME):
-            sc_('sudo mkdir -p {}'.format(os.path.dirname(LOG_FILENAME)))
-            sc_('sudo touch {}'.format(LOG_FILENAME))
-            sc_('sudo chmod 666 {}'.format(LOG_FILENAME))
+        exit()
 
         # clone or update repos as needed
         update_repos_from_list(e, cli.get_repos())

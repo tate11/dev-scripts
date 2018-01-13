@@ -258,6 +258,11 @@ class Client:
             paths.append(path + repo.get_addons_dir())
         return ','.join(paths)
 
+    def get_sources_dir(self):
+        """ Devuelve el directorio absuluto a los fuentes para este cliente
+        """
+        return '{}{}/sources/'.format(self.get_home_dir(), self.get_name())
+
 
 class Repo:
     def __init__(self, cli, dict):
